@@ -2,6 +2,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
 
 	Crafty.scene('IsoTest', function() {
+		var hero; //entity global to this scene
 		function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 			return function(worldX, worldY, worldZ) {
 				return {
@@ -20,6 +21,10 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				heroWest: [0, h*3, w, h]
 			});
 		})();
+		/**
+		 * Map from global tile id, e.g. "55", to their properties, e.g. {"noStand": "true"}
+		 */
+		var tileProperties = {};
 		(function() {
 			//Load tileset into crafty
 			var tileX, tileY, i;
@@ -38,14 +43,15 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				var imageWidthInTiles = tileset.imagewidth / tileset.tilewidth;
 				for (tileY = 0; tileY < imageHeightInTiles; tileY++) {
 					for (tileX = 0; tileX < imageWidthInTiles; tileX++) {
-						var tileProperties = tileset.tileproperties && tileset.tileproperties[tileId - tileset.firstgid];
-						if (tileProperties) {
+						var _tileProperties = tileset.tileproperties && tileset.tileproperties[tileId - tileset.firstgid];
+						if (_tileProperties) {
+							tileProperties[tileId] = _tileProperties;
 							var addUp = 0, addSides = 0;
-							if (tileProperties.addUp) {
-								addUp = parseInt(tileProperties.addUp, 10);
+							if (_tileProperties.addUp) {
+								addUp = parseInt(_tileProperties.addUp, 10);
 							}
-							if (tileProperties.addSides) {
-								addSides = parseInt(tileProperties.addSides, 10);
+							if (_tileProperties.addSides) {
+								addSides = parseInt(_tileProperties.addSides, 10);
 							}
 							craftySpriteData['tile'+tileId] = [
 								tileX - addSides,
@@ -73,22 +79,6 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 		(function() {
 			//Render map
 			var i, j;
-			Crafty.c('Hero', {
-				init: function() {
-					this.requires('2D');
-				},
-				setPos: function(worldX, worldY, worldZ) {
-					var pixelCoord = worldToPixel(worldX, worldY, worldZ);
-					this.attr({
-						x: pixelCoord.pixelX - (this.w / 2),
-						y: pixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h,
-						z: worldZ + 1
-					});
-					return this;
-				}
-			});
-
-			var hero = Crafty.e('2D, Canvas, Hero, heroSouth').setPos(0, 0, 0);
 
 			var defaultAreaMap = [[32, 32], [64, 48], [32, 64], [0, 48]];
 
@@ -112,24 +102,57 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 							var tileX = j % layer.width + baseheight;
 							var tileY = Math.floor(j / layer.width) + baseheight;
 							var pixelCoord = worldToPixel(tileX, tileY, baseheight);
-							/* The call to .map below makes a deep copy of the array; this is needed because Crafty
-							 * seems to change the provided coordinate arrays in-place, which leads to problems if
-							 * they're shared between multiple entities. */
-							var tileAreaMap = new Crafty.polygon(defaultAreaMap.map(function(a) { return a.slice(); }));
-							var entity = Crafty.e('2D, Canvas, Mouse, ' + tileType);
+							var entity = Crafty.e('2D, Canvas, ' + tileType);
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
 								y: pixelCoord.pixelY - entity.h,
 								z: baseheight,
 								tileX: tileX,
 								tileY: tileY
-							}).bind("Click", function() {
-								hero.setPos(this.tileX, this.tileY, this.z);
-							}).areaMap(tileAreaMap);
+							});
+							var _tileProperties;
+							if (tileProperties[layer.data[j]]) {
+								_tileProperties = tileProperties[layer.data[j]];
+							} else {
+								_tileProperties = {};
+							}
+							if (!_tileProperties['noStand']) {
+								entity.addComponent('Mouse');
+								entity.bind("Click", function() {
+									//this.alpha = 0.5; //For debugging which tile got clicked.
+									hero.setPos(this.tileX, this.tileY, this.z);
+									console.log(hero.z);
+								});
+								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
+								 * seems to change the provided coordinate arrays in-place, which leads to problems if
+								 * they're shared between multiple entities. */
+								var tileAreaMap = new Crafty.polygon(defaultAreaMap.map(function(a) { return a.slice(); }));
+								entity.areaMap(tileAreaMap);
+							}
 						}
 					}
 				}
 			}
+		})();
+		(function() {
+			//Add characterss
+			Crafty.c('Hero', {
+				init: function() {
+					this.requires('2D');
+				},
+				setPos: function(worldX, worldY, worldZ) {
+					var pixelCoord = worldToPixel(worldX, worldY, worldZ);
+					this.attr({
+						tileX: worldX,
+						tileY: worldY,
+						x: pixelCoord.pixelX - (this.w / 2),
+						y: pixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h,
+						z: worldZ
+					});
+					return this;
+				}
+			});
+			hero = Crafty.e('2D, Canvas, Hero, heroSouth').setPos(0, 0, 0);
 		})();
 		(function() {
 			Crafty.sprite("assets/ui/music.png", {
