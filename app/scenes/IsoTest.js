@@ -1,5 +1,6 @@
 define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], function(config, mapData) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
+
 	Crafty.scene('IsoTest', function() {
 		function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 			return function(worldX, worldY, worldZ) {
@@ -45,12 +46,14 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			var i, j;
 			var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 
+			var heroWidth = 24;
+			var heroHeight = 36;
 			var heroPixelCoord = worldToPixel(0, 0, 0);
 			var hero = Crafty.e('2D, Canvas, Color').attr({
-				w: 16,
-				h: 32,
-				x: heroPixelCoord.pixelX,
-				y: heroPixelCoord.pixelY,
+				w: heroWidth,
+				h: heroHeight,
+				x: heroPixelCoord.pixelX + (TILE_IMAGE_SIZE - heroWidth) / 2,
+				y: heroPixelCoord.pixelY + 0.75*TILE_IMAGE_SIZE - heroHeight,
 				z: 1
 			}).color('green');
 
@@ -74,8 +77,8 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 							}).bind("Click", function() {
 								var newHeroPixelCoord = worldToPixel(this.tileX, this.tileY, this.z);
 								hero.attr({
-									x: newHeroPixelCoord.pixelX,
-									y: newHeroPixelCoord.pixelY,
+									x: newHeroPixelCoord.pixelX  + (TILE_IMAGE_SIZE - heroWidth) / 2,
+									y: newHeroPixelCoord.pixelY  + 0.75 *TILE_IMAGE_SIZE - heroHeight,
 									z: this.z + 1
 								});
 							});
