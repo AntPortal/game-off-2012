@@ -46,16 +46,27 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			var i, j;
 			var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 
+			Crafty.c('Hero', {
+				init: function() {
+					this.requires('2D');
+				},
+				setPos: function(worldX, worldY, worldZ) {
+					var pixelCoord = worldToPixel(worldX, worldY, worldZ);
+					this.attr({
+						x: pixelCoord.pixelX + (TILE_IMAGE_SIZE - this.w) / 2,
+						y: pixelCoord.pixelY + 0.75*TILE_IMAGE_SIZE - this.h,
+						z: worldZ + 1
+					});
+					return this;
+				}
+			});
+
 			var heroWidth = 24;
 			var heroHeight = 36;
-			var heroPixelCoord = worldToPixel(0, 0, 0);
-			var hero = Crafty.e('2D, Canvas, Color').attr({
+			var hero = Crafty.e('2D, Canvas, Color, Hero').attr({
 				w: heroWidth,
-				h: heroHeight,
-				x: heroPixelCoord.pixelX + (TILE_IMAGE_SIZE - heroWidth) / 2,
-				y: heroPixelCoord.pixelY + 0.75*TILE_IMAGE_SIZE - heroHeight,
-				z: 1
-			}).color('green');
+				h: heroHeight
+			}).setPos(0, 0, 0).color('green');
 
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
@@ -75,12 +86,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 								tileX: tileX,
 								tileY: tileY
 							}).bind("Click", function() {
-								var newHeroPixelCoord = worldToPixel(this.tileX, this.tileY, this.z);
-								hero.attr({
-									x: newHeroPixelCoord.pixelX  + (TILE_IMAGE_SIZE - heroWidth) / 2,
-									y: newHeroPixelCoord.pixelY  + 0.75 *TILE_IMAGE_SIZE - heroHeight,
-									z: this.z + 1
-								});
+								hero.setPos(this.tileX, this.tileY, this.z);
 							});
 						}
 					}
