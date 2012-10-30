@@ -68,7 +68,15 @@ define(function(){return(
          "tileheight":64,
          "tileproperties":
             {
+             "150":
+                {
+                 "addUp":"2"
+                },
              "34":
+                {
+                 "heightoffset":"1"
+                },
+             "54":
                 {
                  "heightoffset":"1"
                 }

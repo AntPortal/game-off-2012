@@ -7,6 +7,19 @@
     <property name="heightoffset" value="1"/>
    </properties>
   </tile>
+  <tile id="54">
+   <properties>
+    <property name="heightoffset" value="1"/>
+   </properties>
+  </tile>
+  <tile id="150">
+   <properties>
+    <property name="addUp" value="2"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="161" name="iso-64x64-building_2" tilewidth="64" tileheight="64">
+  <image source="../tiles/iso-64x64-building_2.png" width="640" height="512"/>
  </tileset>
  <layer name="0 floor" width="8" height="8">
   <properties>
@@ -17,8 +30,19 @@
   </data>
  </layer>
  <layer name="0 decoration" width="8" height="8">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKAcOANxKBTDgDmaGnR5ZFBHBTegA5j90wmoAwCLUwMb
+   eJxjYKAcOANxKBSDwDsgfgOlYQBZHh3UUcEN6MAcSk8noA4AOpkFrA==
+  </data>
+ </layer>
+ <layer name="1 roof" width="8" height="8">
+  <properties>
+   <property name="baseheight" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYKA+WIOEBzsAAFOvAgU=
   </data>
  </layer>
 </map>
