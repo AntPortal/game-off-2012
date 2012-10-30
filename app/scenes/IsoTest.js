@@ -11,8 +11,8 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			};
 		}
 		(function() {
-			var w = 16;
-			var h = 18;
+			var w = 16*2;
+			var h = 18*2;
 			Crafty.sprite("assets/sprites/charsets_warrior.png", {
 				heroNorth: [0, 0, w, h],
 				heroEast: [0, h, w, h],
