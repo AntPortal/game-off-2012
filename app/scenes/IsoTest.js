@@ -12,8 +12,6 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 		(function() {
 			//Load tileset into crafty
 			var tileX, tileY, i;
-			//see https://github.com/bjorn/tiled/issues/302
-			var fixbug302 = mapData.properties && mapData.properties.fixbug302;
 			for (i =0; i < mapData.tilesets.length; i++) {
 				var tileset = mapData.tilesets[i];
 				if (tileset.tileheight != TILE_IMAGE_SIZE) {
@@ -29,7 +27,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				var imageWidthInTiles = tileset.imagewidth / tileset.tilewidth;
 				for (tileY = 0; tileY < imageHeightInTiles; tileY++) {
 					for (tileX = 0; tileX < imageWidthInTiles; tileX++) {
-						var tileProperties = tileset.tileproperties && tileset.tileproperties[fixbug302 ? tileId - 1: tileId];
+						var tileProperties = tileset.tileproperties && tileset.tileproperties[tileId - tileset.firstgid];
 						if (tileProperties) {
 							if (tileProperties.addUp) {
 								var addUp = parseInt(tileProperties.addUp, 10);

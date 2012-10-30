@@ -49,7 +49,7 @@ define(function(){return(
  "orientation":"isometric",
  "properties":
     {
-     "fixbug302":"true"
+
     },
  "tileheight":32,
  "tilesets":[
