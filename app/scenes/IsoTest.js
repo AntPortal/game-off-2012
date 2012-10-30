@@ -1,53 +1,56 @@
-define([ 'config', 'Crafty' ], function(config) {
+define([ 'config', 'maps/test.json', 'Crafty' ], function(config, mapData) {
+
+	
 	Crafty.scene('IsoTest', function() {
-		var x, y, tileType;
-		Crafty.sprite(64, 'assets/tiles/iso-64x64-outside.png', {
-			grass1 : [ 0, 0 ],
-			grass2 : [ 1, 0 ],
-			grass3 : [ 2, 0 ],
-			grass4 : [ 3, 0 ],
-			grass5 : [ 4, 0 ],
-			grass6 : [ 5, 0 ],
-			grass7 : [ 6, 0 ],
-			grass8 : [ 0, 1 ],
-			grass9 : [ 1, 1 ],
-			grass10 : [ 2, 1 ],
-			grass11 : [ 3, 1 ],
-			grass12 : [ 4, 1 ],
-			grass13 : [ 5, 1 ],
-			grass14 : [ 6, 1 ],
-			grass15 : [ 7, 1 ],
-			grass16 : [ 0, 2 ],
-			grass17 : [ 1, 2 ],
-			grass18 : [ 2, 2 ],
-			grass19 : [ 3, 2 ],
-		});
-		var map = new Array();
-		for (y = 0; y < 35; y++) {
-			map[y] = new Array();
-			for (x = 0; x < 12; x++) {
-				tileType = "grass" + Crafty.math.randomInt(1, 19);
-				map[y][x] = tileType;
+		var tileX, tileY, pixelX, pixleY, tileType, i, j;
+		//Load tileset into crafty
+		//TODO: Only support 1 tileset for now
+		for (i =0; i < mapData.tilesets.length; i++) {
+			var tileset = mapData.tilesets[i]
+			//TODO: margin and spacing are ignored.
+			var tileId = tileset.firstgid;
+			var craftySpriteData = {};
+			var imageHeightInTiles = tileset.imageheight / tileset.tileheight;
+			var imageWidthInTiles = tileset.imagewidth / tileset.tilewidth;
+			for (tileY = 0; tileY < imageHeightInTiles; tileY++) {
+				for (tileX = 0; tileX < imageWidthInTiles; tileX++) {
+					craftySpriteData['tile'+tileId] = [tileX,tileY];
+					tileId++;
+				}
 			}
+			//TODO: fix image path
+			Crafty.sprite(tileset.tileheight, tileset.tilewidth, tileset.image, craftySpriteData);
 		}
-		var iso = Crafty.isometric.size(64);
-		for (y = 0; y < map.length; y++) {
-			var row = map[y];
-			for (x = 0; x < row.length; x++) {
-				tileType = row[x];
-				var entity = Crafty.e('2D, Canvas, Mouse, ' + tileType + ', Tint').attr({
-					w : 64,
-					h : 64
-				});
-				entity.bind('MouseOver', function(event) {
-					this.tint("#0000FF", 0.25);
-				});
-				entity.bind('MouseOut', function(event) {
-					this.tint("#000000", 0);
-				});
-				iso.place(x, y, 0, entity);
+		
+		//Render map
+		for (i = 0; i < mapData.layers.length; i++) {
+			var layer = mapData.layers[i];
+			if (layer.visible) {
+				for (j = 0; j < layer.data.length; j++) {
+					tileType = 'tile'+layer.data[j];
+					tileX = j % layer.width;
+					tileY = Math.floor(j / layer.width);
+					pixelX = (config.viewport.width / 2) + ((tileX - tileY) * mapData.tilewidth / 2);
+					pixelY = ((tileX + tileY) * mapData.tileheight / 2);
+					console.log({tileX: tileX,tileY: tileY,pixelX:pixelX,pixelY:pixelY});
+					var entity = Crafty.e('2D, Canvas, Mouse, ' + tileType + ', Tint').attr({
+						w : 64,
+						h : 64,
+						x: pixelX,
+						y: pixelY,
+						tileX: tileX,
+						tileY: tileY
+					});
+					entity.bind('MouseOver', function(event) {
+						this.tint("#0000FF", 0.25);
+						console.log({tileX: this.tileX, tileY: this.tileY});
+					});
+					entity.bind('MouseOut', function(event) {
+						this.tint("#000000", 0);
+					});
+				}
 			}
-		}
+		} 
 	});
 	return undefined;
 });

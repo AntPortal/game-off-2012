@@ -1,6 +1,7 @@
 require.config({
 	paths : {
-		Crafty : '../libs/crafty_0.5.2/crafty'
+		Crafty : '../libs/crafty_0.5.2/crafty',
+		maps: '../assets/maps'
 	}
 });
 
