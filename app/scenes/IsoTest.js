@@ -71,7 +71,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				 * relative to /. The images are in /assets/tiles, so basically we replace the ".." with "assets"
 				 * to perform the conversion, e.g. "../tiles/tileset.png" -> "assets/tiles/tileset.png";
 				 */
-				var fixedPath = "assets" + tileset.image.substr(2);
+				var fixedPath = 'assets' + tileset.image.substr(2);
 				Crafty.sprite(tileset.tileheight, tileset.tilewidth, fixedPath, craftySpriteData);
 			}
 		})();
@@ -80,7 +80,10 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			//Render map
 			var i, j;
 
-			var defaultAreaMap = [[32, 32], [64, 48], [32, 64], [0, 48]];
+			var areaMaps = {
+				'default': [[32, 32], [64, 48], [32, 64], [0, 48]],
+				'cube': [[32, 0], [64, 16], [32, 32], [0, 16]],
+			};
 
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
@@ -108,25 +111,27 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 								y: pixelCoord.pixelY - entity.h,
 								z: baseheight,
 								tileX: tileX,
-								tileY: tileY
+								tileY: tileY,
+								tileId: layer.data[j],
+								tileProperties: tileProperties[layer.data[j]] || {}
 							});
-							var _tileProperties;
-							if (tileProperties[layer.data[j]]) {
-								_tileProperties = tileProperties[layer.data[j]];
-							} else {
-								_tileProperties = {};
-							}
-							if (!_tileProperties['noStand']) {
+							if (!entity.tileProperties['noStand']) {
 								entity.addComponent('Mouse');
 								entity.bind("Click", function() {
 									//this.alpha = 0.5; //For debugging which tile got clicked.
-									hero.setPos(this.tileX, this.tileY, this.z);
-									console.log(hero.z);
+									var heightoffset = parseInt(this.tileProperties['heightoffset'] || 0, 10);
+									//console.log({tileId: this.tileId});
+									//console.log(this.tileProperties);
+									if (hero) {
+										hero.setPos(this.tileX, this.tileY, this.z + heightoffset);
+										//console.log(hero.z);
+									}
 								});
 								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
 								 * seems to change the provided coordinate arrays in-place, which leads to problems if
 								 * they're shared between multiple entities. */
-								var tileAreaMap = new Crafty.polygon(defaultAreaMap.map(function(a) { return a.slice(); }));
+								var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
+								var tileAreaMap = new Crafty.polygon(areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
 								entity.areaMap(tileAreaMap);
 							}
 						}

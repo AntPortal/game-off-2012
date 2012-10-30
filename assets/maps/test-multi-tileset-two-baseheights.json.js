@@ -181,6 +181,7 @@ define(function(){return(
                 },
              "34":
                 {
+                 "areaMap":"cube",
                  "heightoffset":"1"
                 },
              "54":
