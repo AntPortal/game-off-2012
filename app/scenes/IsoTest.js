@@ -44,6 +44,16 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			//Render map
 			var i, j;
 			var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+
+			var heroPixelCoord = worldToPixel(0, 0, 0);
+			var hero = Crafty.e('2D, Canvas, Color').attr({
+				w: 16,
+				h: 32,
+				x: heroPixelCoord.pixelX,
+				y: heroPixelCoord.pixelY,
+				z: 1
+			}).color('green');
+
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
 				if (layer.visible) {
@@ -61,11 +71,18 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 								z: layer.properties.baseheight,
 								tileX: tileX,
 								tileY: tileY
+							}).bind("Click", function() {
+								var newHeroPixelCoord = worldToPixel(this.tileX, this.tileY, this.z);
+								hero.attr({
+									x: newHeroPixelCoord.pixelX,
+									y: newHeroPixelCoord.pixelY,
+									z: this.z + 1
+								});
 							});
 						}
 					}
 				}
-			} 
+			}
 		})();
 	});
 	return undefined;
