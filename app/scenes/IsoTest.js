@@ -1,4 +1,9 @@
-define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], function(config, mapData) {
+define([
+		'config',
+		'maps/test-multi-tileset-two-baseheights.json',
+		'Crafty',
+		'components/ViewportRelative'
+	], function(config, mapData) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
 
 	Crafty.scene('IsoTest', function() {
@@ -157,16 +162,14 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			hero = Crafty.e('2D, Canvas, Hero, heroSouth').setPos(0, 0, 0);
 		})();
 		(function() {
+			//Handle HUD
 			Crafty.sprite("assets/ui/music.png", {
 				uiMusic: [0, 0, 256,256]
 			});
-			var temp = worldToPixel(0,0,0);
-			//TODO: Make it so that this isn't affected by mouselook.
-			//TODO: Make it so that when you click on this, the music is muted.
-			Crafty.e('2D, Canvas, Mouse, uiMusic').attr({
-				x: temp.pixelX,
-				y: temp.pixelY,
-				z: 1,
+			Crafty.e('2D, Canvas, Mouse, uiMusic, ViewportRelative').attr({
+				x: 0,
+				y: 0,
+				z: 100,
 				w: 64,
 				h: 64
 			});
