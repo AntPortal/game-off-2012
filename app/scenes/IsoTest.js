@@ -21,7 +21,6 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			 * to perform the conversion, e.g. "../tiles/tileset.png" -> "assets/tiles/tileset.png";
 			 */
 			var fixedPath = "assets" + tileset.image.substr(2);
-			//TODO: fix image path
 			Crafty.sprite(tileset.tileheight, tileset.tilewidth, fixedPath, craftySpriteData);
 		}
 		
