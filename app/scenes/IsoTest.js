@@ -118,6 +118,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 		})();
 		Crafty.viewport.clampToEntities = false;
 		Crafty.viewport.mouselook(true);
+		Crafty.audio.play('music/town', -1);
 	});
 	return undefined;
 });

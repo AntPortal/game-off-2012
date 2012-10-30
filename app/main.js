@@ -8,6 +8,5 @@ require.config({
 define([ 'config', 'Crafty', 'scenes/Loading', 'scenes/IsoTest' ], function(config) {
 	Crafty.init(config.viewport.width, config.viewport.height);
 	// Start in loading scene
-	//Crafty.scene('Loading');
-	Crafty.scene('IsoTest');
+	Crafty.scene('Loading');
 });
