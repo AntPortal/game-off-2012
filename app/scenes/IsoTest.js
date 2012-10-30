@@ -11,6 +11,16 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 			};
 		}
 		(function() {
+			var w = 16;
+			var h = 18;
+			Crafty.sprite("assets/sprites/charsets_warrior.png", {
+				heroNorth: [0, 0, w, h],
+				heroEast: [0, h, w, h],
+				heroSouth: [0, h*2, w, h],
+				heroWest: [0, h*3, w, h]
+			});
+		})();
+		(function() {
 			//Load tileset into crafty
 			var tileX, tileY, i;
 			for (i =0; i < mapData.tilesets.length; i++) {
@@ -75,12 +85,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				}
 			});
 
-			var heroWidth = 24;
-			var heroHeight = 36;
-			var hero = Crafty.e('2D, Canvas, Color, Hero').attr({
-				w: heroWidth,
-				h: heroHeight
-			}).setPos(0, 0, 0).color('green');
+			var hero = Crafty.e('2D, Canvas, Hero, heroSouth').setPos(0, 0, 0);
 
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
