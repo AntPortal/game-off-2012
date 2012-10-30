@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" width="8" height="8" tilewidth="64" tileheight="32">
+<map version="1.0" orientation="isometric" width="14" height="25" tilewidth="64" tileheight="32">
  <tileset firstgid="1" name="iso-64x64-outside" tilewidth="64" tileheight="64">
   <image source="../tiles/iso-64x64-outside.png" width="640" height="1024"/>
   <tile id="34">
@@ -21,28 +21,36 @@
  <tileset firstgid="161" name="iso-64x64-building_2" tilewidth="64" tileheight="64">
   <image source="../tiles/iso-64x64-building_2.png" width="640" height="512"/>
  </tileset>
- <layer name="0 floor" width="8" height="8">
+ <layer name="0 floor" width="14" height="25">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxdj0sOQCEIAxWWfnaK9z/p60vGhLiYBS0tYZdSGhwxRRULunCx8Rv+wTMxmGvyB/lGp6H/maDz7vU0O11B1lKHP/0TerpxtUBfyYvE/eUDjL8DGQ==
+   eJztkr0OwyAMhEMoyUD+GinAWCVr3zovWiN9lqyqqpS5HU6AfWefgaNpmuOPn8PD4HlBNwtGQRLsF+qs6FQ7CBbO+xd97efQB0En2AQe7fLBR0Umf4ezUKMXTNStaFlrzWI4gVhLvMaiyWVmmMkn8pHzhO/N+M1oZ3xFanj0hZhjP9DPGZ+J2i3zFfKqG+nn0GZm9+ii0Tt6VM7JOQOPLsAfjVfHWtDFN07PO+n9at4bnyexDk3gTix/MF4noPfeGY767ZldNdlA71b/RQAJjf7NO7Wd4eh7ruxv8EYzp/4X5euf0NnsW9RaL0Q7IUk=
   </data>
  </layer>
- <layer name="0 decoration" width="8" height="8">
+ <layer name="0 decoration" width="14" height="25">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKAcOANxKBSDwDsgfgOlYQBZHh3UUcEN6MAcSk8noA4AOpkFrA==
+   eJxjYBgFo4AycJ1MfUuJULMNiN8i8ZcA8WIi9W0jUQ9M32sS9aADYvyFTx/M7S/Q3AXCu5HEnIE4lAHhzndA/AZKw8AeIN7FgAgLGADpW4LEx+bXJWj8OixqsfkVXR+yHYuhepZC1SGzcekjBUynghn0AAAFdCD9
   </data>
  </layer>
- <layer name="1 roof" width="8" height="8">
+ <layer name="1 floor" width="14" height="25">
   <properties>
    <property name="baseheight" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKA+WIOEBzsAAFOvAgU=
+   eJxjYKAvWEhnfccpsG8pmthiIvUuhaqF0SC8BIrRzcQHkO1bgsUOXGAJGnspFC9hwDQHl32DBWwA4rVDQB81wSYkvByPGDpYg4TxiY2CgQcAi4cdFQ==
+  </data>
+ </layer>
+ <layer name="2" width="14" height="25">
+  <properties>
+   <property name="baseheight" value="2"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYKAvWD9E9O0jU98oGAWjYBQQAgAkCwLM
   </data>
  </layer>
 </map>
