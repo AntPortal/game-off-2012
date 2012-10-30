@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" width="15" height="25" tilewidth="64" tileheight="32">
+<map version="1.0" orientation="isometric" width="15" height="27" tilewidth="64" tileheight="32">
  <tileset firstgid="1" name="iso-64x64-outside" tilewidth="64" tileheight="64">
   <image source="../tiles/iso-64x64-outside.png" width="640" height="1024"/>
   <tile id="34">
@@ -17,40 +17,67 @@
     <property name="addUp" value="2"/>
    </properties>
   </tile>
+  <tile id="152">
+   <properties>
+    <property name="addUp" value="1"/>
+   </properties>
+  </tile>
+  <tile id="158">
+   <properties>
+    <property name="addSides" value="1"/>
+    <property name="addUp" value="2"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="161" name="iso-64x64-building_2" tilewidth="64" tileheight="64">
   <image source="../tiles/iso-64x64-building_2.png" width="640" height="512"/>
  </tileset>
- <layer name="0 floor" width="15" height="25">
+ <layer name="0 floor" width="15" height="27">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztk0sOgzAMRAkQWPCvBGFZwba35lC9ThPpjWqhqmr3LEYo9szEdsyeZdl+4cIH3E94/KEdQBexRGx4PH/wSrobWunbiJHz9sWjRu/w8BFVxBxRoB+Nh0XiBDgTvBGf5NubvnK+SbOSE88Tz8mlWGNygX4G8iU9NkB+Dh/VHtAP1Nfg05Jf0DZoV3I1Z9W84N8T6+A6o+2416EPzKJAp1rl4bgr8Q7OARRoPXzNWHU7vita+YpT84YDvNxwClPzQaxC55mT+CX51tStOehNKsNR7ep/NrpgoJmrLw8WNNpb7VVFveLZ/dE+TOYN1Lv2Spo1e/8b/vROye8FM1kkJg==
+   eJztk80KgzAQhI0aPfhf0Hgs9tq39qH6Ok3gG7p4KG2hN4UhJDsz2d2sWfb7dztx4g+4HnD/QjuALmKJ2PB4fOCVdBe00rcRI/vtjUeN3uHhI6qIOaJAPxoPi8QJcCZ4Iz7Jtzd15axJsxITz3OeE0tnjYkF6hmIl9TYAPk5fJR7QD+QX4NPS3xB26BdidXslfOCf89ZB9cZbce9Dn2gFwU65SoPx12Jt7MPoEDr4avHytuxrmjlK07NGw7wcsMpTM47ZxU6T5/EL4m3Jm/1QW9SGY5yV/2z0QUD9Vx1ebCg0dxqriryFc/Oj+ZhMm+g2jVX0qzZ69/wh3dKfk96USYz
   </data>
  </layer>
- <layer name="0 decoration" width="15" height="25">
+ <layer name="0 decoration" width="15" height="27">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2BogKVEqtsGxG+R+EuAeDEJereRoQ+m9zUZ+tABsf7EpxfmjxdIcjCx3Wh6nIE4lAHh5ndA/AZKw8AeIN7FgAgbZADSuwSJj83vS7CI1WFRj83v2PQi27UYqm8pVC0yG59eUsF0KppFDwAAHVsgJg==
+   eJxjYBgFo2AU4ANLiVS3DYjfIvGXAPFiEvSCcAOavjQi9b4m0b6ZSOxGKE2sP5FBFBCHI+mF+eMFmvtAeDeavlQgDmZAuPkdEL+B0jCwB4h3QfXDQAgQp0P1LkESx+Z3kHwjmhhIfzSaXmx+X4JFDNmuxVB9S6FqkdnY9NbhMQ8fmE6mPlLATMJKGOYTaRYAWIkmcw==
   </data>
  </layer>
- <layer name="1 floor" width="15" height="25">
+ <layer name="1 floor" width="15" height="27">
   <properties>
    <property name="baseheight" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBg+YDGR6hZCMbl6j6OpX0qivUug+pfisXcJAbNgemFmIWNCevHZSWw40BJsAOK1Q0wvtcEmJIxNbDkevWuQMD6xUTC8AQC9FR2m
+   eJxjYEAFMxkGF5iORw7m1oVYMLEApv4EFr3o5uFyy2I85mIzj1y9x9HUL4XSd6D0TAaEX/ZiMW8JVP9SKI3NP0uwiCEDmF6YWciYkF5sfoXZiUuOnmADEK8dYnqpDTYhYWxiy/HoXYOE8YmNguENABfdMFI=
   </data>
  </layer>
- <layer name="2" width="15" height="25">
+ <layer name="1 decoration" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF1ACVA+0AKoCKgXbAAIObA+2AQQCwhcFouIwCUgAA+bIDfQ==
+  </data>
+ </layer>
+ <layer name="2 floor" width="15" height="27">
   <properties>
    <property name="baseheight" value="2"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBia4AEFeteTqe8+EO+jwN5RMApGwSigFwAAbc0DLQ==
+   eJxjYBh84AEJau8D8TokvA9J7jIZ5qHrXU+B29D1ovOxgbsMmP64j8YfBaNgFIyCwQoAIKQN4Q==
+  </data>
+ </layer>
+ <layer name="2 decoration" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="2"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgc4CYNzLxFZfNo4cZRMApGwSgYTgAA+BsCjQ==
   </data>
  </layer>
 </map>

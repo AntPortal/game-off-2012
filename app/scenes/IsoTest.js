@@ -40,15 +40,19 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 					for (tileX = 0; tileX < imageWidthInTiles; tileX++) {
 						var tileProperties = tileset.tileproperties && tileset.tileproperties[tileId - tileset.firstgid];
 						if (tileProperties) {
+							var addUp = 0, addSides = 0;
 							if (tileProperties.addUp) {
-								var addUp = parseInt(tileProperties.addUp, 10);
-								craftySpriteData['tile'+tileId] = [
-									tileX,
-									tileY-addUp,
-									1,
-									addUp+1
-								];
+								addUp = parseInt(tileProperties.addUp, 10);
 							}
+							if (tileProperties.addSides) {
+								addSides = parseInt(tileProperties.addSides, 10);
+							}
+							craftySpriteData['tile'+tileId] = [
+								tileX - addSides,
+								tileY-addUp,
+								addSides * 2 + 1,
+								addUp+1
+							];
 						}
 						if (!craftySpriteData['tile'+tileId]) { //default
 							craftySpriteData['tile'+tileId] = [tileX,tileY];
@@ -65,11 +69,10 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				Crafty.sprite(tileset.tileheight, tileset.tilewidth, fixedPath, craftySpriteData);
 			}
 		})();
+		var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		(function() {
 			//Render map
 			var i, j;
-			var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-
 			Crafty.c('Hero', {
 				init: function() {
 					this.requires('2D');
@@ -89,7 +92,13 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
-				var baseheight = parseInt(layer.properties.baseheight || 0, 10);
+				var baseheight;
+				if (layer.properties && layer.properties.baseheight) {
+					baseheight = parseInt(layer.properties.baseheight, 10);
+				} else {
+					baseheight = 0;
+					console.warn('Layer ' + layer.name + ' missing baseheight');
+				}
 				if (layer.visible) {
 					for (j = 0; j < layer.data.length; j++) {
 						if (layer.data[j] != 0) {
@@ -105,7 +114,7 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
 								y: pixelCoord.pixelY - entity.h,
-								z: layer.properties.baseheight,
+								z: baseheight,
 								tileX: tileX,
 								tileY: tileY
 							}).bind("Click", function() {
@@ -116,9 +125,24 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				}
 			}
 		})();
+		(function() {
+			Crafty.sprite("assets/ui/music.png", {
+				uiMusic: [0, 0, 256,256]
+			});
+			var temp = worldToPixel(0,0,0);
+			//TODO: Make it so that this isn't affected by mouselook.
+			//TODO: Make it so that when you click on this, the music is muted.
+			Crafty.e('2D, Canvas, Mouse, uiMusic').attr({
+				x: temp.pixelX,
+				y: temp.pixelY,
+				z: 1,
+				w: 64,
+				h: 64
+			});
+		})();
 		Crafty.viewport.clampToEntities = false;
 		Crafty.viewport.mouselook(true);
-		Crafty.audio.play('music/town', -1);
+		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
 	});
 	return undefined;
 });
