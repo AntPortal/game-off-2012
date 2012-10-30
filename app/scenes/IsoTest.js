@@ -67,8 +67,8 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				setPos: function(worldX, worldY, worldZ) {
 					var pixelCoord = worldToPixel(worldX, worldY, worldZ);
 					this.attr({
-						x: pixelCoord.pixelX + (TILE_IMAGE_SIZE - this.w) / 2,
-						y: pixelCoord.pixelY + 0.75*TILE_IMAGE_SIZE - this.h,
+						x: pixelCoord.pixelX - (this.w / 2),
+						y: pixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h,
 						z: worldZ + 1
 					});
 					return this;
