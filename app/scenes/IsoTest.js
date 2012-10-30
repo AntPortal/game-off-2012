@@ -4,14 +4,16 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 		function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 			return function(worldX, worldY, worldZ) {
 				return {
-					pixelX: ((config.viewport.width - mapTileWidth) / 2) + ((worldX - worldY) * mapTileWidth / 2),
-					pixelY: ((worldX + worldY) * mapTileHeight / 2) - (worldZ * mapTileHeight)
+					pixelX: ((config.viewport.width - mapTileWidth) / 2) + ((worldX - worldY + 1) * mapTileWidth / 2),
+					pixelY: ((worldX + worldY) * mapTileHeight / 2) - ((worldZ - 1) * mapTileHeight)
 				};
 			};
 		}
 		(function() {
 			//Load tileset into crafty
 			var tileX, tileY, i;
+			//see https://github.com/bjorn/tiled/issues/302
+			var fixbug302 = mapData.properties && mapData.properties.fixbug302;
 			for (i =0; i < mapData.tilesets.length; i++) {
 				var tileset = mapData.tilesets[i];
 				if (tileset.tileheight != TILE_IMAGE_SIZE) {
@@ -27,7 +29,21 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 				var imageWidthInTiles = tileset.imagewidth / tileset.tilewidth;
 				for (tileY = 0; tileY < imageHeightInTiles; tileY++) {
 					for (tileX = 0; tileX < imageWidthInTiles; tileX++) {
-						craftySpriteData['tile'+tileId] = [tileX,tileY];
+						var tileProperties = tileset.tileproperties && tileset.tileproperties[fixbug302 ? tileId - 1: tileId];
+						if (tileProperties) {
+							if (tileProperties.addUp) {
+								var addUp = parseInt(tileProperties.addUp, 10);
+								craftySpriteData['tile'+tileId] = [
+									tileX,
+									tileY-addUp,
+									1,
+									addUp+1
+								];
+							}
+						}
+						if (!craftySpriteData['tile'+tileId]) { //default
+							craftySpriteData['tile'+tileId] = [tileX,tileY];
+						}
 						tileId++;
 					}
 				}
@@ -53,11 +69,10 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 							var tileX = j % layer.width;
 							var tileY = Math.floor(j / layer.width);
 							var pixelCoord = worldToPixel(tileX, tileY, layer.properties.baseheight);
-							var entity = Crafty.e('2D, Canvas, Mouse, ' + tileType).attr({
-								w : TILE_IMAGE_SIZE,
-								h : TILE_IMAGE_SIZE,
-								x: pixelCoord.pixelX,
-								y: pixelCoord.pixelY,
+							var entity = Crafty.e('2D, Canvas, Mouse, ' + tileType);
+							entity.attr({
+								x: pixelCoord.pixelX - entity.w / 2,
+								y: pixelCoord.pixelY - entity.h,
 								z: layer.properties.baseheight,
 								tileX: tileX,
 								tileY: tileY
