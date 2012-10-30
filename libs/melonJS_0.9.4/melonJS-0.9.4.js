@@ -268,7 +268,9 @@ var me = me || {};
 
 		// directly call domReady if document is already "ready"
 		if (document.readyState === "complete") {
-			return domReady();
+			// Use a timeout to ensure the rest of the initialization code (creation of me.utils, etc.)
+			// has already run before any of the domReady callbacks are run.
+			setTimeout(domReady, 1);
 		} else {
 			if (document.addEventListener) {
 				// Use the handy event callback
