@@ -11,11 +11,14 @@ define([ 'config', 'Crafty', 'scenes/Title' ], function(config) {
 		});
 		Crafty.audio.add('music/title', [ 'assets/music/peekaboo.ogg',
 				'assets/music/peekaboo.mp3' ]);
+		Crafty.audio.add('music/town', [ 'assets/music/292 - Touch the Sky.ogg',
+				'assets/music/292 - Touch the Sky.mp3' ]);
 		Crafty.load([ 'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png' ], function() {
 			// TODO load other assets
 			// When done loading, transition to Title scene.
-			Crafty.scene('Title');
+			//TODO Crafty.scene('Title');
+			Crafty.scene('IsoTest');
 		});
 	});
 	return undefined;
