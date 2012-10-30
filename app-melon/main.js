@@ -8,11 +8,11 @@ define(['Melon'], function() {
 	var gameResources = [{
 		name: "iso-64x64-outside",
 		type: "image",
-		src: "/assets/tiles/iso-64x64-outside.png"
+		src: "assets/tiles/iso-64x64-outside.png"
 	}, {
 		name: "test",
 		type: "tmx",
-		src: "/assets/maps/test.tmx"
+		src: "assets/maps/test.tmx"
 	}];
 
 	var jsApp = {
