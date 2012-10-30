@@ -84,13 +84,18 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
+				var baseheight = parseInt(layer.properties.baseheight || 0, 10);
 				if (layer.visible) {
 					for (j = 0; j < layer.data.length; j++) {
 						if (layer.data[j] != 0) {
 							var tileType = 'tile'+layer.data[j];
-							var tileX = j % layer.width;
-							var tileY = Math.floor(j / layer.width);
-							var pixelCoord = worldToPixel(tileX, tileY, layer.properties.baseheight);
+							/*
+							 * We add the baseheight to convert from "Looks right in tiled" to "reflects actual world
+							 * coordinates."
+							 */
+							var tileX = j % layer.width + baseheight;
+							var tileY = Math.floor(j / layer.width) + baseheight;
+							var pixelCoord = worldToPixel(tileX, tileY, baseheight);
 							var entity = Crafty.e('2D, Canvas, Mouse, ' + tileType);
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
