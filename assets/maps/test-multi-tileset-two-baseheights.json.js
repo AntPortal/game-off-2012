@@ -179,6 +179,14 @@ define(function(){return(
                  "addUp":"2",
                  "noStand":"true"
                 },
+             "31":
+                {
+                 "heightoffset":"0.5"
+                },
+             "33":
+                {
+                 "heightoffset":"0.5"
+                },
              "34":
                 {
                  "areaMap":"cube",
@@ -218,6 +226,14 @@ define(function(){return(
          "tileheight":64,
          "tileproperties":
             {
+             "54":
+                {
+                 "heightoffset":"0.5"
+                },
+             "56":
+                {
+                 "noStand":"true"
+                },
              "59":
                 {
                  "noStand":"true"

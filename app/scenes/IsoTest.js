@@ -118,13 +118,9 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 							if (!entity.tileProperties['noStand']) {
 								entity.addComponent('Mouse');
 								entity.bind("Click", function() {
-									//this.alpha = 0.5; //For debugging which tile got clicked.
-									var heightoffset = parseInt(this.tileProperties['heightoffset'] || 0, 10);
-									//console.log({tileId: this.tileId});
-									//console.log(this.tileProperties);
+									var heightoffset = parseFloat(this.tileProperties['heightoffset'] || 0, 10);
 									if (hero) {
 										hero.setPos(this.tileX, this.tileY, this.z + heightoffset);
-										//console.log(hero.z);
 									}
 								});
 								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
@@ -150,9 +146,10 @@ define([ 'config', 'maps/test-multi-tileset-two-baseheights.json', 'Crafty' ], f
 					this.attr({
 						tileX: worldX,
 						tileY: worldY,
+						tileZ: worldZ,
 						x: pixelCoord.pixelX - (this.w / 2),
 						y: pixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h,
-						z: worldZ
+						z: Math.floor(worldZ)
 					});
 					return this;
 				}
