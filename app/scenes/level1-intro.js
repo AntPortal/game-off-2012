@@ -1,10 +1,12 @@
 define([
 		'config',
 		'maps/level1-intro.json',
+		'mouselook',
 		'utils',
 		'Crafty',
-		'components/ViewportRelative'
-	], function(config, mapData, utils) {
+		'components/ViewportRelative',
+		'components/ClickNoDrag'
+	], function(config, mapData, mouselook, utils) {
 	Crafty.scene('level1-intro', function() {
 		var hero; //entity global to this scene
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
@@ -17,7 +19,6 @@ define([
 		(function() {
 			//Render map
 			var i, j;
-
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
 				var baseheight;
@@ -53,7 +54,7 @@ define([
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
 								y: pixelCoord.pixelY - entity.h,
-								z: baseheight,
+								z: tileX + tileY + baseheight,
 								tileX: tileX,
 								tileY: tileY,
 								tileZ: baseheight,
@@ -63,8 +64,8 @@ define([
 							});
 							heightMap[tileX+","+tileY] = entity;
 							if (!entity.tileProperties['noStand']) {
-								entity.addComponent('Mouse');
-								entity.bind("Click", function() {
+								entity.addComponent('ClickNoDrag');
+								entity.bind("ClickNoDrag", function() {
 									console.log('Clicked on');
 									console.log({
 										x: this.tileX,
@@ -106,7 +107,7 @@ define([
 						tileZ: worldZ,
 						x: topLeftPixelCoord.x,
 						y: topLeftPixelCoord.y,
-						z: Math.floor(worldZ)
+						z: worldX + worldY + worldZ
 					});
 					return this;
 				},
@@ -154,6 +155,7 @@ define([
 							this.tileY++;
 						}
 						this.tileZ = heightMap[this.tileX+','+this.tileY].surfaceZ;
+						this.z = this.tileX + this.tileY + this.tileZ;
 						console.log({
 							action: 'Hero moving',
 							x: this.tileX,
@@ -181,8 +183,9 @@ define([
 			});
 		})();
 		Crafty.viewport.clampToEntities = false;
-		Crafty.viewport.mouselook(true);
-		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
+		Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
+
+		mouselook.start();
 	});
 	return undefined;
 });
