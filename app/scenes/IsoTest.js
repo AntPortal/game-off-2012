@@ -131,7 +131,7 @@ define([
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
 								y: pixelCoord.pixelY - entity.h,
-								z: baseheight,
+								z: tileX + tileY + baseheight,
 								tileX: tileX,
 								tileY: tileY,
 								tileZ: baseheight,
@@ -184,7 +184,7 @@ define([
 						tileZ: worldZ,
 						x: topLeftPixelCoord.x,
 						y: topLeftPixelCoord.y,
-						z: Math.floor(worldZ)
+						z: worldX + worldY + worldZ
 					});
 					return this;
 				},
@@ -232,6 +232,7 @@ define([
 							this.tileY++;
 						}
 						this.tileZ = heightMap[this.tileX+','+this.tileY].surfaceZ;
+						this.z = this.tileX + this.tileY + this.tileZ;
 						console.log({
 							action: 'Hero moving',
 							x: this.tileX,
