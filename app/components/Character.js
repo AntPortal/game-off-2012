@@ -5,7 +5,7 @@ define(['config', 'utils', 'Crafty'], function(config) {
 	Crafty.c('Character', {
 		_targetX: 0, //in world coordinates
 		_targetY: 0, //in world coordinates
-		heightMap : null, //Must be set by caller!
+		heightMap: null, //Must be set by caller!
 		worldToPixel: null, //Must be set by caller!
 		init: function() {
 			this.requires('2D');
@@ -15,7 +15,7 @@ define(['config', 'utils', 'Crafty'], function(config) {
 			this.heightMap = heightMap;
 			this.worldToPixel = worldToPixel;
 			var initialZ = heightMap[initialX+','+initialY].surfaceZ;
-			this.setPos(initialX, initialY, initialZ);
+			this.setPos(initialX,initialY,initialZ);
 			return this;
 		},
 		setPos: function(worldX, worldY, worldZ) {
@@ -46,8 +46,8 @@ define(['config', 'utils', 'Crafty'], function(config) {
 			if (curTilePixelTopLeft.x != this.x || curTilePixelTopLeft.y != this.y) {
 				//Not aligned in tile, so move towards proper position within tile.
 				var newX, newY;
-				newX = curTilePixelTopLeft.x * 0.1 + this.x * 0.9;
-				newY = curTilePixelTopLeft.y * 0.1 + this.y * 0.9;
+				newX = Crafty.math.lerp(curTilePixelTopLeft.x, this.x, 0.9);
+				newY = Crafty.math.lerp(curTilePixelTopLeft.y, this.y, 0.9);
 				if (Math.abs(newX - this.x) < 1) {
 					this.x = curTilePixelTopLeft.x;
 				} else {
@@ -57,6 +57,10 @@ define(['config', 'utils', 'Crafty'], function(config) {
 					this.y = curTilePixelTopLeft.y;
 				} else {
 					this.y = newY;
+				}
+				/* 192 is the squared distance between the center of a tile "diamond" and the midpoint of any of its edges. */
+				if (Crafty.math.squaredDistance(curTilePixelTopLeft.x, curTilePixelTopLeft.y, this.x, this.y) < 192) {
+					this.z = this.tileX + this.tileY + Math.ceil(this.tileZ);
 				}
 			} else if (this._targetX != this.tileX || this._targetY != this.tileY) {
 				//Not at the right tile, so choose the next tile to move into
@@ -74,7 +78,6 @@ define(['config', 'utils', 'Crafty'], function(config) {
 					this.tileY++;
 				}
 				this.tileZ = this.heightMap[this.tileX+','+this.tileY].surfaceZ;
-				this.z = this.tileX + this.tileY + this.tileZ;
 				console.log({
 					action: 'Hero moving',
 					x: this.tileX,
@@ -86,4 +89,5 @@ define(['config', 'utils', 'Crafty'], function(config) {
 			}
 		}
 	});
+	console.log('Character component defined.');
 });
