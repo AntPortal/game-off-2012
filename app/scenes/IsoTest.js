@@ -1,12 +1,13 @@
 define([
 		'config',
 		'maps/test-multi-tileset-two-baseheights.json',
+		'mouselook',
 		'utils',
 		'Crafty',
-		'components/ViewportRelative'
-	], function(config, mapData, utils) {
+		'components/ViewportRelative',
+		'components/ClickNoDrag'
+	], function(config, mapData, mouselook, utils) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
-
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
 		(function() {
@@ -133,8 +134,8 @@ define([
 							});
 							heightMap[tileX+","+tileY] = entity;
 							if (!entity.tileProperties['noStand']) {
-								entity.addComponent('Mouse');
-								entity.bind("Click", function() {
+								entity.addComponent('ClickNoDrag');
+								entity.bind("ClickNoDrag", function() {
 									console.log('Clicked on');
 									console.log({
 										x: this.tileX,
@@ -251,8 +252,9 @@ define([
 			});
 		})();
 		Crafty.viewport.clampToEntities = false;
-		Crafty.viewport.mouselook(true);
 		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
+
+		mouselook.start();
 	});
 	return undefined;
 });
