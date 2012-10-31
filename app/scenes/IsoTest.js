@@ -1,21 +1,14 @@
 define([
 		'config',
 		'maps/test-multi-tileset-two-baseheights.json',
+		'utils',
 		'Crafty',
 		'components/ViewportRelative'
-	], function(config, mapData) {
+	], function(config, mapData, utils) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
 
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
-		function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
-			return function(worldX, worldY, worldZ) {
-				return {
-					pixelX: ((config.viewport.width - mapTileWidth) / 2) + ((worldX - worldY + 1) * mapTileWidth / 2),
-					pixelY: ((worldX + worldY) * mapTileHeight / 2) - ((worldZ - 1) * mapTileHeight)
-				};
-			};
-		}
 		(function() {
 			var w = 16*2;
 			var h = 18*2;
@@ -80,7 +73,7 @@ define([
 				Crafty.sprite(tileset.tileheight, tileset.tilewidth, fixedPath, craftySpriteData);
 			}
 		})();
-		var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		/**
 		 * Map from a string of the form "x,y", e.g. "0,0", to an object containing information about the highest tile
 		 * at those coordinates. Used for pathing.
