@@ -10,16 +10,6 @@ define([
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
-		(function() {
-			var w = 16*2;
-			var h = 18*2;
-			Crafty.sprite("assets/sprites/charsets_warrior.png", {
-				heroNorth: [0, 0, w, h],
-				heroEast: [0, h, w, h],
-				heroSouth: [0, h*2, w, h],
-				heroWest: [0, h*3, w, h]
-			});
-		})();
 		/**
 		 * Map from global tile id, e.g. "55", to their properties, e.g. {"noStand": "true"}
 		 */
@@ -252,7 +242,7 @@ define([
 			});
 		})();
 		Crafty.viewport.clampToEntities = false;
-		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
+		Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
 
 		mouselook.start();
 	});
