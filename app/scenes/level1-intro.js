@@ -1,13 +1,11 @@
 define([
 		'config',
-		'maps/test-multi-tileset-two-baseheights.json',
-		'mouselook',
+		'maps/level1-intro.json',
 		'utils',
 		'Crafty',
-		'components/ViewportRelative',
-		'components/ClickNoDrag'
-	], function(config, mapData, mouselook, utils) {
-	Crafty.scene('IsoTest', function() {
+		'components/ViewportRelative'
+	], function(config, mapData, utils) {
+	Crafty.scene('level1-intro', function() {
 		var hero; //entity global to this scene
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		var tileProperties = utils.loadTileset(mapData);
@@ -19,6 +17,7 @@ define([
 		(function() {
 			//Render map
 			var i, j;
+
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
 				var baseheight;
@@ -54,7 +53,7 @@ define([
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
 								y: pixelCoord.pixelY - entity.h,
-								z: tileX + tileY + baseheight,
+								z: baseheight,
 								tileX: tileX,
 								tileY: tileY,
 								tileZ: baseheight,
@@ -64,8 +63,8 @@ define([
 							});
 							heightMap[tileX+","+tileY] = entity;
 							if (!entity.tileProperties['noStand']) {
-								entity.addComponent('ClickNoDrag');
-								entity.bind("ClickNoDrag", function() {
+								entity.addComponent('Mouse');
+								entity.bind("Click", function() {
 									console.log('Clicked on');
 									console.log({
 										x: this.tileX,
@@ -107,7 +106,7 @@ define([
 						tileZ: worldZ,
 						x: topLeftPixelCoord.x,
 						y: topLeftPixelCoord.y,
-						z: worldX + worldY + worldZ
+						z: Math.floor(worldZ)
 					});
 					return this;
 				},
@@ -155,7 +154,6 @@ define([
 							this.tileY++;
 						}
 						this.tileZ = heightMap[this.tileX+','+this.tileY].surfaceZ;
-						this.z = this.tileX + this.tileY + this.tileZ;
 						console.log({
 							action: 'Hero moving',
 							x: this.tileX,
@@ -183,9 +181,8 @@ define([
 			});
 		})();
 		Crafty.viewport.clampToEntities = false;
-		Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
-
-		mouselook.start();
+		Crafty.viewport.mouselook(true);
+		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
 	});
 	return undefined;
 });
