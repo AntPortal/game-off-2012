@@ -59,3 +59,7 @@ Scene Layout
   * User clicks "yes", this is enough to push back Cthulhu.
   * Ending credits.
   * Cthulhu is now in our world, to be continued...
+
+BUGS
+====
+* Need a click areamap for stairs and slopes.
