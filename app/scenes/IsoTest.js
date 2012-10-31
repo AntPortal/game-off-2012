@@ -19,12 +19,6 @@ define([
 		(function() {
 			//Render map
 			var i, j;
-
-			var areaMaps = {
-				'default': [[32, 32], [64, 48], [32, 64], [0, 48]],
-				'cube': [[32, 0], [64, 16], [32, 32], [0, 16]],
-			};
-
 			for (i = 0; i < mapData.layers.length; i++) {
 				var layer = mapData.layers[i];
 				var baseheight;
@@ -86,7 +80,7 @@ define([
 								 * seems to change the provided coordinate arrays in-place, which leads to problems if
 								 * they're shared between multiple entities. */
 								var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
-								var tileAreaMap = new Crafty.polygon(areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
+								var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
 								entity.areaMap(tileAreaMap);
 							}
 						}
