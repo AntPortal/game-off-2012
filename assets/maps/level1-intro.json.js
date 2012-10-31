@@ -6,6 +6,10 @@ define(function(){return(
          "height":5,
          "name":"0 floor",
          "opacity":1,
+         "properties":
+            {
+             "baseheight":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":4,
@@ -17,6 +21,10 @@ define(function(){return(
          "height":5,
          "name":"0 deco",
          "opacity":1,
+         "properties":
+            {
+             "baseheight":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":4,

@@ -3,11 +3,17 @@
  <tileset firstgid="1" source="iso-64x64-building_2.tsx"/>
  <tileset firstgid="81" source="iso-64x64-outside.tsx"/>
  <layer name="0 floor" width="4" height="5">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJxTYGBg0AZiTSg2AGJjJKyHxtdC46OrBwCW4AO6
   </data>
  </layer>
  <layer name="0 deco" width="4" height="5">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJxjYGBgcGKAAHMG3MAUjW+CQx4AMVQBGA==
   </data>
