@@ -16,6 +16,8 @@ define(['config', 'utils', 'Crafty'], function(config) {
 			this.worldToPixel = worldToPixel;
 			var initialZ = heightMap[initialX+','+initialY].surfaceZ;
 			this.setPos(initialX,initialY,initialZ);
+			this._targetX = initialX;
+			this._targetY = initialY;
 			return this;
 		},
 		setPos: function(worldX, worldY, worldZ) {
