@@ -2,9 +2,12 @@ define([
 		'config',
 		'maps/test-multi-tileset-two-baseheights.json',
 		'Crafty',
-		'components/ViewportRelative'
+		'components/ViewportRelative',
+		'components/ClickNoDrag'
 	], function(config, mapData) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
+
+
 
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
@@ -140,8 +143,8 @@ define([
 							});
 							heightMap[tileX+","+tileY] = entity;
 							if (!entity.tileProperties['noStand']) {
-								entity.addComponent('Mouse');
-								entity.bind("Click", function() {
+								entity.addComponent('ClickNoDrag');
+								entity.bind("ClickNoDrag", function() {
 									console.log('Clicked on');
 									console.log({
 										x: this.tileX,
