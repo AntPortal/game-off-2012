@@ -93,7 +93,7 @@ function(config) {
 	 */
 	function effectiveVolume(songId, logicalVolume) {
 		if (arguments.length === 1) {
-			logicalVolume = config.musicVolume
+			logicalVolume = config.musicVolume;
 		}
 		return config.music[songId].volume * logicalVolume;
 	}
@@ -139,11 +139,96 @@ function(config) {
 			setMusicVolume(Crafty, this.volumeState);
 		});
 	}
+	/**
+	 * Creates the many entities needed to represent the map, and returns the
+	 * heightmap that was computed.
+	 * 
+	 * @param mapData
+	 *            Tiled data.
+	 * @param tileProperties
+	 *            retrieved via loadTileset()
+	 * @param tileClickCallback
+	 *            a function which accepts a single parameter representing the
+	 *            tile entity that was clicked on.
+	 */
+	function loadMap(mapData, tileProperties, tileClickCallback) {
+		/**
+		 * Map from a string of the form "x,y", e.g. "0,0", to an object containing information about the highest tile
+		 * at those coordinates. Used for pathing.
+		 */
+		var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+		var heightMap = {};
+		var i, j;
+		for (i = 0; i < mapData.layers.length; i++) {
+			var layer = mapData.layers[i];
+			var baseheight;
+			if (layer.properties && layer.properties.baseheight) {
+				baseheight = parseInt(layer.properties.baseheight, 10);
+			} else {
+				baseheight = 0;
+				console.warn('Layer ' + layer.name + ' missing baseheight');
+			}
+			if (layer.visible) {
+				for (j = 0; j < layer.data.length; j++) {
+					if (layer.data[j] != 0) {
+						var tileType = 'tile'+layer.data[j];
+						/*
+						 * We add the baseheight to convert from "Looks right in tiled" to "reflects actual world
+						 * coordinates."
+						 */
+						var tileX = j % layer.width + baseheight;
+						var tileY = Math.floor(j / layer.width) + baseheight;
+						var pixelCoord = worldToPixel(tileX, tileY, baseheight);
+						var entity = Crafty.e('2D, Canvas, ' + tileType);
+						var _justTileProperties = tileProperties[layer.data[j]] || {};
+						var heightoffset;
+						if (_justTileProperties['heightoffset']) {
+							heightoffset = parseFloat(_justTileProperties['heightoffset']);
+							if (isNaN(heightoffset)) {
+								heightoffset = 0;
+								console.warn('Could not parse ' + _justTileProperties['heightoffset']);
+							}
+						} else {
+							heightoffset = 0;
+						}
+						entity.attr({
+							x: pixelCoord.pixelX - entity.w / 2,
+							y: pixelCoord.pixelY - entity.h,
+							z: tileX + tileY + baseheight,
+							tileX: tileX,
+							tileY: tileY,
+							tileZ: baseheight,
+							surfaceZ: baseheight + heightoffset,
+							tileId: layer.data[j],
+							tileProperties: _justTileProperties
+						});
+						heightMap[tileX+","+tileY] = entity;
+						if (!entity.tileProperties['noStand']) {
+							entity.addComponent('ClickNoDrag');
+							entity.bind("ClickNoDrag", function() {
+								if (tileClickCallback) {
+									tileClickCallback(this);
+								}
+							});
+							/* The call to .map below makes a deep copy of the array; this is needed because Crafty
+							 * seems to change the provided coordinate arrays in-place, which leads to problems if
+							 * they're shared between multiple entities. */
+							var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
+							var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
+							entity.areaMap(tileAreaMap);
+						}
+					}
+				}
+			}
+		}
+		return heightMap;
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
 		effectiveVolume : effectiveVolume,
 		setMusicVolume : setMusicVolume,
 		addMusicControlEntity: addMusicControlEntity,
+		loadMap: loadMap,
 	};
 });
