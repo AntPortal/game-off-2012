@@ -15,19 +15,16 @@ define([
 			'text-align' : 'center',
 			'color' : 'white'
 		});
-		var music = {
-			'music/title': 'assets/music/peekaboo',
-			'music/town' : 'assets/music/292 - Touch the Sky',
-		};
-		for (key in music) {
-			var ogg = music[key] + '.ogg';
-			var mp3 = music[key] + '.mp3';
+		for (key in config.music) {
+			var ogg = config.music[key].prefix + '.ogg';
+			var mp3 = config.music[key].prefix + '.mp3';
 			Crafty.audio.add(key, [ ogg, mp3 ]);
 		}
 		Crafty.load([
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
-				'assets/sprites/charsets_warrior.png'
+				'assets/sprites/charsets_warrior.png',
+				'assets/ui/music.png',
 			], function() {
 			// TODO load other assets
 			(function() {

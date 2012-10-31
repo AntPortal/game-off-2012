@@ -171,20 +171,10 @@ define([
 		})();
 		(function() {
 			//Handle HUD
-			Crafty.sprite("assets/ui/music.png", {
-				uiMusic: [0, 0, 256,256]
-			});
-			Crafty.e('2D, Canvas, Mouse, uiMusic, ViewportRelative').attr({
-				x: 0,
-				y: 0,
-				z: 100,
-				w: 64,
-				h: 64
-			});
+			utils.addMusicControlEntity(Crafty);
 		})();
 		Crafty.viewport.clampToEntities = false;
-		Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
-
+		Crafty.audio.play('music/town', -1, utils.effectiveVolume('music/town'));
 		mouselook.start();
 	});
 	return undefined;
