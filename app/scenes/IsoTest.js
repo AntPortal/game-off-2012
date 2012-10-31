@@ -127,8 +127,8 @@ define([
 					if (curTilePixelTopLeft.x != this.x || curTilePixelTopLeft.y != this.y) {
 						//Not aligned in tile, so move towards proper position within tile.
 						var newX, newY;
-						newX = curTilePixelTopLeft.x * 0.1 + this.x * 0.9;
-						newY = curTilePixelTopLeft.y * 0.1 + this.y * 0.9;
+						newX = Crafty.math.lerp(curTilePixelTopLeft.x, this.x, 0.9);
+						newY = Crafty.math.lerp(curTilePixelTopLeft.y, this.y, 0.9);
 						if (Math.abs(newX - this.x) < 1) {
 							this.x = curTilePixelTopLeft.x;
 						} else {
@@ -138,6 +138,10 @@ define([
 							this.y = curTilePixelTopLeft.y;
 						} else {
 							this.y = newY;
+						}
+						/* 192 is the squared distance between the center of a tile "diamond" and the midpoint of any of its edges. */
+						if (Crafty.math.squaredDistance(curTilePixelTopLeft.x, curTilePixelTopLeft.y, this.x, this.y) < 192) {
+							this.z = this.tileX + this.tileY + Math.ceil(this.tileZ);
 						}
 					} else if (this._targetX != this.tileX || this._targetY != this.tileY) {
 						//Not at the right tile, so choose the next tile to move into
@@ -155,7 +159,6 @@ define([
 							this.tileY++;
 						}
 						this.tileZ = heightMap[this.tileX+','+this.tileY].surfaceZ;
-						this.z = this.tileX + this.tileY + Math.ceil(this.tileZ);
 						console.log({
 							action: 'Hero moving',
 							x: this.tileX,
