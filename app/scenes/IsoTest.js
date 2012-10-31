@@ -1,14 +1,12 @@
 define([
 		'config',
 		'maps/test-multi-tileset-two-baseheights.json',
+		'mouselook',
 		'Crafty',
 		'components/ViewportRelative',
 		'components/ClickNoDrag'
-	], function(config, mapData) {
+	], function(config, mapData, mouselook) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
-
-
-
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
 		function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
@@ -261,8 +259,9 @@ define([
 			});
 		})();
 		Crafty.viewport.clampToEntities = false;
-		Crafty.viewport.mouselook(true);
 		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
+
+		mouselook.start();
 	});
 	return undefined;
 });
