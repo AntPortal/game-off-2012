@@ -7,64 +7,10 @@ define([
 		'components/ViewportRelative',
 		'components/ClickNoDrag'
 	], function(config, mapData, mouselook, utils) {
-	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
-		/**
-		 * Map from global tile id, e.g. "55", to their properties, e.g. {"noStand": "true"}
-		 */
-		var tileProperties = {};
-		(function() {
-			//Load tileset into crafty
-			var tileX, tileY, i;
-			for (i =0; i < mapData.tilesets.length; i++) {
-				var tileset = mapData.tilesets[i];
-				if (tileset.tileheight != TILE_IMAGE_SIZE) {
-					console.warn("tileheight is not " + TILE_IMAGE_SIZE + " for " + tileset.name);
-				}
-				if (tileset.tilewidth != TILE_IMAGE_SIZE) {
-					console.warn("tilewidth is not " + TILE_IMAGE_SIZE + " for " + tileset.name);
-				}
-				//TODO: margin and spacing are ignored.
-				var tileId = tileset.firstgid;
-				var craftySpriteData = {};
-				var imageHeightInTiles = tileset.imageheight / tileset.tileheight;
-				var imageWidthInTiles = tileset.imagewidth / tileset.tilewidth;
-				for (tileY = 0; tileY < imageHeightInTiles; tileY++) {
-					for (tileX = 0; tileX < imageWidthInTiles; tileX++) {
-						var _tileProperties = tileset.tileproperties && tileset.tileproperties[tileId - tileset.firstgid];
-						if (_tileProperties) {
-							tileProperties[tileId] = _tileProperties;
-							var addUp = 0, addSides = 0;
-							if (_tileProperties.addUp) {
-								addUp = parseInt(_tileProperties.addUp, 10);
-							}
-							if (_tileProperties.addSides) {
-								addSides = parseInt(_tileProperties.addSides, 10);
-							}
-							craftySpriteData['tile'+tileId] = [
-								tileX - addSides,
-								tileY-addUp,
-								addSides * 2 + 1,
-								addUp+1
-							];
-						}
-						if (!craftySpriteData['tile'+tileId]) { //default
-							craftySpriteData['tile'+tileId] = [tileX,tileY];
-						}
-						tileId++;
-					}
-				}
-				/*
-				 * Tiled saves images relative to the map, which is in /assets/maps. Crafty wants images
-				 * relative to /. The images are in /assets/tiles, so basically we replace the ".." with "assets"
-				 * to perform the conversion, e.g. "../tiles/tileset.png" -> "assets/tiles/tileset.png";
-				 */
-				var fixedPath = 'assets' + tileset.image.substr(2);
-				Crafty.sprite(tileset.tileheight, tileset.tilewidth, fixedPath, craftySpriteData);
-			}
-		})();
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+		var tileProperties = utils.loadTileset(mapData);
 		/**
 		 * Map from a string of the form "x,y", e.g. "0,0", to an object containing information about the highest tile
 		 * at those coordinates. Used for pathing.
@@ -179,7 +125,7 @@ define([
 					var bottomPixelCoord = worldToPixel(worldX, worldY, worldZ);
 					return {
 						x: bottomPixelCoord.pixelX - (this.w / 2),
-						y: bottomPixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h
+						y: bottomPixelCoord.pixelY - (config.TILE_IMAGE_SIZE / 4) - this.h
 					};
 				},
 				_enterFrame: function() {
