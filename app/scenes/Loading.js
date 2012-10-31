@@ -39,8 +39,8 @@ define([
 				});
 			})();
 			// When done loading, transition to Title scene.
-			// Crafty.scene('Title');
-			Crafty.scene('IsoTest'); //TODO
+			 Crafty.scene('Title');
+			//Crafty.scene('IsoTest'); //TODO
 			//Crafty.scene('level1-intro'); //TODO
 		});
 	});
