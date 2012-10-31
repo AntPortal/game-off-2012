@@ -59,3 +59,10 @@ Scene Layout
   * User clicks "yes", this is enough to push back Cthulhu.
   * Ending credits.
   * Cthulhu is now in our world, to be continued...
+
+BUGS
+====
+* Need a click areamap for stairs and slopes.
+* Fix draw ordering (Hasan)
+* Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
+  * As part of this, you'll probably want to add an A* path finding algorithm.

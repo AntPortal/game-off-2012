@@ -2,31 +2,14 @@ define([
 		'config',
 		'maps/test-multi-tileset-two-baseheights.json',
 		'mouselook',
+		'utils',
 		'Crafty',
 		'components/ViewportRelative',
 		'components/ClickNoDrag'
-	], function(config, mapData, mouselook) {
+	], function(config, mapData, mouselook, utils) {
 	var TILE_IMAGE_SIZE = 64; //A baked in assumption we're making
 	Crafty.scene('IsoTest', function() {
 		var hero; //entity global to this scene
-		function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
-			return function(worldX, worldY, worldZ) {
-				return {
-					pixelX: ((config.viewport.width - mapTileWidth) / 2) + ((worldX - worldY + 1) * mapTileWidth / 2),
-					pixelY: ((worldX + worldY) * mapTileHeight / 2) - ((worldZ - 1) * mapTileHeight)
-				};
-			};
-		}
-		(function() {
-			var w = 16*2;
-			var h = 18*2;
-			Crafty.sprite("assets/sprites/charsets_warrior.png", {
-				heroNorth: [0, 0, w, h],
-				heroEast: [0, h, w, h],
-				heroSouth: [0, h*2, w, h],
-				heroWest: [0, h*3, w, h]
-			});
-		})();
 		/**
 		 * Map from global tile id, e.g. "55", to their properties, e.g. {"noStand": "true"}
 		 */
@@ -81,7 +64,7 @@ define([
 				Crafty.sprite(tileset.tileheight, tileset.tilewidth, fixedPath, craftySpriteData);
 			}
 		})();
-		var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		/**
 		 * Map from a string of the form "x,y", e.g. "0,0", to an object containing information about the highest tile
 		 * at those coordinates. Used for pathing.
@@ -260,7 +243,7 @@ define([
 			});
 		})();
 		Crafty.viewport.clampToEntities = false;
-		//Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
+		Crafty.audio.play('music/town', -1); //TODO: Uncomment this once muting is implemented.
 
 		mouselook.start();
 	});
