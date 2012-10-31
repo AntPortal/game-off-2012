@@ -155,7 +155,7 @@ define([
 							this.tileY++;
 						}
 						this.tileZ = heightMap[this.tileX+','+this.tileY].surfaceZ;
-						this.z = this.tileX + this.tileY + this.tileZ;
+						this.z = this.tileX + this.tileY + Math.ceil(this.tileZ);
 						console.log({
 							action: 'Hero moving',
 							x: this.tileX,
