@@ -5,6 +5,16 @@ define([
 		'scenes/Title',
 		'scenes/level1-intro'
 	], function(config, mapData) {
+	function loadAntifareaCharacterSprite(id, url) {
+		var w = 16*2;
+		var h = 18*2;
+		var spriteParam = {};
+		spriteParam[id + 'North'] = [0, h*0, w, h];
+		spriteParam[id + 'East'] = [0, h*1, w, h];
+		spriteParam[id + 'South'] = [0, h*2, w, h],
+		spriteParam[id + 'West'] = [0, h*3, w, h],
+		Crafty.sprite(url, spriteParam);
+	}
 	Crafty.scene('Loading', function() {
 		Crafty.background('#000');
 		Crafty.e('2D, DOM, Text').attr({
@@ -24,20 +34,12 @@ define([
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
 				'assets/sprites/charsets_warrior.png',
+				'assets/sprites/mom.png',
 				'assets/ui/music.png',
 			], function() {
 			// TODO load other assets
-			(function() {
-				//Defines components for hero sprite
-				var w = 16*2;
-				var h = 18*2;
-				Crafty.sprite("assets/sprites/charsets_warrior.png", {
-					heroNorth: [0, 0, w, h],
-					heroEast: [0, h, w, h],
-					heroSouth: [0, h*2, w, h],
-					heroWest: [0, h*3, w, h]
-				});
-			})();
+			loadAntifareaCharacterSprite('hero', 'assets/sprites/charsets_warrior.png');
+			loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
 			// When done loading, transition to Title scene.
 			// Crafty.scene('Title');
 			Crafty.scene('IsoTest'); //TODO
