@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="isometric" width="15" height="27" tilewidth="64" tileheight="32">
+ <tileset firstgid="1" name="iso-64x64-outside" tilewidth="64" tileheight="64">
+  <image source="../tiles/iso-64x64-outside.png" width="640" height="1024"/>
+  <tile id="31">
+   <properties>
+    <property name="heightoffset" value="0.5"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="heightoffset" value="0.5"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="areaMap" value="cube"/>
+    <property name="heightoffset" value="1"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="heightoffset" value="1"/>
+   </properties>
+  </tile>
+  <tile id="80">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="81">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="90">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="100">
+   <properties>
+    <property name="noStand" value="noStand"/>
+   </properties>
+  </tile>
+  <tile id="101">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="102">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="121">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="128">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="129">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="132">
+   <properties>
+    <property name="addUp" value="1"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="133">
+   <properties>
+    <property name="addUp" value="1"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="150">
+   <properties>
+    <property name="addUp" value="2"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="151">
+   <properties>
+    <property name="addUp" value="2"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="152">
+   <properties>
+    <property name="addUp" value="1"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="153">
+   <properties>
+    <property name="addUp" value="1"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="155">
+   <properties>
+    <property name="addSides" value="1"/>
+    <property name="addUp" value="1"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="158">
+   <properties>
+    <property name="addSides" value="1"/>
+    <property name="addUp" value="2"/>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="161" name="iso-64x64-building_2" tilewidth="64" tileheight="64">
+  <image source="../tiles/iso-64x64-building_2.png" width="640" height="512"/>
+  <tile id="54">
+   <properties>
+    <property name="heightoffset" value="0.5"/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+  <tile id="59">
+   <properties>
+    <property name="noStand" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="0 floor" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztk70OgzAMhAkQGPivBGGsYO1b81B9nSbSd6rFULVbB4YTin13sR2zZ1m2X7jwR7if8PhBO4AuYonY8Hh+4ZV0N7TStxEj5+2DR43e4eEjqog5okA/Gg+LxAlwJngjPsm3N33lfJNmJSeeJ56TS7HG5AL9DORLemyA/Bw+qj2gH6ivwaclv6Bt0K7kas6qecG/J9bBdUbbca9DH5hFgU61ysNxV+IdnAMo0Hr4mrHqdnxXtPIVp+YNB3i54RSm5oNYhc4zJ/FL8q2pW3PQm1SGo9rV/2x0wUAzV18eLGi0t9qrinrFs/ujfZjMG6h37ZU0a/b+N/zpnZLfCzvsKEA=
+  </data>
+ </layer>
+ <layer name="0 decoration" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AU4ANLiVS3DYjfIvGXAPFiEvSCcAOavjQi9b4m0b6ZSOxGKE2sP5FBFBCHI+mF+eMFmvtAeDeavlQgDmZAuPkdEL+B0jCwB4h3QfXDQAgQp0P1LkESx+Z3kHwjmhhIfzSaXmx+X4JFDNmuxVB9S6FqkdnY9NbhMQ8fmE6mPlLATMJKGOYTaRYAWIkmcw==
+  </data>
+ </layer>
+ <layer name="1 floor" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYEAFMxkGF5iORw7m1oVYMLEApv4EFr3o5uFyy2I85mIzj1y9x9HUL4XSd6D0TAaEX/ZiMW8JVP9SKI3NP0uwiCEDmF6YWciYkF5sfoXZiUuOnmADEK8dYnqpDTYhYWxiy/HoXYOE8YmNguENABfdMFI=
+  </data>
+ </layer>
+ <layer name="1 decoration" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF1ACVA+0AKoCKgXbAAIObA+2AQQCwhcFouIwCUgAA+bIDfQ==
+  </data>
+ </layer>
+ <layer name="2 floor" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="2"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBh84AEJau8D8TokvA9J7jIZ5qHrXU+B29D1ovOxgbsMmP64j8YfBaNgFIyCwQoAIKQN4Q==
+  </data>
+ </layer>
+ <layer name="2 decoration" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="2"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgc4CYNzLxFZfNo4cZRMApGwSgYTgAA+BsCjQ==
+  </data>
+ </layer>
+</map>
