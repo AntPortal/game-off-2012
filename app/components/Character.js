@@ -91,5 +91,4 @@ define(['config', 'utils', 'Crafty'], function(config) {
 			}
 		}
 	});
-	console.log('Character component defined.');
 });
