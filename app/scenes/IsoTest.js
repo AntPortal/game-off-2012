@@ -81,6 +81,11 @@ define([
 			}
 		})();
 		var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+		/**
+		 * Map from a string of the form "x,y", e.g. "0,0", to an object containing information about the highest tile
+		 * at those coordinates. Used for pathing.
+		 */
+		var heightMap = {};
 		(function() {
 			//Render map
 			var i, j;
@@ -111,21 +116,40 @@ define([
 							var tileY = Math.floor(j / layer.width) + baseheight;
 							var pixelCoord = worldToPixel(tileX, tileY, baseheight);
 							var entity = Crafty.e('2D, Canvas, ' + tileType);
+							var _justTileProperties = tileProperties[layer.data[j]] || {};
+							var heightoffset;
+							if (_justTileProperties['heightoffset']) {
+								heightoffset = parseFloat(_justTileProperties['heightoffset']);
+								if (isNaN(heightoffset)) {
+									heightoffset = 0;
+									console.warn('Could not parse ' + _justTileProperties['heightoffset']);
+								}
+							} else {
+								heightoffset = 0;
+							}
 							entity.attr({
 								x: pixelCoord.pixelX - entity.w / 2,
 								y: pixelCoord.pixelY - entity.h,
 								z: baseheight,
 								tileX: tileX,
 								tileY: tileY,
+								tileZ: baseheight,
+								surfaceZ: baseheight + heightoffset,
 								tileId: layer.data[j],
-								tileProperties: tileProperties[layer.data[j]] || {}
+								tileProperties: _justTileProperties
 							});
+							heightMap[tileX+","+tileY] = entity;
 							if (!entity.tileProperties['noStand']) {
 								entity.addComponent('Mouse');
 								entity.bind("Click", function() {
-									var heightoffset = parseFloat(this.tileProperties['heightoffset'] || 0, 10);
+									console.log('Clicked on');
+									console.log({
+										x: this.tileX,
+										y: this.tileY,
+										z: this.surfaceZ
+									});
 									if (hero) {
-										hero.setPos(this.tileX, this.tileY, this.z + heightoffset);
+										hero.setWalkTarget(this.tileX, this.tileY);
 									}
 								});
 								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
@@ -140,23 +164,82 @@ define([
 				}
 			}
 		})();
+		console.log('heightMap');
+		console.log(heightMap);
 		(function() {
 			//Add characterss
 			Crafty.c('Hero', {
+				_targetX: 0, //in world coordinates
+				_targetY: 0, //in world coordinates
 				init: function() {
 					this.requires('2D');
+					this.bind('EnterFrame', this._enterFrame);
 				},
 				setPos: function(worldX, worldY, worldZ) {
-					var pixelCoord = worldToPixel(worldX, worldY, worldZ);
+					var topLeftPixelCoord = this._getTopLeftPixelCoords(worldX, worldY, worldZ);
 					this.attr({
 						tileX: worldX,
 						tileY: worldY,
 						tileZ: worldZ,
-						x: pixelCoord.pixelX - (this.w / 2),
-						y: pixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h,
+						x: topLeftPixelCoord.x,
+						y: topLeftPixelCoord.y,
 						z: Math.floor(worldZ)
 					});
 					return this;
+				},
+				setWalkTarget: function(worldX, worldY) {
+					this._targetX = worldX;
+					this._targetY = worldY;
+				},
+				_getTopLeftPixelCoords: function(worldX, worldY, worldZ) {
+					var bottomPixelCoord = worldToPixel(worldX, worldY, worldZ);
+					return {
+						x: bottomPixelCoord.pixelX - (this.w / 2),
+						y: bottomPixelCoord.pixelY - (TILE_IMAGE_SIZE / 4) - this.h
+					};
+				},
+				_enterFrame: function() {
+					var curTilePixelTopLeft = this._getTopLeftPixelCoords(this.tileX, this.tileY, this.tileZ);
+					if (curTilePixelTopLeft.x != this.x || curTilePixelTopLeft.y != this.y) {
+						//Not aligned in tile, so move towards proper position within tile.
+						var newX, newY;
+						newX = curTilePixelTopLeft.x * 0.1 + this.x * 0.9;
+						newY = curTilePixelTopLeft.y * 0.1 + this.y * 0.9;
+						if (Math.abs(newX - this.x) < 1) {
+							this.x = curTilePixelTopLeft.x;
+						} else {
+							this.x = newX;
+						}
+						if (Math.abs(newY - this.y) < 1) {
+							this.y = curTilePixelTopLeft.y;
+						} else {
+							this.y = newY;
+						}
+					} else if (this._targetX != this.tileX || this._targetY != this.tileY) {
+						//Not at the right tile, so choose the next tile to move into
+						//TODO: Do pathing so you don't walk over impossible tiles.
+						if (this._targetX < this.tileX) {
+							this.tileX--;
+						}
+						if (this._targetX > this.tileX) {
+							this.tileX++;
+						}
+						if (this._targetY < this.tileY) {
+							this.tileY--;
+						}
+						if (this._targetY > this.tileY) {
+							this.tileY++;
+						}
+						this.tileZ = heightMap[this.tileX+','+this.tileY].surfaceZ;
+						console.log({
+							action: 'Hero moving',
+							x: this.tileX,
+							y: this.tileY,
+							z: this.tileZ,
+							targetX: this._targetX,
+							targetY: this._targetY
+						});
+					}
 				}
 			});
 			hero = Crafty.e('2D, Canvas, Hero, heroSouth').setPos(0, 0, 0);
