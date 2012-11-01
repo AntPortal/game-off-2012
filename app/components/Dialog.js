@@ -32,15 +32,16 @@ define([ 'config', 'Crafty' ], function(config) {
 			this.z = params.z;
 			this.w = params.w;
 			this.h = params.h;
-			this.d7 = Crafty.e('2D, Canvas, dialog7');
-			this.d8 = Crafty.e('2D, Canvas, dialog8');
-			this.d9 = Crafty.e('2D, Canvas, dialog9');
-			this.d4 = Crafty.e('2D, Canvas, dialog4');
-			this.d5 = Crafty.e('2D, Canvas, dialog5');
-			this.d6 = Crafty.e('2D, Canvas, dialog6');
-			this.d1 = Crafty.e('2D, Canvas, dialog1');
-			this.d2 = Crafty.e('2D, Canvas, dialog2');
-			this.d3 = Crafty.e('2D, Canvas, dialog3');
+			this.d = [1,2,3,4,5,6,7,8,9];
+			this.d[7] = Crafty.e('2D, Canvas, dialog7');
+			this.d[8] = Crafty.e('2D, Canvas, dialog8');
+			this.d[9] = Crafty.e('2D, Canvas, dialog9');
+			this.d[4] = Crafty.e('2D, Canvas, dialog4');
+			this.d[5] = Crafty.e('2D, Canvas, dialog5');
+			this.d[6] = Crafty.e('2D, Canvas, dialog6');
+			this.d[1] = Crafty.e('2D, Canvas, dialog1');
+			this.d[2] = Crafty.e('2D, Canvas, dialog2');
+			this.d[3] = Crafty.e('2D, Canvas, dialog3');
 			this.msg = Crafty.e('2D, Canvas, Text').
 				text(params.msg).
 				textColor(params.color, 1).
@@ -58,6 +59,7 @@ define([ 'config', 'Crafty' ], function(config) {
 			}
 			this._attributeChanged();
 			this.bind('Change', this._attributeChanged);
+			this.bind('Remove', this._removed);
 			return this;
 		},
 		_animateShowMore: function(params) {
@@ -68,33 +70,33 @@ define([ 'config', 'Crafty' ], function(config) {
 			}
 		},
 		_attributeChanged: function() {
-			this.d7.attr({
+			this.d[7].attr({
 				x : this.x,
 				y : this.y,
 				z : this.z,
 				visible: this.visible,
 			});
-			this.d8.attr({
+			this.d[8].attr({
 				x : this.x + TILE_SIZE,
 				y : this.y,
 				z : this.z,
 				w : this.w - (TILE_SIZE * 2),
 				visible: this.visible,
 			});
-			this.d9.attr({
+			this.d[9].attr({
 				x : this.x + this.w - TILE_SIZE,
 				y : this.y,
 				z : this.z,
 				visible: this.visible,
 			});
-			this.d4.attr({
+			this.d[4].attr({
 				x : this.x,
 				y : this.y + TILE_SIZE,
 				z : this.z,
 				h : this.h - (TILE_SIZE * 2),
 				visible: this.visible,
 			});
-			this.d5.attr({
+			this.d[5].attr({
 				x : this.x + TILE_SIZE,
 				y : this.y + TILE_SIZE,
 				z : this.z,
@@ -102,27 +104,27 @@ define([ 'config', 'Crafty' ], function(config) {
 				h : this.h - (TILE_SIZE * 2),
 				visible: this.visible,
 			});
-			this.d6.attr({
+			this.d[6].attr({
 				x : this.x + this.w - TILE_SIZE,
 				y : this.y + TILE_SIZE,
 				z : this.z,
 				h : this.h - (TILE_SIZE * 2),
 				visible: this.visible,
 			});
-			this.d1.attr({
+			this.d[1].attr({
 				x : this.x,
 				y : this.y + this.h - TILE_SIZE,
 				z : this.z,
 				visible: this.visible,
 			});
-			this.d2.attr({
+			this.d[2].attr({
 				x : this.x + TILE_SIZE,
 				y : this.y + this.h - TILE_SIZE,
 				z : this.z,
 				w : this.w - (TILE_SIZE * 2),
 				visible: this.visible,
 			});
-			this.d3.attr({
+			this.d[3].attr({
 				x : this.x + this.w - TILE_SIZE,
 				y : this.y + this.h - TILE_SIZE,
 				z : this.z,
@@ -151,6 +153,19 @@ define([ 'config', 'Crafty' ], function(config) {
 				visible: this.visible,
 			});
 		},
+		_removed: function() {
+			var i;
+			for (i = 1; i <= 9; i++) {
+				this.d[i].destroy();
+			}
+			if (this.showMore) {
+				this.showMore.destroy();
+			}
+			if (this.face) {
+				this.face.destroy();
+			}
+			this.msg.destroy();
+		}
 	});
 
 	return undefined;
