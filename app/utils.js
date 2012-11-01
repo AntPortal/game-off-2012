@@ -223,6 +223,11 @@ function(config) {
 		}
 		return heightMap;
 	}
+	function stopAllMusic() {
+		for (key in config.music) {
+			Crafty.audio.stop();
+		}
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
@@ -230,5 +235,6 @@ function(config) {
 		setMusicVolume : setMusicVolume,
 		addMusicControlEntity: addMusicControlEntity,
 		loadMap: loadMap,
+		stopAllMusic: stopAllMusic,
 	};
 });

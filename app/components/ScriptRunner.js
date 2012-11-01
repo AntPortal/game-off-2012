@@ -1,7 +1,8 @@
 define([
 	'config',
+	'utils',
 	'Crafty'
-], function(config) {
+], function(config, utils) {
 	Crafty.c('ScriptRunner', {
 		_curState: 0,
 		init: function() {
@@ -26,6 +27,12 @@ define([
 				break;
 			case 'loadScene':
 				this._loadScene(instruction);
+				break;
+			case 'playMusic':
+				this._playMusic(instruction);
+				break;
+			case 'fade':
+				this._fade(instruction);
 				break;
 			default:
 				throw 'Unsupported scripting action: ' + instruction.action;
@@ -59,6 +66,35 @@ define([
 				throw inst;
 			}
 			Crafty.scene(inst.scene);
+			this._curState++;
+			this.run();
+		},
+		_playMusic: function(inst) {
+			if (inst.action != 'playMusic') {
+				throw inst;
+			}
+			utils.stopAllMusic();
+			Crafty.audio.play(inst.song, -1, utils.effectiveVolume(inst.song));
+			this._curState++;
+			this.run();
+		},
+		_fade: function(inst) {
+			if (inst.action != 'fade') {
+				throw inst;
+			}
+			var me = this;
+			if (!this.fader) {
+				this.fader = Crafty.e('2D, Canvas, Color, Tween, ViewportRelative').attr({
+					x: 0, y: 0, z: 999, w: config.viewport.width, h: config.viewport.height, alpha: 0, color: '#000000'
+				});
+			}
+			var curState = this._curState;
+			this.fader.bind('TweenEnd', function() {
+				this.unbind('TweenEnd');
+				me._curState = curState + 1;
+				me.run();
+			});
+			this.fader.tween(inst.params, inst.duration);
 		}
 	});
 });

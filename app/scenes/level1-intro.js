@@ -18,6 +18,14 @@ define([
 		var hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(heightMap, worldToPixel, 3, 0);
 		var mom = Crafty.e('2D, Canvas, Character, momSouth').Character(heightMap, worldToPixel, 1, 0);
 		var script = [
+			{ 
+				action: 'fade',
+				params: {
+					color: '#000000',
+					alpha: 1.0, 
+				},
+				duration: 1
+			},
 			{
 				action: 'dialog',
 				params: {
@@ -54,6 +62,15 @@ define([
 				}
 			},
 			{ action: 'PACADOC' },
+			{ action: 'playMusic', song: 'music/town' },
+			{ 
+				action: 'fade',
+				params: {
+					color: '#000000',
+					alpha: 0.0, 
+				},
+				duration: 100
+			},
 			{
 				action: 'dialog',
 				params: {
@@ -72,7 +89,6 @@ define([
 		Crafty.e('2D, ScriptRunner').ScriptRunner(script).run();
 		Crafty.viewport.clampToEntities = false;
 		Crafty.viewport.y = config.viewport.height / 2;
-		Crafty.audio.play('music/town', -1, utils.effectiveVolume('music/town'));
 	});
 	return undefined;
 });
