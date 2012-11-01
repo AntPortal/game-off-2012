@@ -32,7 +32,6 @@ define([
 			utils.addMusicControlEntity(Crafty);
 		})();
 		Crafty.viewport.clampToEntities = false;
-		Crafty.audio.play('music/town', -1, utils.effectiveVolume('music/town'));
 		mouselook.start();
 	});
 	return undefined;

@@ -19,7 +19,7 @@ define([
 		var mom = Crafty.e('2D, Canvas, Character, momSouth').Character(heightMap, worldToPixel, 1, 0);
 		var script = [
 			{
-				action: "dialog",
+				action: 'dialog',
 				params: {
 					x: 150,
 					y: 100,
@@ -29,9 +29,9 @@ define([
 					showMore: true,
 				}
 			},
-			{ action: "PACADOC" },
+			{ action: 'PACADOC' },
 			{
-				action: "dialog",
+				action: 'dialog',
 				params: {
 					x: 150,
 					y: 100,
@@ -41,9 +41,9 @@ define([
 					showMore: true,
 				}
 			},
-			{ action: "PACADOC" },
+			{ action: 'PACADOC' },
 			{
-				action: "dialog",
+				action: 'dialog',
 				params: {
 					x: 150,
 					y: 100,
@@ -53,9 +53,9 @@ define([
 					showMore: true,
 				}
 			},
-			{ action: "PACADOC" },
+			{ action: 'PACADOC' },
 			{
-				action: "dialog",
+				action: 'dialog',
 				params: {
 					x: 150,
 					y: 100,
@@ -66,7 +66,8 @@ define([
 					face: 'face_villagerF',
 				}
 			},
-			{ action: "PACADOC" },
+			{ action: 'PACADOC' },
+			{ action: 'loadScene', scene: 'IsoTest' },
 		];
 		Crafty.e('2D, ScriptRunner').ScriptRunner(script).run();
 		Crafty.viewport.clampToEntities = false;

@@ -18,19 +18,22 @@ define([
 			}
 			var instruction = this.script[this._curState];
 			switch (instruction.action) {
-			case "dialog":
+			case 'dialog':
 				this._dialog(instruction);
 				break;
-			case "PACADOC": //Pause and close all dialogs on click
+			case 'PACADOC': //Pause and close all dialogs on click
 				this._PACADOC(instruction);
 				break;
+			case 'loadScene':
+				this._loadScene(instruction);
+				break;
 			default:
-				throw "Unsupported scripting action: " + instruction.action;
+				throw 'Unsupported scripting action: ' + instruction.action;
 			}
 			return this;
 		},
 		_dialog: function(dialogInst) {
-			if (dialogInst.action != "dialog") {
+			if (dialogInst.action != 'dialog') {
 				throw dialogInst;
 			}
 			Crafty.e('2D, Canvas, Dialog').Dialog(dialogInst.params);
@@ -38,7 +41,7 @@ define([
 			this.run();
 		},
 		_PACADOC: function(pacadocInst) {
-			if (pacadocInst.action != "PACADOC") {
+			if (pacadocInst.action != 'PACADOC') {
 				throw pacadocInst;
 			}
 			var me = this;
@@ -50,6 +53,12 @@ define([
 				me._curState++;
 				me.run();
 			});
+		},
+		_loadScene: function(inst) {
+			if (inst.action != 'loadScene') {
+				throw inst;
+			}
+			Crafty.scene(inst.scene);
 		}
 	});
 });
