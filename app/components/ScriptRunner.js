@@ -1,7 +1,8 @@
 define([
 	'config',
 	'utils',
-	'Crafty'
+	'Crafty',
+	'components/ViewportRelative',
 ], function(config, utils) {
 	Crafty.c('ScriptRunner', {
 		_curState: 0,
@@ -55,7 +56,7 @@ define([
 				throw pacadocInst;
 			}
 			var me = this;
-			Crafty.e('2D, Mouse').attr({
+			Crafty.e('2D, Mouse, ViewportRelative').attr({
 				x: 0, y: 0, w: config.viewport.width, h: config.viewport.height, clicked: false
 			}).bind('Click', function() {
 				Crafty('Dialog').destroy(); //Destroy all dialogs
