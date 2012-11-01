@@ -16,6 +16,7 @@ define([
 		//Add characters
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		var hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(heightMap, worldToPixel, 3, 0);
+		hero.visible = false;
 		var mom = Crafty.e('2D, Canvas, Character, momSouth').Character(heightMap, worldToPixel, 1, 0);
 		var script = [
 			{ 
@@ -84,7 +85,11 @@ define([
 				}
 			},
 			{ action: 'PACADOC' },
-			//TODO spawn hero sprite
+			{ action: 'arbitraryCode', code: function(curState, callback) {
+				hero.visible = true;
+				hero.setWalkTarget(3,1);
+				callback(curState + 1);
+			}},
 			{
 				action: 'dialog',
 				params: {
@@ -95,6 +100,21 @@ define([
 					msg: [
 						"Mom: You were so excited about the Millenial",
 						"Fair that you didn't sleep well, did you...?",
+					],
+					showMore: true,
+					face: 'face_villagerF',
+				}
+			},
+			{ action: 'PACADOC' },
+			{
+				action: 'dialog',
+				params: {
+					x: 150,
+					y: 100,
+					w: 400,
+					h: 70,
+					msg: [
+						"Mom: I want you to behave yourself today!",
 					],
 					showMore: true,
 					face: 'face_villagerF',

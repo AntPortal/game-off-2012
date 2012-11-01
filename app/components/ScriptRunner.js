@@ -34,6 +34,9 @@ define([
 			case 'fade':
 				this._fade(instruction);
 				break;
+			case 'arbitraryCode':
+				this._arbitraryCode(instruction);
+				break;
 			default:
 				throw 'Unsupported scripting action: ' + instruction.action;
 			}
@@ -95,6 +98,16 @@ define([
 				me.run();
 			});
 			this.fader.tween(inst.params, inst.duration);
+		},
+		_arbitraryCode: function(inst) {
+			if (inst.action != 'arbitraryCode') {
+				throw inst;
+			}
+			var me = this;
+			inst.code(this._curState, function(newState) {
+				me._curState = newState;
+				me.run();
+			});
 		}
 	});
 });
