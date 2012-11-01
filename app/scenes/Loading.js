@@ -36,10 +36,19 @@ define([
 				'assets/sprites/charsets_warrior.png',
 				'assets/sprites/mom.png',
 				'assets/ui/music.png',
+				'assets/ui/dialog.blue.png',
 			], function() {
 			// TODO load other assets
 			loadAntifareaCharacterSprite('hero', 'assets/sprites/charsets_warrior.png');
 			loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
+			(function() {
+				//Load dialog box
+				Crafty.sprite(16, 'assets/ui/dialog.blue.png', {
+					dialog7: [0, 0], dialog8: [1, 0], dialog9: [2, 0],
+					dialog4: [0, 1], dialog5: [1, 1], dialog6: [2, 1],
+					dialog1: [0, 2], dialog2: [1, 2], dialog3: [2, 2],
+				});
+			})();
 			// When done loading, transition to Title scene.
 			// Crafty.scene('Title');
 			Crafty.scene('IsoTest'); //TODO
