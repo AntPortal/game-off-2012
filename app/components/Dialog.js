@@ -6,6 +6,7 @@ define([ 'config', 'Crafty' ], function(config) {
 			this.requires('2D');
 		},
 		Dialog : function(params) {
+			var i;
 			if (!params.x) {
 				params.x = 0;
 			}
@@ -22,10 +23,15 @@ define([ 'config', 'Crafty' ], function(config) {
 				params.h = (TILE_SIZE * 2);
 			}
 			if (!params.msg) {
-				params.msg = "";
+				params.msg = [''];
+			}
+			if (typeof(params.msg) == 'string') {
+				var temp = params.msg;
+				params.msg = [];
+				params.msg[0] = temp;
 			}
 			if (!params.color) {
-				params.color = "#FFFFFF";
+				params.color = '#FFFFFF';
 			}
 			this.x = params.x;
 			this.y = params.y;
@@ -42,13 +48,16 @@ define([ 'config', 'Crafty' ], function(config) {
 			this.d[1] = Crafty.e('2D, Canvas, dialog1');
 			this.d[2] = Crafty.e('2D, Canvas, dialog2');
 			this.d[3] = Crafty.e('2D, Canvas, dialog3');
-			this.msg = Crafty.e('2D, Canvas, Text').
-				text(params.msg).
+			this.msg = [];
+			for (i = 0; i < params.msg.length; i++) {
+				this.msg[i] = Crafty.e('2D, Canvas, Text').
+				text(params.msg[i]).
 				textColor(params.color, 1).
 				textFont({
 					family: 'Patrick Hand',
 					size: '16px',
 				});
+			}
 			if (params.showMore) {
 				this.showMore = Crafty.e('2D, Canvas, dialogMore');
 				this.bind('EnterFrame', this._animateShowMore);
@@ -70,6 +79,7 @@ define([ 'config', 'Crafty' ], function(config) {
 			}
 		},
 		_attributeChanged: function() {
+			var i;
 			this.d[7].attr({
 				x : this.x,
 				y : this.y,
@@ -146,12 +156,14 @@ define([ 'config', 'Crafty' ], function(config) {
 					visible: this.visible
 				});
 			}
-			this.msg.attr({
-				x : this.x + TILE_SIZE + (this.face ? 48 : 0),
-				y : this.y + (TILE_SIZE * 1.5),
-				z : this.z,
-				visible: this.visible,
-			});
+			for (i = 0; i < this.msg.length; i++) {
+				this.msg[i].attr({
+					x : this.x + TILE_SIZE + (this.face ? 48 : 0),
+					y : this.y + (i + 1) * (TILE_SIZE * 1.5),
+					z : this.z,
+					visible: this.visible,
+				});
+			}
 		},
 		_removed: function() {
 			var i;
@@ -164,7 +176,9 @@ define([ 'config', 'Crafty' ], function(config) {
 			if (this.face) {
 				this.face.destroy();
 			}
-			this.msg.destroy();
+			for (i = 0; i < this.msg.length; i++) {
+				this.msg[i].destroy();
+			}
 		}
 	});
 

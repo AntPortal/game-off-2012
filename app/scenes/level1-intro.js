@@ -31,7 +31,7 @@ define([
 				params: {
 					x: 150,
 					y: 100,
-					w: 320,
+					w: 400,
 					h: 70,
 					msg: "[Name]...",
 					showMore: true,
@@ -43,7 +43,7 @@ define([
 				params: {
 					x: 150,
 					y: 100,
-					w: 320,
+					w: 400,
 					h: 70,
 					msg: "[Name]!",
 					showMore: true,
@@ -55,7 +55,7 @@ define([
 				params: {
 					x: 150,
 					y: 100,
-					w: 320,
+					w: 400,
 					h: 70,
 					msg: "Good morning, [Name]!",
 					showMore: true,
@@ -76,9 +76,26 @@ define([
 				params: {
 					x: 150,
 					y: 100,
-					w: 320,
+					w: 400,
 					h: 70,
 					msg: "Mom: Come on, sleepy head! Get up!",
+					showMore: true,
+					face: 'face_villagerF',
+				}
+			},
+			{ action: 'PACADOC' },
+			//TODO spawn hero sprite
+			{
+				action: 'dialog',
+				params: {
+					x: 150,
+					y: 100,
+					w: 400,
+					h: 70,
+					msg: [
+						"Mom: You were so excited about the Millenial",
+						"Fair that you didn't sleep well, did you...?",
+					],
 					showMore: true,
 					face: 'face_villagerF',
 				}
