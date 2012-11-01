@@ -5,8 +5,27 @@
 <!-- TODO: Come up with title for game -->
 <title>Game Off 2012</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+	var fontsLoaded = false;
+	WebFontConfig = {
+		google : {
+			families : [ 'Patrick+Hand::latin' ]
+		},
+		active: function() {
+			fontsLoaded = true;
+		}
+	};
+	(function() {
+		var wf = document.createElement('script');
+		wf.src = ('https:' == document.location.protocol ? 'https' : 'http')
+				+ '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+		wf.type = 'text/javascript';
+		wf.async = 'true';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(wf, s);
+	})();
+</script>
 <script data-main="app/main" src="libs/requirejs_2.1.1/require.js"></script>
-<link href='http://fonts.googleapis.com/css?family=Patrick+Hand' rel='stylesheet' type='text/css'>
 <style type="text/css">
 body {
 	background-color: black;
