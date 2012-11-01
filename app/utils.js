@@ -117,7 +117,7 @@ function(config) {
 		Crafty.e('2D, Canvas, Mouse, uiMusic, ViewportRelative').attr({
 			x: 0,
 			y: 0,
-			z: 100,
+			z: config.zOffset.meta,
 			w: 32,
 			h: 32,
 			volumeState: 1

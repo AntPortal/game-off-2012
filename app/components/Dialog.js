@@ -1,4 +1,4 @@
-define([ 'Crafty' ], function() {
+define([ 'config', 'Crafty' ], function(config) {
 	var TILE_SIZE = 16; // hardcoded size of a dialog tile.
 	var SHOW_MORE_SIZE = 16; // hardcoded size of the "show more" icon.
 	Crafty.c('Dialog', {
@@ -13,7 +13,7 @@ define([ 'Crafty' ], function() {
 				params.y = 0;
 			}
 			if (!params.z) {
-				params.z = 100;
+				params.z = config.zOffset.dialog;
 			}
 			if (!params.w || params.w < (TILE_SIZE * 2)) {
 				params.w = (TILE_SIZE * 2);

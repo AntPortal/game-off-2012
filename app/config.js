@@ -22,5 +22,17 @@ define(function() {
 				volume: 1.0,
 			},
 		},
+		/**
+		 * 0000..0999: Game objects (e.g. tiles, NPCs, etc.)
+		 * 1000..1999: gitk UI
+		 * 2000..2999: dialog UI
+		 * 3000..3999: meta UI (e.g. volume mute)
+		 */
+		zOffset : {
+			'game': 0,
+			'gitk': 1000,
+			'dialog': 2000,
+			'meta': 3000,
+		}
 	};
 });
