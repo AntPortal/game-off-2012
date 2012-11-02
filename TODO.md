@@ -66,3 +66,5 @@ BUGS
 * Fix draw ordering (Hasan)
 * Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
   * As part of this, you'll probably want to add an A* path finding algorithm.
+* Seems like there's a bug in Crafty where if you use a mix of DOM and Canvas text elements, setting the font on the Canvas element also sets the font on the DOM element. 
+* Volume controls don't work on ipad.
