@@ -80,7 +80,7 @@ define([
 				})();
 				// When done loading, transition to Title-intro scene.
 				//Crafty.scene('Title-intro');
-				Crafty.scene('level1-intro'); //TODO
+				Crafty.scene('title'); //TODO
 			})();
 		});
 	});
