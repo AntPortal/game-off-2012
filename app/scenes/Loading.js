@@ -2,7 +2,7 @@ define([
 		'config',
 		'maps/level1-intro.json', //Any arbitrary level for tileset data
 		'Crafty',
-		'scenes/Title',
+		'scenes/Title-intro',
 		'scenes/level1-intro'
 ], function(config, mapData) {
 	function loadAntifareaCharacterSprite(id, url) {
@@ -78,8 +78,8 @@ define([
 					}
 					Crafty.sprite(48, 'assets/faces/faces1.png', spriteParam);
 				})();
-				// When done loading, transition to Title scene.
-				//Crafty.scene('Title');
+				// When done loading, transition to Title-intro scene.
+				//Crafty.scene('Title-intro');
 				Crafty.scene('level1-intro'); //TODO
 			})();
 		});

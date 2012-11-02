@@ -1,5 +1,5 @@
 define([ 'config', 'utils', 'Crafty' ], function(config, utils) {
-	Crafty.scene('Title', function() {
+	Crafty.scene('Title-intro', function() {
 		Crafty.audio.play('music/title', 1, utils.effectiveVolume('music/title'));
 		var clickToSkipText = Crafty.e('2D, DOM, Text');
 		clickToSkipText.attr({
