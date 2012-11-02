@@ -228,6 +228,50 @@ function(config) {
 			Crafty.audio.stop();
 		}
 	}
+	/**
+	 * Given a sorted array of objects with a numeric field, returns the
+	 * object whose numeric field is the largest one less than or equal to the
+	 * target value. E.g.
+	 * 
+	 * binarySearch([
+	 *   { key : 1, val: "a"},
+	 *   { key : 2, val: "b"},
+	 *   { key : 3, val: "c"},
+	 * ], "key", 2.5) returns { key : 2, val: "b"}.
+	 * 
+	 * 	 * @param array
+	 *            the array to search
+	 * @param numericField
+	 *            the name of the numeric field
+	 * @param targetValue
+	 *            an upper bound on the value the numericField can have.
+	 * @return the object whose numeric field is the largest one under the
+	 *         target value, or null if no such object exists.
+	 */
+	function binarySearch(array, numericField, targetValue) {
+		function binarySearchRecurr(imin, imax) {
+			//imin is inclusive, imax is exclusive
+			if (array[imin][numericField] > targetValue) {
+				return null;
+			}
+			if (imin >= imax) {
+				return null;
+			}
+			if (imin + 1 == imax) {
+				return array[imin];
+			}
+			var imid = Math.floor((imin + imax)/2);
+			var value = array[imid][numericField];
+			if (value > targetValue) {
+				return binarySearchRecurr(imin, imid);
+			} else if (value < targetValue) {
+				return binarySearchRecurr(imid, imax);
+			} else {
+				return array[imid];
+			}
+		}
+		return binarySearchRecurr(0, array.length);
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
@@ -236,5 +280,6 @@ function(config) {
 		addMusicControlEntity: addMusicControlEntity,
 		loadMap: loadMap,
 		stopAllMusic: stopAllMusic,
+		binarySearch: binarySearch,
 	};
 });
