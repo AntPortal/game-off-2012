@@ -1,6 +1,6 @@
-define(function() {
+define([], function() {
 	//TODO: Store the musicVolume in the preference, and reload it as needed.
-	return {
+	var configObj = {
 		viewport : {
 			width : 710,
 			height : 580
@@ -49,10 +49,7 @@ define(function() {
 		 * Easiest way to detect that a save slot is empty is to read the level field, and if it's "undefined", it means
 		 * the slot is empty.
 		 */
-		saveGames: [{
-			name: "Nebu", //TODO Test data, delete me in final build of the game.
-			level: 1
-		},{},{}], //TODO: Load save games from cookies/local store/whatever
+		saveGames: [{},{},{}],
 		curSaveSlot: 0, //must be a value between 0 and 2 inclusive
 		getCurLevel: function() {
 			return this.saveGames[this.curSaveSlot].level;
@@ -82,7 +79,15 @@ define(function() {
 			this.serialize();
 		},
 		serialize: function() {
-			//TODO: Store the data in saveGames to local store or cookies or whatever.
+			window.localStorage.setItem('saveGames', JSON.stringify(this.saveGames));
 		}
 	};
+	(function() {
+		//Load from local storage
+		var loadedData = window.localStorage.getItem('saveGames');
+		if (loadedData) {
+			configObj.saveGames = JSON.parse(loadedData);
+		}
+	})();
+	return configObj;
 });
