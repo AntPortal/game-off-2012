@@ -29,6 +29,7 @@ define([ 'Crafty' ], function() {
 			this._headRevId = this._nextRevId
 			this._nextRevId += 1;
 			// console.log(JSON.stringify(this._revisions));
+			this.trigger("Commit", newRevision);
 			return this._headRevId;
 		}
 	});
