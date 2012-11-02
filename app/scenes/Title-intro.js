@@ -1,4 +1,9 @@
-define([ 'config', 'utils', 'Crafty' ], function(config, utils) {
+define([
+		'config',
+		'utils',
+		'Crafty',
+		'scenes/title'
+	], function(config, utils) {
 	Crafty.scene('Title-intro', function() {
 		Crafty.audio.play('music/title', 1, utils.effectiveVolume('music/title'));
 		var clickToSkipText = Crafty.e('2D, DOM, Text');
@@ -50,21 +55,7 @@ define([ 'config', 'utils', 'Crafty' ], function(config, utils) {
 			cues.push(bgCueList);
 		})();
 		(function() {
-			var title = Crafty.e('2D, DOM, Text');
-			title.attr({
-				w : config.viewport.width,
-				x : 0,
-				y : 0,
-				z : 1,
-			}).text("Karayom").css({
-				'text-align': 'center',
-				'color': '#fff',
-				'display' : 'none',
-				'font-family' : 'Corben',
-				'font-size' : '80px',
-				'font-weight' : 700,
-				'text-shadow': '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95',
-			});
+			var title = utils.createTitleEntity(Crafty);
 			title.visible = false;
 			var titleLandingY = config.viewport.height * 0.5;
 			var titleCueList = [];
@@ -131,7 +122,7 @@ define([ 'config', 'utils', 'Crafty' ], function(config, utils) {
 			//console.log(curBar);
 			if (curBar > 66 || clickCapture.clicked) {
 				Crafty.audio.stop('music/title');
-				Crafty.scene('level1-intro'); //TODO
+				Crafty.scene('title'); //TODO
 				this.destroy();
 			}
 		});

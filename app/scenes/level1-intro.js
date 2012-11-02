@@ -34,7 +34,7 @@ define([
 					y: 100,
 					w: 400,
 					h: 70,
-					msg: "[Name]...",
+					msg: config.getCurShortName() + "...",
 					showMore: true,
 				}
 			},
@@ -46,7 +46,7 @@ define([
 					y: 100,
 					w: 400,
 					h: 70,
-					msg: "[Name]!",
+					msg: config.getCurShortName() + "!",
 					showMore: true,
 				}
 			},
@@ -58,7 +58,7 @@ define([
 					y: 100,
 					w: 400,
 					h: 70,
-					msg: "Good morning, [Name]!",
+					msg: "Good morning, "+config.getCurShortName() +"!",
 					showMore: true,
 				}
 			},

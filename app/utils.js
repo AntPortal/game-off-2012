@@ -272,6 +272,65 @@ function(config) {
 		}
 		return binarySearchRecurr(0, array.length);
 	}
+	function createTitleEntity(Crafty) {
+		var title = Crafty.e('2D, DOM, Text');
+		title.attr({
+			w : config.viewport.width,
+			x : 0,
+			y : 0,
+			z : 1,
+		}).text("Karayom").css({
+			'text-align': 'center',
+			'color': '#fff',
+			'display' : 'none',
+			'font-family' : 'Corben', //depends on index.html
+			'font-size' : '80px',
+			'font-weight' : 700,
+			'text-shadow': '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95',
+		});
+		return title;
+	}
+	function charAtIsLowerCase(text, index) {
+		if (text.length <= index) {
+			return false;
+		}
+		var char = text[index];
+		return char.toLowerCase() == char;
+	}
+	var MAX_NAME_LENGTH = 6;
+	function getShortName(longName) {
+		if (longName.length <= MAX_NAME_LENGTH) { //If the name fits, just use it as is.
+			return longName;
+		}
+		//Guaranteed name is too long at this point.
+		var dashPosition = longName.indexOf('-');
+		if (dashPosition != -1) { //If there's a dash in the name, truncate at dash and try again
+			return getShortName(longName.substr(0,dashPosition));
+		}
+		//Guaranteed too long and no dash at this point.
+		
+		/*
+		 * If you can divide the name into an uppercase portion followed by a lowercase portion, keep all but the last
+		 * uppercase character, and truncate the rest. E.g. "TJHolowaychuk" -> "TJ". If the uppercase portion is too long,
+		 * just return the first N characters from it, e.g. "ABCDEFGalloway" -> "ABCDEF".
+		 */
+		var regResults = /^([A-Z]+)[A-Z][a-z]+$/.exec(longName);
+		if (regResults) {
+			return regResults[1].substr(0,MAX_NAME_LENGTH);
+		}
+		/*
+		 * If there is a transition from lowecase to uppercase within the length limit, keep the lowercase letter and
+		 * discard the uppercase one. E.g. "NebuPookins" would be truncated to "Nebu".
+		 */
+		var i;
+		for (i = MAX_NAME_LENGTH - 1; i > 0; i--) {
+			if (charAtIsLowerCase(longName, i) && !charAtIsLowerCase(longName, i + 1)) {
+				return longName.substr(0, i + 1);
+			}
+		}
+		//Give up. Just return the first N characters.
+		return longName.substr(0, MAX_NAME_LENGTH);
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
@@ -281,5 +340,7 @@ function(config) {
 		loadMap: loadMap,
 		stopAllMusic: stopAllMusic,
 		binarySearch: binarySearch,
+		createTitleEntity: createTitleEntity,
+		getShortName: getShortName,
 	};
 });
