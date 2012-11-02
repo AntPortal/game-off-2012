@@ -3,12 +3,18 @@ define([
 		'maps/test-multi-tileset-two-baseheights.json',
 		'mouselook',
 		'utils',
+		'versioning',
 		'Crafty',
 		'components/ViewportRelative',
 		'components/ClickNoDrag',
 		'components/Character',
-	], function(config, mapData, mouselook, utils) {
+	], function(config, mapData, mouselook, utils, VersionHistory) {
 	Crafty.scene('IsoTest', function() {
+		var gameState = {
+			hero: {position: [0, 0]}
+		};
+		var versions = new VersionHistory(gameState);
+
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
 		var heightMap = utils.loadMap(mapData, tileProperties, function(tileEntity) {
@@ -20,6 +26,7 @@ define([
 			});
 			if (hero) {
 				hero.setWalkTarget(tileEntity.tileX, tileEntity.tileY);
+				versions.commit({hero: {position: [tileEntity.tileX, tileEntity.tileY]}});
 			}
 		});
 		(function() {
