@@ -49,19 +49,21 @@ define([
 				'assets/sprites/mom.png',
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
+				'assets/ui/action_stop.gif',
 				'assets/ui/bg-blue.png',
 				'assets/ui/comment_new.gif',
 				'assets/ui/dialog.blue.png',
 				'assets/ui/music.png',
+				config.DEFAULT_GITHUB_AVATAR_URL,
 			];
 			//Adds Github avatars to the list of assets to load.
-			var uniqueGithubAvatarUrls = utils.removeDuplicates(githubAvatarUrls);
-			for (i = 0; i < uniqueGithubAvatarUrls.length; i++) {
-				var url = uniqueGithubAvatarUrls[i];
+			for (i = 0; i < githubAvatarUrls.length; i++) {
+				var url = githubAvatarUrls[i];
 				if (url) {
 					assets.push(url);
 				}
 			}
+			assets = utils.removeDuplicates(assets);
 			Crafty.load(assets, function() {
 				makeSleepUntilFontsLoaded(function() {
 					loadAntifareaCharacterSprite('hero', 'assets/sprites/charsets_warrior.png');
@@ -78,6 +80,9 @@ define([
 					Crafty.sprite(16, 'assets/ui/comment_new.gif', {
 						dialogMore : [ 0, 0 ]
 					});
+					Crafty.sprite(16, 'assets/ui/action_stop.gif', {
+						ui_save_delete : [ 0, 0 ]
+					});
 					(function() {
 						//Loads the faces as face_warriorM, face_warriorF, face_mageM, etc.
 						var temp = ['warrior', 'mage', 'healer', 'ninja', 'ranger', 'villager'];
@@ -88,7 +93,8 @@ define([
 						}
 						Crafty.sprite(48, 'assets/faces/faces1.png', spriteParam);
 					})();
-					for (i = 0; i < githubAvatarUrls.length; i++) { //Important! we do NOT use uniqueGithubAvatarUrls here.
+					//Create sprites for github avatars from save files.
+					for (i = 0; i < githubAvatarUrls.length; i++) {
 						var url = githubAvatarUrls[i];
 						if (url != null) {
 							var img = Crafty.asset(url);
@@ -97,6 +103,13 @@ define([
 							Crafty.sprite(url, spriteParams);
 						}
 					}
+					(function() { //Create sprite for default github avatars
+						var url = config.DEFAULT_GITHUB_AVATAR_URL;
+						var img = Crafty.asset(url); 
+						Crafty.sprite(url, {
+							DefaultGithubAvatar: [0,0,img.width,img.height]
+						});
+					})();
 					// When done loading, transition to Title-intro scene.
 					//Crafty.scene('Title-intro');
 					Crafty.scene('title'); //TODO

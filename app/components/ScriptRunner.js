@@ -47,7 +47,7 @@ define([
 			if (dialogInst.action != 'dialog') {
 				throw dialogInst;
 			}
-			Crafty.e('2D, Canvas, Dialog').Dialog(dialogInst.params);
+			Crafty.e('2D, Canvas, Dialog').attr(dialogInst.params);
 			this._curState++;
 			this.run();
 		},

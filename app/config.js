@@ -6,6 +6,7 @@ define([], function() {
 			height : 580
 		},
 		TILE_IMAGE_SIZE : 64, // A baked in assumption we're making
+		DEFAULT_GITHUB_AVATAR_URL: 'https://a248.e.akamai.net/assets.github.com/images/gravatars/gravatar-user-420.png',
 		areaMaps : {
 			'default' : [ [ 32, 32 ], [ 64, 48 ], [ 32, 64 ], [ 0, 48 ] ],
 			'cube' : [ [ 32, 0 ], [ 64, 16 ], [ 32, 32 ], [ 0, 16 ] ],

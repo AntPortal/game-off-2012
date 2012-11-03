@@ -9,21 +9,27 @@ define([
 		var title = utils.createTitleEntity(Crafty);
 		title.css('display', 'block');
 		var slots = [0,1,2];
+		function getMsgForSaveGameData(i) {
+			return [
+				"Save Game Slot " + (i + 1) +": " + (config.saveGames[i].name || "[Empty]"),
+				(config.saveGames[i].level ? "Level: " + config.saveGames[i].level : "")
+			];
+		}
 		for (i = 0; i < slots.length; i++) {
-			slots[i] = Crafty.e('Dialog').Dialog({
+			slots[i] = Crafty.e('Dialog');
+			slots[i].attr({
 				x: 0,
 				y: 120 * i + 150,
 				w: config.viewport.width,
 				h: 100,
-				msg: [
-						"Save Game Slot " + (i + 1) +": " + (config.saveGames[i].name || "[Empty]"),
-						(config.saveGames[i].level ? "Level: " + config.saveGames[i].level : "")
-				],
+				z: config.zOffset.dialog,
+				msg: getMsgForSaveGameData(i),
 				face: 'GithubAvatar' + i,
 				faceWidth: 78,
 				faceHeight: 78,
+				saveIndex: i
 			});
-			slots[i].attr({saveIndex: i});
+			slots[i].trigger('Change');
 			slots[i].addComponent('Mouse');
 			slots[i].bind('Click', function() {
 				config.curSaveSlot = this.saveIndex;
@@ -35,8 +41,23 @@ define([
 					Crafty.scene('newGame');
 				}
 			});
+			var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
+			slotDelete.attr({
+				x: config.viewport.width - 16 - 8,
+				y: 120 * i + 150 + 10,
+				w: 16,
+				h: 16,
+				z: config.zOffset.dialog,
+				saveIndex: i,
+			});
+			slotDelete.bind('Click', function() {
+				console.log('delete clicked');
+				config.saveGames[this.saveIndex] = {};
+				slots[this.saveIndex].face = 'DefaultGithubAvatar';
+				slots[this.saveIndex].msg = getMsgForSaveGameData(this.saveIndex);
+				slots[this.saveIndex].trigger('Change');
+			});
 		}
-		Crafty.e('2D, Canvas, githubAvatar').attr({x: 0, y: 0, w: 100, h: 100, z: 9999});
 	});
 
 	Crafty.scene('newGame', function() {
@@ -57,7 +78,7 @@ define([
 		var charSquareSize = fontSize * charSquareSizeMultiplier;
 		var MAX_NAME_LENGTH = 40;
 		var i, j;
-		Crafty.e('Dialog').Dialog({
+		Crafty.e('Dialog').attr({
 			x: 0,
 			y: 0,
 			w: config.viewport.width,
