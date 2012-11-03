@@ -210,12 +210,14 @@ function(config) {
 									tileClickCallback(this);
 								}
 							});
-							/* The call to .map below makes a deep copy of the array; this is needed because Crafty
-							 * seems to change the provided coordinate arrays in-place, which leads to problems if
-							 * they're shared between multiple entities. */
-							var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
-							var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
-							entity.areaMap(tileAreaMap);
+							if (entity.areaMap) { //Some scenes, e.g. level1-intro, don't use areamaps.
+								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
+								 * seems to change the provided coordinate arrays in-place, which leads to problems if
+								 * they're shared between multiple entities. */
+								var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
+								var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
+								entity.areaMap(tileAreaMap);
+							}
 						}
 					}
 				}
