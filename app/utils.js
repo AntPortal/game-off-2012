@@ -331,6 +331,76 @@ function(config) {
 		//Give up. Just return the first N characters.
 		return longName.substr(0, MAX_NAME_LENGTH);
 	}
+	function ajax(url, callback) {
+		var unusedName = 'asjdlasidjliwmxxsasdnsmnd'; //TODO check if name is unused, generate a different name if it is used.
+		var body = document.getElementsByTagName('body')[0];
+		var script = document.createElement('script');
+		window[unusedName] = function(var_args) {
+			delete window[unusedName];
+			body.removeChild(script);
+			callback.apply(null, arguments);
+		};
+		script.src = url + '?callback='+unusedName;
+		body.appendChild(script);
+	}
+	/**
+	 * Gets the avatar url associated with the specified github account name, and then invokes the callback, passing in
+	 * the url.
+	 */
+	function withGitHubAvatarUrl(githubAccountName, callback) {
+		ajax('https://api.github.com/users/'+githubAccountName, function(jsonData) {
+			if (jsonData.meta.status === 200) {
+				callback(jsonData.data.avatar_url);
+			} else if (jsonData.meta.status === 404) {
+				callback(null);
+			} else {
+				console.warn('Got ' + jsonData.meta.status + ' while loading github avatar');
+				callback(null);
+			}
+		});
+	}
+	/**
+	 * Given an array of github account names, gets their associated avatar urls, then invokes the callback, passing in
+	 * an array of urls.
+	 */
+	function withGitHubAvatarUrls(accountArray, callback) {
+		function withGitHubAvatarUrlsRecurr(myArray, accumulator) {
+			if (accountArray.length == 0) {
+				callback(accumulator);
+			} else {
+				var head = accountArray[0];
+				var tail = accountArray.splice(0, 1);
+				withGitHubAvatarUrl(head, function(headUrl) {
+					accumulator.push(headUrl);
+					withGitHubAvatarUrlsRecurr(tail, accumulator);
+				});
+			}
+		}
+		withGitHubAvatarUrlsRecurr(accountArray, []);
+	}
+	/**
+	 * Returns true if the array contains the provided needle, false otherwise.
+	 */
+	function contains(array, needle) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] == needle) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * Returns a new array which is equal to the first array, except with duplicates removed;
+	 */
+	function removeDuplicates(array) {
+		var retVal = [];
+		for (var i = 0; i < array.length; i++) {
+			if (!contains(retVal, array[i])) {
+				retVal.push(array[i]);
+			}
+		}
+		return retVal;
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
@@ -342,5 +412,8 @@ function(config) {
 		binarySearch: binarySearch,
 		createTitleEntity: createTitleEntity,
 		getShortName: getShortName,
+		withGitHubAvatarUrl: withGitHubAvatarUrl,
+		withGitHubAvatarUrls: withGitHubAvatarUrls,
+		removeDuplicates: removeDuplicates,
 	};
 });

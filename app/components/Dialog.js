@@ -65,6 +65,12 @@ define([ 'config', 'Crafty' ], function(config) {
 			if (params.face) {
 				this.face = Crafty.e('2D, Canvas');
 				this.face.addComponent(params.face);
+				if (params.faceWidth) {
+					this.face.attr("w", params.faceWidth);
+				}
+				if (params.faceHeight) {
+					this.face.attr("h", params.faceWidth);
+				}
 			}
 			this._attributeChanged();
 			this.bind('Change', this._attributeChanged);
@@ -158,7 +164,7 @@ define([ 'config', 'Crafty' ], function(config) {
 			}
 			for (i = 0; i < this.msg.length; i++) {
 				this.msg[i].attr({
-					x : this.x + TILE_SIZE + (this.face ? 48 : 0),
+					x : this.x + TILE_SIZE + (this.face ? this.face.w + 2 : 0),
 					y : this.y + (i + 1) * (TILE_SIZE * 1.5),
 					z : this.z,
 					visible: this.visible,

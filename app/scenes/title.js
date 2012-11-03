@@ -18,7 +18,10 @@ define([
 				msg: [
 						"Save Game Slot " + (i + 1) +": " + (config.saveGames[i].name || "[Empty]"),
 						(config.saveGames[i].level ? "Level: " + config.saveGames[i].level : "")
-				]
+				],
+				face: 'GithubAvatar' + i,
+				faceWidth: 78,
+				faceHeight: 78,
 			});
 			slots[i].attr({saveIndex: i});
 			slots[i].addComponent('Mouse');
@@ -33,6 +36,7 @@ define([
 				}
 			});
 		}
+		Crafty.e('2D, Canvas, githubAvatar').attr({x: 0, y: 0, w: 100, h: 100, z: 9999});
 	});
 
 	Crafty.scene('newGame', function() {
