@@ -9,6 +9,7 @@ define([
 	'config',
 	'Crafty',
 	'scenes/Loading',
+	'trapBackspace',
 ], function(config) {
 	Crafty.init(config.viewport.width, config.viewport.height);
 	// Start in loading scene
