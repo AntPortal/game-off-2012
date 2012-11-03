@@ -1,11 +1,10 @@
 define([
 		'config',
 		'utils',
-		'maps/level1-intro.json', //Any arbitrary level for tileset data
 		'Crafty',
 		'scenes/Title-intro',
 		'scenes/level1-intro'
-], function(config, utils, mapData) {
+], function(config, utils) {
 	function loadAntifareaCharacterSprite(id, url) {
 		var w = 16*2;
 		var h = 18*2;
