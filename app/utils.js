@@ -299,6 +299,15 @@ function(config) {
 	}
 	var MAX_NAME_LENGTH = 6;
 	function getShortName(longName) {
+		/*
+		 * Note that the judge's github account names are:
+		 * 
+		 * David Czarnecki: czarneckid
+		 * Eric Preisz: ??? GarageGames? DavidWyand-GG? GG-ScottB? Svetbach? thecelloman?
+		 * Matt Hackett: richtaur 
+		 * Lee Reilly: leereilly
+		 * Romana Ramzan: ???
+		 */
 		if (longName.length <= MAX_NAME_LENGTH) { //If the name fits, just use it as is.
 			return longName;
 		}
@@ -308,13 +317,22 @@ function(config) {
 			return getShortName(longName.substr(0,dashPosition));
 		}
 		//Guaranteed too long and no dash at this point.
-		
+		var regResults;
+		/*
+		 * If a name is exactly two uppercase characters followed by a lower case characters, drop the first uppercase
+		 * character, then keep all the remaining lowercase characters (up to the max length). E.g. "ASwanson" -> "Swanso".
+		 */
+		regResults = /^[A-Z]([A-Z][a-z]+)$/.exec(longName);
+		if (regResults) {
+			return regResults[1].substr(0,MAX_NAME_LENGTH);
+		}
 		/*
 		 * If you can divide the name into an uppercase portion followed by a lowercase portion, keep all but the last
 		 * uppercase character, and truncate the rest. E.g. "TJHolowaychuk" -> "TJ". If the uppercase portion is too long,
-		 * just return the first N characters from it, e.g. "ABCDEFGalloway" -> "ABCDEF".
+		 * just return the first N characters from it, e.g. "ABCDEFGalloway" -> "ABCDEF". Note that because of the earlier
+		 * regexp test, we're guaranteed that there are at least 2 uppercase initials here.
 		 */
-		var regResults = /^([A-Z]+)[A-Z][a-z]+$/.exec(longName);
+		regResults = /^([A-Z]+)[A-Z][a-z]+$/.exec(longName);
 		if (regResults) {
 			return regResults[1].substr(0,MAX_NAME_LENGTH);
 		}
