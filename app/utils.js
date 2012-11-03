@@ -1,5 +1,6 @@
 define([
-		'config'
+		'config',
+		'components/BetterText',
 ],
 function(config) {
 	function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
@@ -275,15 +276,16 @@ function(config) {
 		return binarySearchRecurr(0, array.length);
 	}
 	function createTitleEntity(Crafty) {
-		var title = Crafty.e('2D, DOM, Text');
+		var title = Crafty.e('2D, DOM, BetterText');
 		title.attr({
+			text: "Karayom",
+			textColor: "#fff",
 			w : config.viewport.width,
 			x : 0,
 			y : 0,
 			z : 1,
-		}).text("Karayom").css({
+		}).css({
 			'text-align': 'center',
-			'color': '#fff',
 			'display' : 'none',
 			'font-family' : 'Corben', //depends on index.html
 			'font-size' : '80px',

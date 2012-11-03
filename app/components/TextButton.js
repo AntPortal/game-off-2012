@@ -1,4 +1,8 @@
-define([ 'config', 'Crafty' ], function(config) {
+define([
+	'config',
+	'Crafty',
+	'components/BetterText',
+], function(config) {
 	Crafty.c('TextButton', {
 		init: function() {
 			this.requires('2D, Mouse');
@@ -14,12 +18,12 @@ define([ 'config', 'Crafty' ], function(config) {
 			if (!params.size) {
 				params.size = '45px';
 			}
-			this._label = Crafty.e('2D, Canvas, Text');
-			this._label.text(label);
-			this._label.textColor('#FFFFFF', 1);
-			this._label.textFont({
-				family: 'Patrick Hand',
-				size: params.size,
+			this._label = Crafty.e('2D, Canvas, BetterText');
+			this._label.attr({
+				text: label,
+				textColor: '#FFFFFF',
+				fontFamily: 'Patrick Hand',
+				fontSize: params.size,
 			});
 			return this;
 			//TODO Allow user to configure font size, color

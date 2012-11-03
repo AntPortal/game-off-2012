@@ -3,6 +3,7 @@ define([
 		'utils',
 		'components/Dialog',
 		'components/TextButton',
+		'components/BetterText',
 ], function(config, utils) {
 	Crafty.scene('title', function() {
 		var i;
@@ -84,13 +85,12 @@ define([
 			w: config.viewport.width,
 			h: config.viewport.height,
 		});
-		Crafty.e('2D, Canvas, Text').
-			text("Enter your GitHub name:").
-			textColor('#FFFFFF', 1).
-			textFont({
-				family: 'Patrick Hand',
-				size: fontSize+'px',
-			}).attr({
+		Crafty.e('2D, Canvas, BetterText').
+			attr({
+				text: "Enter your GitHub name:",
+				textColor: '#FFFFFF',
+				fontFamily: 'Patrick Hand',
+				fontSize: fontSize+'px',
 				x: 20,
 				y: 0,
 				z: config.zOffset.dialog + 1,
@@ -98,67 +98,66 @@ define([
 				h: fontSize
 			});
 		var name = '';
-		var nameEntity = Crafty.e('2D, Canvas, Text').
-			text(' ').
-			textColor('#FFFFFF', 1).
-			textFont({
-				family: 'Patrick Hand',
-				size: fontSize+'px',
-			}).
-			attr({
-				x: 20,
-				y: charSquareSize,
-				z: config.zOffset.dialog + 1,
-				w: config.viewport.width,
-				h: charSquareSize
-			}).
-			bind('KeyDown', function(keyEvent) {
-				//Implements support for physical keyboard.
-				var aKeycode = 65;
-				var zKeycode = aKeycode + 25;
-				var dashKeycode = 189;
-				var backspaceKeycode = 8;
-				var deleteKeycode = 46;
-				var enterKeycode = 13;
-				var keycode = keyEvent.which || keyEvent.key || keyEvent.keyCode;
-				var char = null;
-				if (aKeycode <= keycode && keycode <= zKeycode) {
-					char = String.fromCharCode(keycode);
-					if (keyEvent.shiftKey) {
-						char = char.toUpperCase();
-					} else {
-						char = char.toLowerCase();
-					}
-				} else if (keycode == dashKeycode) {
-					char = '-';
-				} else if (keycode == backspaceKeycode || keycode == deleteKeycode) {
-					char = 'DELETE';
-				} else if (keycode == enterKeycode) {
-					char = 'DONE';
+		var nameEntity = Crafty.e('2D, Canvas, BetterText');
+		nameEntity.attr({
+			text: ' ',
+			textColor: '#FFFFFF',
+			fontFamily: 'Patrick Hand',
+			fontSize: fontSize+'px',
+			x: 20,
+			y: charSquareSize + 10,
+			baseline: charSquareSize + 10 + charSquareSize * 0.75,
+			z: config.zOffset.dialog + 1,
+			w: config.viewport.width,
+			h: charSquareSize * 1.25,
+		});
+		nameEntity.bind('KeyDown', function(keyEvent) {
+			//Implements support for physical keyboard.
+			var aKeycode = 65;
+			var zKeycode = aKeycode + 25;
+			var dashKeycode = 189;
+			var backspaceKeycode = 8;
+			var deleteKeycode = 46;
+			var enterKeycode = 13;
+			var keycode = keyEvent.which || keyEvent.key || keyEvent.keyCode;
+			var char = null;
+			if (aKeycode <= keycode && keycode <= zKeycode) {
+				char = String.fromCharCode(keycode);
+				if (keyEvent.shiftKey) {
+					char = char.toUpperCase();
+				} else {
+					char = char.toLowerCase();
 				}
-				if (char) {
-					if (char == 'DELETE') {
-						fnBackspace();
-					} else if (char == 'DONE') {
-						fnDone();
-					} else {
-						setNameHack(name + char);
-					}
+			} else if (keycode == dashKeycode) {
+				char = '-';
+			} else if (keycode == backspaceKeycode || keycode == deleteKeycode) {
+				char = 'DELETE';
+			} else if (keycode == enterKeycode) {
+				char = 'DONE';
+			}
+			if (char) {
+				if (char == 'DELETE') {
+					fnBackspace();
+				} else if (char == 'DONE') {
+					fnDone();
+				} else {
+					setNameHack(name + char);
 				}
-			});
+			}
+		});
 		function setNameHack(newValue) {
 			name = newValue.substr(0, MAX_NAME_LENGTH);
 			if (name.substr(0,1) == '-') {
 				name = ''; //Github does not allow name to start with dash.
 			}
 			if (name.length == 0) {
-				nameEntity.text(' '); //Put a space, or else Crafty messes things up.
+				nameEntity.text = ' '; //Put a space, or else Crafty messes things up.
 			} else {
 				var shortName = utils.getShortName(name);
 				if (name == shortName) {
-					nameEntity.text(name);
+					nameEntity.text = name;
 				} else {
-					nameEntity.text(name + ' ('+shortName+')');
+					nameEntity.text = name + ' ('+shortName+')';
 				}
 			}
 			//Hack, because otherwise the refresh doesn't seme to work in Crafty.
@@ -225,5 +224,17 @@ define([
 				Crafty.scene('level1-intro');
 			}
 		}
+		var tooltip = Crafty.e('2D, Canvas, BetterText');
+		tooltip.attr({
+			text: '?',
+			textColor: '#00FF00',
+			fontFamily: 'Patrick Hand',
+			fontSize: fontSize+'px',
+			x: config.viewport.width - 24,
+			y: 24,
+			w: 16,
+			h: 16,
+			z: config.zOffset.dialog + 2,
+		});
 	});
 });

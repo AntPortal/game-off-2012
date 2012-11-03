@@ -2,19 +2,21 @@ define([
 		'config',
 		'utils',
 		'Crafty',
-		'scenes/title'
+		'scenes/title',
+		'components/BetterText',
 	], function(config, utils) {
 	Crafty.scene('Title-intro', function() {
 		Crafty.audio.play('music/title', 1, utils.effectiveVolume('music/title'));
-		var clickToSkipText = Crafty.e('2D, DOM, Text');
+		var clickToSkipText = Crafty.e('2D, DOM, BetterText');
 		clickToSkipText.attr({
+			text: "Click to Skip",
+			textColor: 'white',
 			w : config.viewport.width,
 			x : 0,
 			y : config.viewport.height * 0.9,
 			z : config.zOffset.meta
-		}).text("Click to Skip").css({
+		}).css({
 			'text-align' : 'center',
-			'color' : 'white'
 		});
 		var clickCapture = Crafty.e('2D, Canvas, Mouse');
 		clickCapture.attr({

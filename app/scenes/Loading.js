@@ -3,7 +3,8 @@ define([
 		'utils',
 		'Crafty',
 		'scenes/Title-intro',
-		'scenes/level1-intro'
+		'scenes/level1-intro',
+		'components/BetterText',
 ], function(config, utils) {
 	function loadAntifareaCharacterSprite(id, url) {
 		var w = 16*2;
@@ -17,13 +18,14 @@ define([
 	}
 	Crafty.scene('Loading', function() {
 		Crafty.background('#000');
-		Crafty.e('2D, DOM, Text').attr({
+		Crafty.e('2D, DOM, BetterText').attr({
+			text: "Loading...",
+			textColor: 'white',
 			w : config.viewport.width,
 			x : 0,
 			y : config.viewport.height / 2
-		}).text("Loading...").css({
+		}).css({
 			'text-align' : 'center',
-			'color' : 'white'
 		});
 		for (key in config.music) {
 			var ogg = config.music[key].prefix + '.ogg';

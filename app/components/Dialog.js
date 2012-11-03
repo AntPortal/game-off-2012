@@ -1,4 +1,8 @@
-define([ 'config', 'Crafty' ], function(config) {
+define([
+	'config',
+	'Crafty',
+	'components/BetterText'
+], function(config) {
 	var TILE_SIZE = 16; // hardcoded size of a dialog tile.
 	var SHOW_MORE_SIZE = 16; // hardcoded size of the "show more" icon.
 	Crafty.c('Dialog', {
@@ -145,14 +149,12 @@ define([ 'config', 'Crafty' ], function(config) {
 			this._msgEntity = [];
 			//Create new set of message entities
 			for (i = 0; i < this.msg.length; i++) {
-				var msgEntity = Crafty.e('2D, Canvas, Text');
-				msgEntity.text(this.msg[i]);
-				msgEntity.textColor(this.msgColor, 1);
-				msgEntity.textFont({
-					family: 'Patrick Hand',
-					size: '16px',
-				});
+				var msgEntity = Crafty.e('2D, Canvas, BetterText');
 				msgEntity.attr({
+					text: this.msg[i],
+					textColor: this.msgColor,
+					fontFamily: 'Patrick Hand',
+					fontSize: '16px',
 					x : this.x + TILE_SIZE + (this.face ? this._faceEntity.w + 2 : 0),
 					y : this.y + (i + 1) * (TILE_SIZE * 1.5),
 					z : this.z,
