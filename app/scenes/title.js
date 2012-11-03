@@ -83,12 +83,47 @@ define([
 			textFont({
 				family: 'Patrick Hand',
 				size: fontSize+'px',
-			}).attr({
+			}).
+			attr({
 				x: 20,
 				y: charSquareSize,
 				z: config.zOffset.dialog + 1,
 				w: config.viewport.width,
 				h: charSquareSize
+			}).
+			bind('KeyDown', function(keyEvent) {
+				//Implements support for physical keyboard.
+				var aKeycode = 65;
+				var zKeycode = aKeycode + 25;
+				var dashKeycode = 189;
+				var backspaceKeycode = 8;
+				var deleteKeycode = 46;
+				var enterKeycode = 13;
+				var keycode = keyEvent.which || keyEvent.key || keyEvent.keyCode;
+				var char = null;
+				if (aKeycode <= keycode && keycode <= zKeycode) {
+					char = String.fromCharCode(keycode);
+					if (keyEvent.shiftKey) {
+						char = char.toUpperCase();
+					} else {
+						char = char.toLowerCase();
+					}
+				} else if (keycode == dashKeycode) {
+					char = '-';
+				} else if (keycode == backspaceKeycode || keycode == deleteKeycode) {
+					char = 'DELETE';
+				} else if (keycode == enterKeycode) {
+					char = 'DONE';
+				}
+				if (char) {
+					if (char == 'DELETE') {
+						fnBackspace();
+					} else if (char == 'DONE') {
+						fnDone();
+					} else {
+						setNameHack(name + char);
+					}
+				}
 			});
 		function setNameHack(newValue) {
 			name = newValue.substr(0, MAX_NAME_LENGTH);
@@ -144,10 +179,7 @@ define([
 				h: (charSquareSize/2),
 				z: config.zOffset.dialog + 1,
 			}).
-			bind('Click', function() {
-				var newValue = name.substr(0,name.length - 1);
-				setNameHack(newValue);
-			});
+			bind('Click', fnBackspace);
 		Crafty.e('TextButton, Canvas').
 			TextButton("Done", {size: (fontSize/2)+'px'}).
 			attr({
@@ -157,13 +189,20 @@ define([
 				h: (charSquareSize/2),
 				z: config.zOffset.dialog + 1,
 			}).
-			bind('Click', function() {
-				if (name.length > 0) {
-					config.setCurName(name);
-					config.setCurShortName(utils.getShortName(name));
-					config.setCurLevel(1);
-					Crafty.scene('level1-intro');
-				}
-			});
+			bind('Click', fnDone);
+		function fnBackspace() {
+			if (name.length > 0) {
+				var newValue = name.substr(0,name.length - 1);
+				setNameHack(newValue);
+			}
+		}
+		function fnDone() {
+			if (name.length > 0) {
+				config.setCurName(name);
+				config.setCurShortName(utils.getShortName(name));
+				config.setCurLevel(1);
+				Crafty.scene('level1-intro');
+			}
+		}
 	});
 });
