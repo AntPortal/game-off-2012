@@ -68,3 +68,4 @@ BUGS
   * As part of this, you'll probably want to add an A* path finding algorithm.
 * Seems like there's a bug in Crafty where if you use a mix of DOM and Canvas text elements, setting the font on the Canvas element also sets the font on the DOM element. 
 * Volume controls don't work on ipad.
+* In the name entry screen, the bottom of text (e.g. the tail of y) is cut off.
