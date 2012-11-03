@@ -368,16 +368,22 @@ function(config) {
 	 * the url.
 	 */
 	function withGitHubAvatarUrl(githubAccountName, callback) {
-		ajax('https://api.github.com/users/'+githubAccountName, function(jsonData) {
-			if (jsonData.meta.status === 200) {
-				callback(jsonData.data.avatar_url);
-			} else if (jsonData.meta.status === 404) {
-				callback(null);
-			} else {
-				console.warn('Got ' + jsonData.meta.status + ' while loading github avatar');
-				callback(null);
-			}
-		});
+		cacheFunctionResult(
+			'withGitHubAvatarUrl.'+githubAccountName,
+			function(cacheCallback) {
+				ajax('https://api.github.com/users/'+githubAccountName, function(jsonData) {
+					if (jsonData.meta.status === 200) {
+						cacheCallback(jsonData.data.avatar_url);
+					} else if (jsonData.meta.status === 404) {
+						cacheCallback(null);
+					} else {
+						console.warn('Got ' + jsonData.meta.status + ' while loading github avatar');
+						cacheCallback(null);
+					}
+				});
+			},
+			callback
+		);
 	}
 	/**
 	 * Given an array of github account names, gets their associated avatar urls, then invokes the callback, passing in
@@ -420,6 +426,42 @@ function(config) {
 			}
 		}
 		return retVal;
+	}
+	/**
+	 * If the cache contains the provided key, invokes the callback passing in the associated value. Otherwise, runs the
+	 * provided function, and stores the result of the function into the cache under the specified key, and then invokes
+	 * the specified callback with the value.
+	 * 
+	 * Example:
+	 * 
+	 * cacheFunctionResult(
+	 * 	'sumOf2Plus2',
+	 * 	function(callback) {
+	 * 		var computation = 2 + 2;
+	 * 		callback(computation);
+	 * 	},
+	 * 	function(result) {
+	 * 		console.log('The result is ' + result);
+	 * });
+	 * 
+	 * Note that "falsy" values are not stored into the cache. If you really want to cache 'false' as the result of the
+	 * computation, you should wrap it in an object so that it appears truthy.
+	 */
+	function cacheFunctionResult(key, func, callback) {
+		var cacheStr = window.localStorage.getItem('cacheFunctionResult');
+		var cacheObj = cacheStr ? JSON.parse(cacheStr) : {};
+		var cachedValue = cacheObj[key];
+		if (cachedValue) {
+			callback(cachedValue);
+		} else {
+			func(function(result) {
+				if (result) { //Don't store falsy results.
+					cacheObj[key] = result;
+					window.localStorage.setItem('cacheFunctionResult', JSON.stringify(cacheObj));
+				}
+				callback(result);
+			});
+		}
 	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
