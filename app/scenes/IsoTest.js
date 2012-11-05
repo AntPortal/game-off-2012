@@ -9,6 +9,7 @@ define([
 		'components/Character',
 		'components/VersionHistory',
 		'components/Dialog',
+		'components/Rotates',
 	], function(config, mapData, mouselook, utils) {
 	Crafty.scene('IsoTest', function() {
 		var initGameState = {
@@ -48,7 +49,7 @@ define([
 			versions.bind('Commit', function(commit) {
 				/* For now, commit markers are just squares. */
 				console.log(commit);
-				var marker = Crafty.e('2D, Canvas, ViewportRelative, gitk_commit_current').attr({w: COMMIT_SIZE, h: COMMIT_SIZE, z: config.zOffset.gitk + 1});
+				var marker = Crafty.e('2D, Canvas, ViewportRelative, gitk_commit_current, Rotates').attr({w: COMMIT_SIZE, h: COMMIT_SIZE, z: config.zOffset.gitk + 1});
 				var parentMarkers = commit.parentRevIds.map(function(parentId) { return markersByCommitId[parentId]; });
 				/* The "tile coordinates" here indicate positions relative to the commit graph (not the game world).
 				 * (0,0) is the lower-left corner, and the Y axis points upward. */
