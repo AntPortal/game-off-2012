@@ -48,12 +48,15 @@ define([
 				console.log(commit);
 				var marker = Crafty.e('2D, Canvas, Color, ViewportRelative').color('yellow').attr({w: 16, h: 16, z: config.zOffset.gitk});
 				var parentMarkers = commit.parentRevIds.map(function(parentId) { return markersByCommitId[parentId] });
+				/* The "tile coordinates" here indicate positions relative to the commit graph (not the game world).
+				 * (0,0) is the lower-left corner, and the Y axis points upward. */
 				if (parentMarkers.length === 0) {
-					marker.attr({x: 8, y: viewHeight - 32 + 8});
+					marker.attr({tileX: 0, tileY: 0});
 				} else {
 					parentMarkers[0].color('blue');
-					marker.attr({x: parentMarkers[0].x + 32 + 8, y: parentMarkers[0].y});
+					marker.attr({tileX: parentMarkers[0].tileX + 1, tileY: parentMarkers[0].tileY});
 				}
+				marker.attr({x: 32*marker.tileX + 8, y: viewHeight - 32*marker.tileY - 32 + 8});
 				markersByCommitId[commit.id] = marker;
 			});
 		})();
