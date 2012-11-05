@@ -1,43 +1,22 @@
-define([ 'config', 'Crafty' ], function(config) {
+define([
+	'config',
+	'Crafty',
+	'components/BetterText'
+], function(config) {
 	var TILE_SIZE = 16; // hardcoded size of a dialog tile.
 	var SHOW_MORE_SIZE = 16; // hardcoded size of the "show more" icon.
 	Crafty.c('Dialog', {
 		init : function() {
 			this.requires('2D');
-		},
-		Dialog : function(params) {
-			var i;
-			if (!params.x) {
-				params.x = 0;
-			}
-			if (!params.y) {
-				params.y = 0;
-			}
-			if (!params.z) {
-				params.z = config.zOffset.dialog;
-			}
-			if (!params.w || params.w < (TILE_SIZE * 2)) {
-				params.w = (TILE_SIZE * 2);
-			}
-			if (!params.h || params.h < (TILE_SIZE * 2)) {
-				params.h = (TILE_SIZE * 2);
-			}
-			if (!params.msg) {
-				params.msg = [''];
-			}
-			if (typeof(params.msg) == 'string') {
-				var temp = params.msg;
-				params.msg = [];
-				params.msg[0] = temp;
-			}
-			if (!params.color) {
-				params.color = '#FFFFFF';
-			}
-			this.x = params.x;
-			this.y = params.y;
-			this.z = params.z;
-			this.w = params.w;
-			this.h = params.h;
+			this.attr({
+				x: 0,
+				y: 0,
+				z: config.zOffset.dialog,
+				w: TILE_SIZE * 2,
+				h: TILE_SIZE * 2,
+				msg: [''],
+				msgColor: '#FFFFFF',
+			});
 			this.d = [1,2,3,4,5,6,7,8,9];
 			this.d[7] = Crafty.e('2D, Canvas, dialog7');
 			this.d[8] = Crafty.e('2D, Canvas, dialog8');
@@ -48,37 +27,25 @@ define([ 'config', 'Crafty' ], function(config) {
 			this.d[1] = Crafty.e('2D, Canvas, dialog1');
 			this.d[2] = Crafty.e('2D, Canvas, dialog2');
 			this.d[3] = Crafty.e('2D, Canvas, dialog3');
-			this.msg = [];
-			for (i = 0; i < params.msg.length; i++) {
-				this.msg[i] = Crafty.e('2D, Canvas, Text').
-				text(params.msg[i]).
-				textColor(params.color, 1).
-				textFont({
-					family: 'Patrick Hand',
-					size: '16px',
-				});
-			}
-			if (params.showMore) {
-				this.showMore = Crafty.e('2D, Canvas, dialogMore');
-				this.bind('EnterFrame', this._animateShowMore);
-			}
-			if (params.face) {
-				this.face = Crafty.e('2D, Canvas');
-				this.face.addComponent(params.face);
-			}
-			this._attributeChanged();
+			this._msgEntity = [];
+			this.bind('EnterFrame', this._animateShowMore);
 			this.bind('Change', this._attributeChanged);
 			this.bind('Remove', this._removed);
-			return this;
 		},
 		_animateShowMore: function(params) {
-			if (this.visible) {
+			if (this.visible && this._showMoreEntity) {
 				var size = (Math.sin(params.frame / 20) + 1)/ 3;
-				this.showMore.w = SHOW_MORE_SIZE * (1 + size);
-				this.showMore.h = SHOW_MORE_SIZE * (1 + size);
+				this._showMoreEntity.w = SHOW_MORE_SIZE * (1 + size);
+				this._showMoreEntity.h = SHOW_MORE_SIZE * (1 + size);
 			}
 		},
 		_attributeChanged: function() {
+			if (!this.msg) {
+				this.msg = [''];
+			} else if (typeof(this.msg) == 'string') {
+				var temp = [this.msg];
+				this.msg = temp;
+			}
 			var i;
 			this.d[7].attr({
 				x : this.x,
@@ -141,28 +108,59 @@ define([ 'config', 'Crafty' ], function(config) {
 				visible: this.visible,
 			});
 			if (this.showMore) {
-				this.showMore.attr({
+				if (!this._showMoreEntity) {
+					this._showMoreEntity = Crafty.e('2D, Canvas, dialogMore');
+				}
+				this._showMoreEntity.attr({
 					x: this.x + this.w - (TILE_SIZE * 1.5),
 					y: this.y + this.h - (TILE_SIZE * 1.5),
 					z: this.z,
 					visible: this.visible
 				});
+			} else if (this._showMoreEntity) {
+				this._showMoreEntity.destroy();
+				this._showMoreEntity = null;
+			}
+			//Destroy old face entity
+			if (this._faceEntity) {
+				this._faceEntity.destroy();
+				this._faceEntity = null;
 			}
 			if (this.face) {
-				this.face.attr({
+				this._faceEntity = Crafty.e('2D, Canvas');
+				this._faceEntity.addComponent(this.face);
+				if (this.faceWidth) {
+					this._faceEntity.attr("w", this.faceWidth);
+				}
+				if (this.faceHeight) {
+					this._faceEntity.attr("h", this.faceWidth);
+				}
+				this._faceEntity.attr({
 					x: this.x + TILE_SIZE * 2/3,
 					y: this.y + TILE_SIZE * 2/3,
 					z: this.z,
 					visible: this.visible
 				});
 			}
+			//Destroy the old message entities
+			for (i = 0; i < this._msgEntity.length; i++) {
+				this._msgEntity[i].destroy();
+			}
+			this._msgEntity = [];
+			//Create new set of message entities
 			for (i = 0; i < this.msg.length; i++) {
-				this.msg[i].attr({
-					x : this.x + TILE_SIZE + (this.face ? 48 : 0),
+				var msgEntity = Crafty.e('2D, Canvas, BetterText');
+				msgEntity.attr({
+					text: this.msg[i],
+					textColor: this.msgColor,
+					fontFamily: 'Patrick Hand',
+					fontSize: '16px',
+					x : this.x + TILE_SIZE + (this.face ? this._faceEntity.w + 2 : 0),
 					y : this.y + (i + 1) * (TILE_SIZE * 1.5),
 					z : this.z,
 					visible: this.visible,
 				});
+				this._msgEntity.push(msgEntity);
 			}
 		},
 		_removed: function() {
@@ -170,14 +168,14 @@ define([ 'config', 'Crafty' ], function(config) {
 			for (i = 1; i <= 9; i++) {
 				this.d[i].destroy();
 			}
-			if (this.showMore) {
-				this.showMore.destroy();
+			if (this._showMoreEntity) {
+				this._showMoreEntity.destroy();
 			}
-			if (this.face) {
-				this.face.destroy();
+			if (this._faceEntity) {
+				this._faceEntity.destroy();
 			}
-			for (i = 0; i < this.msg.length; i++) {
-				this.msg[i].destroy();
+			for (i = 0; i < this._msgEntity.length; i++) {
+				this._msgEntity[i].destroy();
 			}
 		}
 	});

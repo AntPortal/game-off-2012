@@ -1,5 +1,6 @@
 define([
-		'config'
+		'config',
+		'components/BetterText',
 ],
 function(config) {
 	function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
@@ -210,12 +211,14 @@ function(config) {
 									tileClickCallback(this);
 								}
 							});
-							/* The call to .map below makes a deep copy of the array; this is needed because Crafty
-							 * seems to change the provided coordinate arrays in-place, which leads to problems if
-							 * they're shared between multiple entities. */
-							var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
-							var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
-							entity.areaMap(tileAreaMap);
+							if (entity.areaMap) { //Some scenes, e.g. level1-intro, don't use areamaps.
+								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
+								 * seems to change the provided coordinate arrays in-place, which leads to problems if
+								 * they're shared between multiple entities. */
+								var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
+								var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
+								entity.areaMap(tileAreaMap);
+							}
 						}
 					}
 				}
@@ -272,6 +275,196 @@ function(config) {
 		}
 		return binarySearchRecurr(0, array.length);
 	}
+	function createTitleEntity(Crafty) {
+		var title = Crafty.e('2D, DOM, BetterText');
+		title.attr({
+			text: "Karayom",
+			textColor: "#fff",
+			w : config.viewport.width,
+			x : 0,
+			y : 0,
+			z : 1,
+		}).css({
+			'text-align': 'center',
+			'display' : 'none',
+			'font-family' : 'Corben', //depends on index.html
+			'font-size' : '80px',
+			'font-weight' : 700,
+			'text-shadow': '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95',
+		});
+		return title;
+	}
+	function charAtIsLowerCase(text, index) {
+		if (text.length <= index) {
+			return false;
+		}
+		var char = text[index];
+		return char.toLowerCase() == char;
+	}
+	var MAX_NAME_LENGTH = 6;
+	function getShortName(longName) {
+		/*
+		 * Note that the judge's github account names are:
+		 * 
+		 * David Czarnecki: czarneckid
+		 * Eric Preisz: ??? GarageGames? DavidWyand-GG? GG-ScottB? Svetbach? thecelloman?
+		 * Matt Hackett: richtaur 
+		 * Lee Reilly: leereilly
+		 * Romana Ramzan: ???
+		 */
+		if (longName.length <= MAX_NAME_LENGTH) { //If the name fits, just use it as is.
+			return longName;
+		}
+		//Guaranteed name is too long at this point.
+		var dashPosition = longName.indexOf('-');
+		if (dashPosition != -1) { //If there's a dash in the name, truncate at dash and try again
+			return getShortName(longName.substr(0,dashPosition));
+		}
+		//Guaranteed too long and no dash at this point.
+		var regResults;
+		/*
+		 * If a name is exactly two uppercase characters followed by a lower case characters, drop the first uppercase
+		 * character, then keep all the remaining lowercase characters (up to the max length). E.g. "ASwanson" -> "Swanso".
+		 */
+		regResults = /^[A-Z]([A-Z][a-z]+)$/.exec(longName);
+		if (regResults) {
+			return regResults[1].substr(0,MAX_NAME_LENGTH);
+		}
+		/*
+		 * If you can divide the name into an uppercase portion followed by a lowercase portion, keep all but the last
+		 * uppercase character, and truncate the rest. E.g. "TJHolowaychuk" -> "TJ". If the uppercase portion is too long,
+		 * just return the first N characters from it, e.g. "ABCDEFGalloway" -> "ABCDEF". Note that because of the earlier
+		 * regexp test, we're guaranteed that there are at least 2 uppercase initials here.
+		 */
+		regResults = /^([A-Z]+)[A-Z][a-z]+$/.exec(longName);
+		if (regResults) {
+			return regResults[1].substr(0,MAX_NAME_LENGTH);
+		}
+		/*
+		 * If there is a transition from lowecase to uppercase within the length limit, keep the lowercase letter and
+		 * discard the uppercase one. E.g. "NebuPookins" would be truncated to "Nebu".
+		 */
+		var i;
+		for (i = MAX_NAME_LENGTH - 1; i > 0; i--) {
+			if (charAtIsLowerCase(longName, i) && !charAtIsLowerCase(longName, i + 1)) {
+				return longName.substr(0, i + 1);
+			}
+		}
+		//Give up. Just return the first N characters.
+		return longName.substr(0, MAX_NAME_LENGTH);
+	}
+	function ajax(url, callback) {
+		var unusedName = 'asjdlasidjliwmxxsasdnsmnd'; //TODO check if name is unused, generate a different name if it is used.
+		var body = document.getElementsByTagName('body')[0];
+		var script = document.createElement('script');
+		window[unusedName] = function(var_args) {
+			delete window[unusedName];
+			body.removeChild(script);
+			callback.apply(null, arguments);
+		};
+		script.src = url + '?callback='+unusedName;
+		body.appendChild(script);
+	}
+	/**
+	 * Gets the avatar url associated with the specified github account name, and then invokes the callback, passing in
+	 * the url.
+	 */
+	function withGitHubAvatarUrl(githubAccountName, callback) {
+		cacheFunctionResult(
+			'withGitHubAvatarUrl.'+githubAccountName,
+			function(cacheCallback) {
+				ajax('https://api.github.com/users/'+githubAccountName, function(jsonData) {
+					if (jsonData.meta.status === 200) {
+						cacheCallback(jsonData.data.avatar_url);
+					} else if (jsonData.meta.status === 404) {
+						cacheCallback(null);
+					} else {
+						console.warn('Got ' + jsonData.meta.status + ' while loading github avatar');
+						cacheCallback(null);
+					}
+				});
+			},
+			callback
+		);
+	}
+	/**
+	 * Given an array of github account names, gets their associated avatar urls, then invokes the callback, passing in
+	 * an array of urls.
+	 */
+	function withGitHubAvatarUrls(accountArray, callback) {
+		function withGitHubAvatarUrlsRecurr(myArray, accumulator) {
+			if (accountArray.length == 0) {
+				callback(accumulator);
+			} else {
+				var head = accountArray[0];
+				var tail = accountArray.splice(0, 1);
+				withGitHubAvatarUrl(head, function(headUrl) {
+					accumulator.push(headUrl);
+					withGitHubAvatarUrlsRecurr(tail, accumulator);
+				});
+			}
+		}
+		withGitHubAvatarUrlsRecurr(accountArray, []);
+	}
+	/**
+	 * Returns true if the array contains the provided needle, false otherwise.
+	 */
+	function contains(array, needle) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] == needle) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * Returns a new array which is equal to the first array, except with duplicates removed;
+	 */
+	function removeDuplicates(array) {
+		var retVal = [];
+		for (var i = 0; i < array.length; i++) {
+			if (!contains(retVal, array[i])) {
+				retVal.push(array[i]);
+			}
+		}
+		return retVal;
+	}
+	/**
+	 * If the cache contains the provided key, invokes the callback passing in the associated value. Otherwise, runs the
+	 * provided function, and stores the result of the function into the cache under the specified key, and then invokes
+	 * the specified callback with the value.
+	 * 
+	 * Example:
+	 * 
+	 * cacheFunctionResult(
+	 * 	'sumOf2Plus2',
+	 * 	function(callback) {
+	 * 		var computation = 2 + 2;
+	 * 		callback(computation);
+	 * 	},
+	 * 	function(result) {
+	 * 		console.log('The result is ' + result);
+	 * });
+	 * 
+	 * Note that "falsy" values are not stored into the cache. If you really want to cache 'false' as the result of the
+	 * computation, you should wrap it in an object so that it appears truthy.
+	 */
+	function cacheFunctionResult(key, func, callback) {
+		var cacheStr = window.localStorage.getItem('cacheFunctionResult');
+		var cacheObj = cacheStr ? JSON.parse(cacheStr) : {};
+		var cachedValue = cacheObj[key];
+		if (cachedValue) {
+			callback(cachedValue);
+		} else {
+			func(function(result) {
+				if (result) { //Don't store falsy results.
+					cacheObj[key] = result;
+					window.localStorage.setItem('cacheFunctionResult', JSON.stringify(cacheObj));
+				}
+				callback(result);
+			});
+		}
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
@@ -281,5 +474,10 @@ function(config) {
 		loadMap: loadMap,
 		stopAllMusic: stopAllMusic,
 		binarySearch: binarySearch,
+		createTitleEntity: createTitleEntity,
+		getShortName: getShortName,
+		withGitHubAvatarUrl: withGitHubAvatarUrl,
+		withGitHubAvatarUrls: withGitHubAvatarUrls,
+		removeDuplicates: removeDuplicates,
 	};
 });

@@ -7,6 +7,7 @@ define([
 		'components/Character',
 		'components/Dialog',
 		'components/ScriptRunner',
+		'scenes/IsoTest', //TODO change to level1
 	], function(config, mapData, utils) {
 	Crafty.scene('level1-intro', function() {
 		var tileProperties = utils.loadTileset(mapData);
@@ -34,7 +35,7 @@ define([
 					y: 100,
 					w: 400,
 					h: 70,
-					msg: "[Name]...",
+					msg: config.getCurShortName() + "...",
 					showMore: true,
 				}
 			},
@@ -46,7 +47,7 @@ define([
 					y: 100,
 					w: 400,
 					h: 70,
-					msg: "[Name]!",
+					msg: config.getCurShortName() + "!",
 					showMore: true,
 				}
 			},
@@ -58,7 +59,7 @@ define([
 					y: 100,
 					w: 400,
 					h: 70,
-					msg: "Good morning, [Name]!",
+					msg: "Good morning, "+config.getCurShortName() +"!",
 					showMore: true,
 				}
 			},
