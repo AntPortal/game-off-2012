@@ -57,6 +57,7 @@ define([
 				'assets/ui/dialog.blue.png',
 				'assets/ui/dialog.olive.png',
 				'assets/ui/music.png',
+				'assets/ui/OrbzPrw.png',
 				config.DEFAULT_GITHUB_AVATAR_URL,
 			];
 			//Adds Github avatars to the list of assets to load.
@@ -99,6 +100,11 @@ define([
 					});
 					Crafty.sprite(16, 'assets/ui/action_stop.gif', {
 						ui_save_delete : [ 0, 0 ]
+					});
+					Crafty.sprite(64, 'assets/ui/OrbzPrw.png', {
+						'gitk_commit_current' : [3,0],
+						'gitk_commit_old' : [2, 0],
+						'gitk_commit_dead' : [0, 1],
 					});
 					(function() {
 						//Loads the faces as face_warriorM, face_warriorF, face_mageM, etc.

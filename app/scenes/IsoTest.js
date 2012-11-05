@@ -42,31 +42,34 @@ define([
 
 		(function() {
 			/* Display a commit marker any time a commit is made. This currently only handles linear sequences of commits. */
+			var COMMIT_SIZE = 16;
 			var markersByCommitId = {};
 			var viewHeight = config.viewport.height;
 			versions.bind('Commit', function(commit) {
 				/* For now, commit markers are just squares. */
 				console.log(commit);
-				var marker = Crafty.e('2D, Canvas, Color, ViewportRelative').color('yellow').attr({w: 16, h: 16, z: config.zOffset.gitk + 1});
+				var marker = Crafty.e('2D, Canvas, ViewportRelative, gitk_commit_current').attr({w: COMMIT_SIZE, h: COMMIT_SIZE, z: config.zOffset.gitk + 1});
 				var parentMarkers = commit.parentRevIds.map(function(parentId) { return markersByCommitId[parentId]; });
 				/* The "tile coordinates" here indicate positions relative to the commit graph (not the game world).
 				 * (0,0) is the lower-left corner, and the Y axis points upward. */
 				if (parentMarkers.length === 0) {
 					marker.attr({tileX: 0, tileY: 0});
 				} else {
-					parentMarkers[0].color('blue');
+					parentMarkers[0].removeComponent('gitk_commit_current');
+					parentMarkers[0].addComponent('gitk_commit_old');
+					parentMarkers[0].attr({w: COMMIT_SIZE, h: COMMIT_SIZE})
 					marker.attr({tileX: parentMarkers[0].tileX + 1, tileY: parentMarkers[0].tileY});
 				}
-				marker.attr({x: 32*marker.tileX + 32 + 8, y: viewHeight - 32*marker.tileY - 32 - 16 + 8});
+				marker.attr({x: (COMMIT_SIZE * 2 *marker.tileX) + 32 + 8, y: viewHeight - (COMMIT_SIZE * 2 *marker.tileY) - 32 - 16 + 8});
 				markersByCommitId[commit.id] = marker;
 			});
 			//Draw BG for gitk UI
 			Crafty.e('2D, Canvas, Dialog, ViewportRelative').
 				attr({
 					x: 32,
-					y: config.viewport.height - 32 - 16,
+					y: config.viewport.height - (COMMIT_SIZE * 2) - 16,
 					w: config.viewport.width - 64,
-					h: 32,
+					h: (COMMIT_SIZE * 2),
 					z: config.zOffset.gitk,
 					dialogBg: 'forkUi',
 				});
