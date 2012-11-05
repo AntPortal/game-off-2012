@@ -150,16 +150,18 @@ define([
 			//Create new set of message entities
 			for (i = 0; i < this.msg.length; i++) {
 				var msgEntity = Crafty.e('2D, Canvas, BetterText');
+				var baseline = this.y + (i + 1) * (TILE_SIZE * 1.5);
 				msgEntity.attr({
 					text: this.msg[i],
 					textColor: this.msgColor,
 					fontFamily: 'Patrick Hand',
 					fontSize: '16px',
 					x : this.x + TILE_SIZE + (this.face ? this._faceEntity.w + 2 : 0),
-					y : this.y + (i + 1) * (TILE_SIZE * 1.5),
+					y : baseline,
 					z : this.z,
 					w : this.w - (TILE_SIZE * 2),
 					h : 16,
+					baseline: baseline,
 					visible: this.visible,
 				});
 				this._msgEntity.push(msgEntity);
