@@ -119,6 +119,8 @@ define([
 			var backspaceKeycode = 8;
 			var deleteKeycode = 46;
 			var enterKeycode = 13;
+			var zeroKeycode = 48;
+			var nineKeycode = 57;
 			var keycode = keyEvent.which || keyEvent.key || keyEvent.keyCode;
 			var char = null;
 			if (aKeycode <= keycode && keycode <= zKeycode) {
@@ -128,6 +130,8 @@ define([
 				} else {
 					char = char.toLowerCase();
 				}
+			} else if (zeroKeycode <= keycode && keycode <= nineKeycode) {
+				char = String.fromCharCode(keycode);
 			} else if (keycode == dashKeycode) {
 				char = '-';
 			} else if (keycode == backspaceKeycode || keycode == deleteKeycode) {
