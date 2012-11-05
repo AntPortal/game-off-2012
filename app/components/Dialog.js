@@ -158,9 +158,12 @@ define([
 					x : this.x + TILE_SIZE + (this.face ? this._faceEntity.w + 2 : 0),
 					y : this.y + (i + 1) * (TILE_SIZE * 1.5),
 					z : this.z,
+					w : this.w - (TILE_SIZE * 2),
+					h : 16,
 					visible: this.visible,
 				});
 				this._msgEntity.push(msgEntity);
+				msgEntity.trigger('Change');
 			}
 		},
 		_removed: function() {

@@ -32,8 +32,8 @@ define([
 			var label = this._label;
 			if (label) {
 				label.attr({
-					x: this.x + (this.w - label.w) / 2,
-					y: this.y + (this.h - label.h) / 2,
+					x: this.x + this.w / 2,
+					y: this.y + this.h / 2,
 					z: this.z,
 				});
 			}
