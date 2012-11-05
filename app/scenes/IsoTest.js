@@ -7,7 +7,8 @@ define([
 		'components/ViewportRelative',
 		'components/ClickNoDrag',
 		'components/Character',
-		'components/VersionHistory'
+		'components/VersionHistory',
+		'components/Dialog',
 	], function(config, mapData, mouselook, utils) {
 	Crafty.scene('IsoTest', function() {
 		var initGameState = {
@@ -46,8 +47,8 @@ define([
 			versions.bind('Commit', function(commit) {
 				/* For now, commit markers are just squares. */
 				console.log(commit);
-				var marker = Crafty.e('2D, Canvas, Color, ViewportRelative').color('yellow').attr({w: 16, h: 16, z: config.zOffset.gitk});
-				var parentMarkers = commit.parentRevIds.map(function(parentId) { return markersByCommitId[parentId] });
+				var marker = Crafty.e('2D, Canvas, Color, ViewportRelative').color('yellow').attr({w: 16, h: 16, z: config.zOffset.gitk + 1});
+				var parentMarkers = commit.parentRevIds.map(function(parentId) { return markersByCommitId[parentId]; });
 				/* The "tile coordinates" here indicate positions relative to the commit graph (not the game world).
 				 * (0,0) is the lower-left corner, and the Y axis points upward. */
 				if (parentMarkers.length === 0) {
@@ -56,9 +57,19 @@ define([
 					parentMarkers[0].color('blue');
 					marker.attr({tileX: parentMarkers[0].tileX + 1, tileY: parentMarkers[0].tileY});
 				}
-				marker.attr({x: 32*marker.tileX + 8, y: viewHeight - 32*marker.tileY - 32 + 8});
+				marker.attr({x: 32*marker.tileX + 32 + 8, y: viewHeight - 32*marker.tileY - 32 - 16 + 8});
 				markersByCommitId[commit.id] = marker;
 			});
+			//Draw BG for gitk UI
+			Crafty.e('2D, Canvas, Dialog, ViewportRelative').
+				attr({
+					x: 32,
+					y: config.viewport.height - 32 - 16,
+					w: config.viewport.width - 64,
+					h: 32,
+					z: config.zOffset.gitk,
+					dialogBg: 'forkUi',
+				});
 		})();
 		/* Commit the initial game state. This needs to be done after the event handler above is installed,
 		 * so that the handler will pick up this initial commit. */
