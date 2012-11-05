@@ -28,7 +28,7 @@ define([
 				face: 'GithubAvatar' + i,
 				faceWidth: 78,
 				faceHeight: 78,
-				saveIndex: i
+				saveIndex: i,
 			});
 			slots[i].trigger('Change');
 			slots[i].addComponent('Mouse');

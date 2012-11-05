@@ -6,27 +6,26 @@ define([
 	var TILE_SIZE = 16; // hardcoded size of a dialog tile.
 	var SHOW_MORE_SIZE = 16; // hardcoded size of the "show more" icon.
 	Crafty.c('Dialog', {
+		x: 0,
+		y: 0,
+		z: config.zOffset.dialog,
+		w: TILE_SIZE * 2,
+		h: TILE_SIZE * 2,
+		msg: [''],
+		msgColor: '#FFFFFF',
+		dialogBg: 'speech',
 		init : function() {
 			this.requires('2D');
-			this.attr({
-				x: 0,
-				y: 0,
-				z: config.zOffset.dialog,
-				w: TILE_SIZE * 2,
-				h: TILE_SIZE * 2,
-				msg: [''],
-				msgColor: '#FFFFFF',
-			});
 			this.d = [1,2,3,4,5,6,7,8,9];
-			this.d[7] = Crafty.e('2D, Canvas, dialog7');
-			this.d[8] = Crafty.e('2D, Canvas, dialog8');
-			this.d[9] = Crafty.e('2D, Canvas, dialog9');
-			this.d[4] = Crafty.e('2D, Canvas, dialog4');
-			this.d[5] = Crafty.e('2D, Canvas, dialog5');
-			this.d[6] = Crafty.e('2D, Canvas, dialog6');
-			this.d[1] = Crafty.e('2D, Canvas, dialog1');
-			this.d[2] = Crafty.e('2D, Canvas, dialog2');
-			this.d[3] = Crafty.e('2D, Canvas, dialog3');
+			this.d[7] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.7');
+			this.d[8] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.8');
+			this.d[9] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.9');
+			this.d[4] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.4');
+			this.d[5] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.5');
+			this.d[6] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.6');
+			this.d[1] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.1');
+			this.d[2] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.2');
+			this.d[3] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.3');
 			this._msgEntity = [];
 			this.bind('EnterFrame', this._animateShowMore);
 			this.bind('Change', this._attributeChanged);
@@ -46,67 +45,43 @@ define([
 				var temp = [this.msg];
 				this.msg = temp;
 			}
+			var me = this;
 			var i;
-			this.d[7].attr({
-				x : this.x,
-				y : this.y,
-				z : this.z,
-				visible: this.visible,
-			});
-			this.d[8].attr({
-				x : this.x + TILE_SIZE,
-				y : this.y,
-				z : this.z,
-				w : this.w - (TILE_SIZE * 2),
-				visible: this.visible,
-			});
-			this.d[9].attr({
-				x : this.x + this.w - TILE_SIZE,
-				y : this.y,
-				z : this.z,
-				visible: this.visible,
-			});
-			this.d[4].attr({
-				x : this.x,
-				y : this.y + TILE_SIZE,
-				z : this.z,
-				h : this.h - (TILE_SIZE * 2),
-				visible: this.visible,
-			});
-			this.d[5].attr({
+			function reinitializeSubDialogEntity(index, attr) {
+				me.d[index].destroy();
+				me.d[index] = Crafty.e('2D, Canvas, dialog.'+me.dialogBg+'.'+index);
+				me.d[index].attr({ //defaults
+					x: me.x,
+					y: me.y,
+					z: me.z,
+					visible: me.visible,
+				});
+				if (attr) {
+					me.d[index].attr(attr);
+				}
+			}
+			reinitializeSubDialogEntity(7);
+			reinitializeSubDialogEntity(8, {x : this.x + TILE_SIZE, w : this.w - (TILE_SIZE * 2)});
+			reinitializeSubDialogEntity(9, {x : this.x + this.w - TILE_SIZE});
+			reinitializeSubDialogEntity(4, {y: this.y + TILE_SIZE, h : this.h - (TILE_SIZE * 2)});
+			reinitializeSubDialogEntity(5, {
 				x : this.x + TILE_SIZE,
 				y : this.y + TILE_SIZE,
-				z : this.z,
 				w : this.w - (TILE_SIZE * 2),
 				h : this.h - (TILE_SIZE * 2),
-				visible: this.visible,
 			});
-			this.d[6].attr({
+			reinitializeSubDialogEntity(6, {
 				x : this.x + this.w - TILE_SIZE,
 				y : this.y + TILE_SIZE,
-				z : this.z,
 				h : this.h - (TILE_SIZE * 2),
-				visible: this.visible,
 			});
-			this.d[1].attr({
-				x : this.x,
-				y : this.y + this.h - TILE_SIZE,
-				z : this.z,
-				visible: this.visible,
-			});
-			this.d[2].attr({
+			reinitializeSubDialogEntity(1, {y : this.y + this.h - TILE_SIZE});
+			reinitializeSubDialogEntity(2, {
 				x : this.x + TILE_SIZE,
 				y : this.y + this.h - TILE_SIZE,
-				z : this.z,
 				w : this.w - (TILE_SIZE * 2),
-				visible: this.visible,
 			});
-			this.d[3].attr({
-				x : this.x + this.w - TILE_SIZE,
-				y : this.y + this.h - TILE_SIZE,
-				z : this.z,
-				visible: this.visible,
-			});
+			reinitializeSubDialogEntity(3, {x : this.x + this.w - TILE_SIZE, y : this.y + this.h - TILE_SIZE});
 			if (this.showMore) {
 				if (!this._showMoreEntity) {
 					this._showMoreEntity = Crafty.e('2D, Canvas, dialogMore');

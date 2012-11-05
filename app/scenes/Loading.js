@@ -55,6 +55,7 @@ define([
 				'assets/ui/bg-blue.png',
 				'assets/ui/comment_new.gif',
 				'assets/ui/dialog.blue.png',
+				'assets/ui/dialog.olive.png',
 				'assets/ui/music.png',
 				config.DEFAULT_GITHUB_AVATAR_URL,
 			];
@@ -73,12 +74,26 @@ define([
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]
 					});
-				// Create sprite for dialog box
-					Crafty.sprite(16, 'assets/ui/dialog.blue.png', {
-						dialog7 : [ 0, 0 ], dialog8 : [ 1, 0 ], dialog9 : [ 2, 0 ],
-						dialog4 : [ 0, 1 ], dialog5 : [ 1, 1 ], dialog6 : [ 2, 1 ],
-						dialog1 : [ 0, 2 ], dialog2 : [ 1, 2 ], dialog3 : [ 2, 2 ],
-					});
+					(function() { // Create sprite for dialog boxes
+						var temp = {
+							'speech' : 'assets/ui/dialog.blue.png',
+							'forkUi' : 'assets/ui/dialog.olive.png',
+						};
+						for (name in temp) {
+							var url = temp[name];
+							var spriteParams = {};
+							spriteParams['dialog.' + name + '.7'] = [ 0, 0 ];
+							spriteParams['dialog.' + name + '.8'] = [ 1, 0 ];
+							spriteParams['dialog.' + name + '.9'] = [ 2, 0 ];
+							spriteParams['dialog.' + name + '.4'] = [ 0, 1 ];
+							spriteParams['dialog.' + name + '.5'] = [ 1, 1 ];
+							spriteParams['dialog.' + name + '.6'] = [ 2, 1 ];
+							spriteParams['dialog.' + name + '.1'] = [ 0, 2 ];
+							spriteParams['dialog.' + name + '.2'] = [ 1, 2 ];
+							spriteParams['dialog.' + name + '.3'] = [ 2, 2 ];
+							Crafty.sprite(16, url, spriteParams);
+						}
+					})();
 					Crafty.sprite(16, 'assets/ui/comment_new.gif', {
 						dialogMore : [ 0, 0 ]
 					});
