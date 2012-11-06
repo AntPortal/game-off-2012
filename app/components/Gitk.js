@@ -138,6 +138,20 @@ define([
 		_drawMarkers: function() {
 			var self = this;
 			var ctx = this._context;
+			/* Draw lines making up the graph */
+			ctx.strokeStyle = 'white';
+			ctx.beginPath();
+			this._forEachCommitMarker(function(marker) {
+				var coords = marker.pixelCoords;
+				marker.commit.childRevIds.forEach(function(childId) {
+					var childMarker = self._commitMarkersById[childId];
+					var childCoords = childMarker.pixelCoords;
+					ctx.moveTo(coords.x + coords.w/2, coords.y + coords.h/2);
+					ctx.lineTo(childCoords.x + childCoords.w/2, childCoords.y + childCoords.h/2);
+				});
+			});
+			ctx.stroke();
+			/* Draw commit symbols */
 			this._forEachCommitMarker(function(marker) {
 				var coords = marker.pixelCoords;
 				var isActive = self._versionHistory.headRev() === marker.commit.id;
