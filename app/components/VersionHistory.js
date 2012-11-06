@@ -5,6 +5,9 @@ define([ 'Crafty' ], function() {
 			this._nextRevId = 1;
 			this._revisions = {};
 		},
+		headRev: function() {
+			return this._headRevId;
+		},
 		show: function(revId) {
 			if (revId === undefined) {
 				return this._revisions[this._headRevId];
@@ -33,8 +36,10 @@ define([ 'Crafty' ], function() {
 			return this._headRevId;
 		},
 		checkout: function(revId) {
+			var rev = this._revisions[revId];
 			this._headRevId = revId;
-			return this._revisions[revId];
+			this.trigger("Checkout", rev);
+			return rev;
 		}
 	});
 });

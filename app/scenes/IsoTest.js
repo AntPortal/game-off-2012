@@ -61,6 +61,13 @@ define([
 		versions.commit({
 			hero: {x: hero.tileX, y: hero.tileY}
 		});
+		versions.bind("Checkout", function(rev) {
+			var revData = rev.data;
+			var tileX = revData.hero.x;
+			var tileY = revData.hero.y;
+			hero.setPos(tileX, tileY, heightMap[tileX+","+tileY].surfaceZ);
+			hero.setWalkTarget(tileX, tileY);
+		});
 		Crafty.viewport.clampToEntities = false;
 		mouselook.start();
 	});

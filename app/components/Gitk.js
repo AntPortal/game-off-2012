@@ -1,10 +1,15 @@
-define([ 'config', 'Crafty' ], function(config) {
+define([
+	'config',
+	'Crafty',
+	'components/ViewportRelative'
+], function(config) {
 	var DIALOG_TILE_SIZE = 16;
 	var ORB_SRC_SIZE = 64;
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
 		init: function() {
+			this.requires('2D, ViewportRelative, Mouse');
 			this._commitMarkersById = {};
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
@@ -20,6 +25,7 @@ define([ 'config', 'Crafty' ], function(config) {
 			canvas.style.zIndex = 100;
 			refElem.appendChild(canvas);
 
+			this.attr({x: x, y: y, w: w, h: h, z: config.zOffset.gitk});
 			this._assets = {
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
 				dialog: Crafty.asset('assets/ui/dialog.olive.png')
@@ -29,9 +35,8 @@ define([ 'config', 'Crafty' ], function(config) {
 			var self = this;
 			this._versionHistory = versionHistory;
 			this._versionHistory.bind("Commit", function(commit) {
-				var marker = {commit: commit, active: true};
+				var marker = {commit: commit};
 				var parentMarkers = commit.parentRevIds.map(function(parentId) { return self._commitMarkersById[parentId]; });
-				parentMarkers.forEach(function(marker) { marker.active = false; });
 				if (parentMarkers.length === 0) {
 					marker.x = 0;
 					marker.y = 0;
@@ -39,8 +44,31 @@ define([ 'config', 'Crafty' ], function(config) {
 					marker.x = parentMarkers[0].x + 1;
 					marker.y = parentMarkers[0].y + parentMarkers[0].commit.childRevIds.length - 1;
 				}
+				marker.pixelCoords = {x: 32*marker.x + 8, y: 32*marker.y + 8, w: 16, h: 16};
 				self._commitMarkersById[commit.id] = marker;
 				self._redraw();
+			});
+
+			this.bind('Click', function(ev) {
+				var pos = Crafty.DOM.translate(ev.clientX, ev.clientY);
+				var clickedMarker = null;
+				pos.x -= self.x;
+				pos.y -= self.y;
+				self._forEachCommitMarker(function(marker) {
+					var coords = marker.pixelCoords;
+					var hit = (
+						Crafty.math.withinRange(pos.x, coords.x, coords.x + coords.w)
+						&& Crafty.math.withinRange(pos.y, coords.y, coords.y + coords.h)
+					);
+					if (hit) {
+						clickedMarker = marker;
+						return false;
+					}
+				});
+				if (clickedMarker) {
+					self._versionHistory.checkout(clickedMarker.commit.id);
+					self._redraw();
+				}
 			});
 			this._redraw();
 		},
@@ -108,17 +136,29 @@ define([ 'config', 'Crafty' ], function(config) {
 			);
 		},
 		_drawMarkers: function() {
+			var self = this;
 			var ctx = this._context;
+			this._forEachCommitMarker(function(marker) {
+				var coords = marker.pixelCoords;
+				var isActive = self._versionHistory.headRev() === marker.commit.id;
+				var isLeaf = marker.commit.childRevIds.length === 0;
+				var spriteX = isActive ? 1 : (marker.isLeaf ? 3 : 2);
+				ctx.drawImage(
+					self._assets.orbs,
+					spriteX*ORB_SRC_SIZE, 0, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
+					coords.x, coords.y, coords.w, coords.h
+				);
+			});
+		},
+		_forEachCommitMarker: function(func) {
 			var commitMarkersById = this._commitMarkersById;
 			for (id in commitMarkersById) {
 				if (commitMarkersById.hasOwnProperty(id)) {
 					var marker = commitMarkersById[id];
-					var spriteX = marker.active ? 3 : 2;
-					ctx.drawImage(
-						this._assets.orbs,
-						spriteX*ORB_SRC_SIZE, 0, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
-						32*marker.x + 8, 32*marker.y + 8, 16, 16
-					);
+					var funcRetVal = func(marker);
+					if (funcRetVal === false) {
+						break;
+					}
 				}
 			}
 		}
