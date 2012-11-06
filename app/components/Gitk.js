@@ -8,9 +8,11 @@ define([
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
+		_breadthsById: null,
 		init: function() {
 			this.requires('2D, ViewportRelative, Mouse');
 			this._commitMarkersById = {};
+			this._breadthsById = {};
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
 			var refElem = document.getElementById(baseElemId);
@@ -41,31 +43,10 @@ define([
 			var self = this;
 			this._versionHistory = versionHistory;
 
-			function calcBreadths() {
-				var breadthsById = {};
-				function calcBreadthRecur(id) {
-					var commit = self._versionHistory.getRev(id);
-					console.log(commit);
-					commit.childRevIds.forEach(calcBreadthRecur);
-					if (commit.childRevIds.length === 0) {
-						breadthsById[commit.id] = 1;
-					} else {
-						var sum = 0;
-						commit.childRevIds.forEach(function(id) {
-							sum += breadthsById[id];
-						});
-						breadthsById[commit.id] = sum;
-					}
-				}
-				calcBreadthRecur(self._versionHistory.rootRevId());
-				return breadthsById;
-			}
-
 			this._versionHistory.bind("Commit", function(commit) {
 				var marker = {commit: commit};
 				self._commitMarkersById[commit.id] = marker;
-
-				var breadthsById = calcBreadths();
+				self._calcBreadths();
 				function setCoordsRecur(id, x, y) {
 					var marker = self._commitMarkersById[id];
 					marker.x = x;
@@ -73,7 +54,7 @@ define([
 					var accum = y;
 					marker.commit.childRevIds.forEach(function(id) {
 						setCoordsRecur(id, x+1, accum);
-						accum += breadthsById[id];
+						accum += self._breadthsById[id];
 					});
 				}
 				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
@@ -107,6 +88,25 @@ define([
 			});
 			this._drawDialog();
 			this._drawNodes();
+		},
+		_calcBreadths: function() {
+			var self = this;
+			this._breadthsById = {};
+			function calcBreadthRecur(id) {
+				var commit = self._versionHistory.getRev(id);
+				console.log(commit);
+				commit.childRevIds.forEach(calcBreadthRecur);
+				if (commit.childRevIds.length === 0) {
+					self._breadthsById[commit.id] = 1;
+				} else {
+					var sum = 0;
+					commit.childRevIds.forEach(function(id) {
+						sum += self._breadthsById[id];
+					});
+					self._breadthsById[commit.id] = sum;
+				}
+			}
+			calcBreadthRecur(this._versionHistory.rootRevId());
 		},
 		_drawDialog: function() {
 			var ctx = this._dialogContext;
