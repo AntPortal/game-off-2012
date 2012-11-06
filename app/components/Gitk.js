@@ -5,11 +5,15 @@ define([
 ], function(config) {
 	var DIALOG_TILE_SIZE = 16;
 	var PADDING = DIALOG_TILE_SIZE / 2;
+	var SCROLL_BUTTON_SIZE = 16;
+	var SCROLL_RIGHT_PADDING = 8;
+	var SCROLL_VERT_PADDING = 8;
 	var ORB_SRC_SIZE = 64;
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
 		_breadthsById: null,
+		_scrollOffset: 0,
 		init: function() {
 			this.requires('2D, ViewportRelative, Mouse');
 			this._commitMarkersById = {};
@@ -72,9 +76,59 @@ define([
 				self._drawNodes();
 			});
 
+			(function() {
+				var canvas = self._dialogContext.canvas;
+				var canvasWidth = canvas.width;
+				var canvasHeight = canvas.height;
+				self._upperButtonBounds = {
+					x: canvasWidth - SCROLL_BUTTON_SIZE - SCROLL_RIGHT_PADDING,
+					y: SCROLL_VERT_PADDING,
+					w: SCROLL_BUTTON_SIZE,
+					h: SCROLL_BUTTON_SIZE
+				};
+				self._lowerButtonBounds = {
+					x: canvasWidth - SCROLL_BUTTON_SIZE - SCROLL_RIGHT_PADDING,
+					y: canvasHeight - SCROLL_BUTTON_SIZE - SCROLL_VERT_PADDING,
+					h: SCROLL_BUTTON_SIZE,
+					w: SCROLL_BUTTON_SIZE
+				};
+				var scrollDir = 0;
+				self.bind('MouseDown', function(ev) {
+					var pos = Crafty.DOM.translate(ev.clientX, ev.clientY);
+					/* Translate pos so that it's relative to the outer canvas (the one with the background). */
+					pos.x -= self.x;
+					pos.y -= self.y;
+					var hitUpper = (
+						Crafty.math.withinRange(pos.x, self._upperButtonBounds.x, self._upperButtonBounds.x + self._upperButtonBounds.w)
+						&& Crafty.math.withinRange(pos.y, self._upperButtonBounds.y, self._upperButtonBounds.y + self._upperButtonBounds.h)
+					);
+					var hitLower = (
+						Crafty.math.withinRange(pos.x, self._lowerButtonBounds.x, self._lowerButtonBounds.x + self._lowerButtonBounds.w)
+						&& Crafty.math.withinRange(pos.y, self._lowerButtonBounds.y, self._lowerButtonBounds.y + self._lowerButtonBounds.h)
+					);
+					if (hitUpper) {
+						scrollDir = 1;
+					} else if (hitLower) {
+						scrollDir = -1;
+					} else {
+						scrollDir = 0;
+					}
+				});
+				self.bind('MouseUp', function(ev) {
+					scrollDir = 0;
+				});
+				self.bind('EnterFrame', function(ev) {
+					if (scrollDir) {
+						self._scrollOffset += scrollDir;
+						self._drawNodes();
+					}
+				});
+			})();
+
 			this.bind('Click', function(ev) {
 				var pos = Crafty.DOM.translate(ev.clientX, ev.clientY);
 				var clickedMarker = null;
+				/* Translate pos so that it's relative to the inner canvas (the one with the nodes). */
 				pos.x -= (self.x + PADDING);
 				pos.y -= (self.y + PADDING);
 				self._forEachCommitMarker(function(marker) {
@@ -173,11 +227,16 @@ define([
 				2*DIALOG_TILE_SIZE, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
 				canvasWidth - DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
 			);
+			ctx.fillStyle = 'red';
+			ctx.fillRect(this._upperButtonBounds.x, this._upperButtonBounds.y, this._upperButtonBounds.w, this._upperButtonBounds.h);
+			ctx.fillRect(this._lowerButtonBounds.x, this._lowerButtonBounds.y, this._lowerButtonBounds.w, this._lowerButtonBounds.h);
 		},
 		_drawNodes: function() {
 			var self = this;
 			var ctx = this._nodesContext;
+			ctx.save();
 			ctx.clearRect(0, 0, this.w, this.h);
+			ctx.translate(0, this._scrollOffset);
 			/* Draw lines making up the graph */
 			ctx.strokeStyle = 'white';
 			ctx.beginPath();
@@ -203,6 +262,7 @@ define([
 					coords.x, coords.y, coords.w, coords.h
 				);
 			});
+			ctx.restore();
 		},
 		_forEachCommitMarker: function(func) {
 			var commitMarkersById = this._commitMarkersById;
