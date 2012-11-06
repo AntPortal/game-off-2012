@@ -4,6 +4,7 @@ define([
 	'components/ViewportRelative'
 ], function(config) {
 	var DIALOG_TILE_SIZE = 16;
+	var PADDING = DIALOG_TILE_SIZE / 2;
 	var ORB_SRC_SIZE = 64;
 
 	Crafty.c('Gitk', {
@@ -37,8 +38,14 @@ define([
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
 				dialog: Crafty.asset('assets/ui/dialog.olive.png')
 			}
-			this._dialogContext = makeCanvas(x, y, w, h, 100).getContext('2d');
-			this._nodesContext = makeCanvas(x, y, w, h, 101).getContext('2d');
+			this._dialogContext = makeCanvas(x, y, w, h, config.zOffset.gitk).getContext('2d');
+			this._nodesContext = makeCanvas(
+				x + PADDING,
+				y + PADDING,
+				w - 2*PADDING,
+				h - 2*PADDING,
+				config.zOffset.gitk + 1
+			).getContext('2d');
 
 			var self = this;
 			this._versionHistory = versionHistory;
@@ -68,8 +75,8 @@ define([
 			this.bind('Click', function(ev) {
 				var pos = Crafty.DOM.translate(ev.clientX, ev.clientY);
 				var clickedMarker = null;
-				pos.x -= self.x;
-				pos.y -= self.y;
+				pos.x -= (self.x + PADDING);
+				pos.y -= (self.y + PADDING);
 				self._forEachCommitMarker(function(marker) {
 					var coords = marker.pixelCoords;
 					var hit = (
