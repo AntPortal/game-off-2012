@@ -142,7 +142,7 @@ define([
 				var coords = marker.pixelCoords;
 				var isActive = self._versionHistory.headRev() === marker.commit.id;
 				var isLeaf = marker.commit.childRevIds.length === 0;
-				var spriteX = isActive ? 1 : (marker.isLeaf ? 3 : 2);
+				var spriteX = isActive ? 1 : (isLeaf ? 3 : 2);
 				ctx.drawImage(
 					self._assets.orbs,
 					spriteX*ORB_SRC_SIZE, 0, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
