@@ -14,23 +14,29 @@ define([
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
 			var refElem = document.getElementById(baseElemId);
-			var canvas = document.createElement('canvas');
-			canvas.width = w;
-			canvas.height = h;
-			canvas.style.position = 'absolute';
-			canvas.style.top = y+'px';
-			canvas.style.left = x+'px';
-			canvas.style.width = w+'px';
-			canvas.style.height = h+'px';
-			canvas.style.zIndex = 100;
-			refElem.appendChild(canvas);
+			var self = this;
+
+			function makeCanvas(x, y, w, h, zIndex) {
+				var canvas = document.createElement('canvas');
+				canvas.width = w;
+				canvas.height = h;
+				canvas.style.position = 'absolute';
+				canvas.style.top = y+'px';
+				canvas.style.left = x+'px';
+				canvas.style.width = w+'px';
+				canvas.style.height = h+'px';
+				canvas.style.zIndex = zIndex;
+				refElem.appendChild(canvas);
+				return canvas;
+			}
 
 			this.attr({x: x, y: y, w: w, h: h, z: config.zOffset.gitk});
 			this._assets = {
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
 				dialog: Crafty.asset('assets/ui/dialog.olive.png')
 			}
-			this._context = canvas.getContext('2d');
+			this._dialogContext = makeCanvas(x, y, w, h, 100).getContext('2d');
+			this._nodesContext = makeCanvas(x, y, w, h, 101).getContext('2d');
 
 			var self = this;
 			this._versionHistory = versionHistory;
@@ -75,7 +81,7 @@ define([
 				self._forEachCommitMarker(function(marker) {
 					marker.pixelCoords = {x: 32*marker.x + 8, y: 32*marker.y + 8, w: 16, h: 16};
 				});
-				self._redraw();
+				self._drawNodes();
 			});
 
 			this.bind('Click', function(ev) {
@@ -96,17 +102,14 @@ define([
 				});
 				if (clickedMarker) {
 					self._versionHistory.checkout(clickedMarker.commit.id);
-					self._redraw();
+					self._drawNodes();
 				}
 			});
-			this._redraw();
-		},
-		_redraw: function() {
 			this._drawDialog();
-			this._drawMarkers();
+			this._drawNodes();
 		},
 		_drawDialog: function() {
-			var ctx = this._context;
+			var ctx = this._dialogContext;
 			var canvasWidth = ctx.canvas.width;
 			var canvasHeight = ctx.canvas.height;
 			/* Draw upper-left part of dialog */
@@ -164,9 +167,10 @@ define([
 				canvasWidth - DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
 			);
 		},
-		_drawMarkers: function() {
+		_drawNodes: function() {
 			var self = this;
-			var ctx = this._context;
+			var ctx = this._nodesContext;
+			ctx.clearRect(0, 0, this.w, this.h);
 			/* Draw lines making up the graph */
 			ctx.strokeStyle = 'white';
 			ctx.beginPath();
