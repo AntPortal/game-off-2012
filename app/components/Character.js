@@ -80,14 +80,6 @@ define(['config', 'utils', 'Crafty'], function(config) {
 					this.tileY++;
 				}
 				this.tileZ = this.heightMap[this.tileX+','+this.tileY].surfaceZ;
-				console.log({
-					action: 'Hero moving',
-					x: this.tileX,
-					y: this.tileY,
-					z: this.tileZ,
-					targetX: this._targetX,
-					targetY: this._targetY
-				});
 			}
 		}
 	});
