@@ -16,7 +16,7 @@ define([ 'Crafty' ], function() {
 			var newRevision = {
 				id: this._nextRevId,
 				data: data,
-				childRevIds: [],
+				childRevIds: []
 			};
 			if (this._headRevId !== null) {
 				this._revisions[this._headRevId].childRevIds.push(this._nextRevId);
@@ -31,6 +31,10 @@ define([ 'Crafty' ], function() {
 			// console.log(JSON.stringify(this._revisions));
 			this.trigger("Commit", newRevision);
 			return this._headRevId;
+		},
+		checkout: function(revId) {
+			this._headRevId = revId;
+			return this._revisions[revId];
 		}
 	});
 });

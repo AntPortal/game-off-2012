@@ -12,9 +12,6 @@ define([
 		'components/Rotates',
 	], function(config, mapData, mouselook, utils) {
 	Crafty.scene('IsoTest', function() {
-		var initGameState = {
-			hero: {position: [0, 0]}
-		};
 		var versions = Crafty.e('VersionHistory');
 
 		var hero; //entity global to this scene
@@ -28,7 +25,9 @@ define([
 			});
 			if (hero) {
 				hero.setWalkTarget(tileEntity.tileX, tileEntity.tileY);
-				versions.commit({hero: {position: [tileEntity.tileX, tileEntity.tileY]}});
+				versions.commit({
+					hero: {x: tileEntity.tileX, y: tileEntity.tileY}
+				});
 			}
 		});
 		(function() {
@@ -48,8 +47,8 @@ define([
 			var viewHeight = config.viewport.height;
 			versions.bind('Commit', function(commit) {
 				/* For now, commit markers are just squares. */
-				console.log(commit);
-				var marker = Crafty.e('2D, Canvas, ViewportRelative, gitk_commit_current').attr({w: COMMIT_SIZE, h: COMMIT_SIZE, z: config.zOffset.gitk + 1});
+				console.log('Committed:', commit);
+				var marker = Crafty.e('2D, Canvas, ViewportRelative, ClickNoDrag, gitk_commit_current').attr({w: COMMIT_SIZE, h: COMMIT_SIZE, z: config.zOffset.gitk + 1});
 				var parentMarkers = commit.parentRevIds.map(function(parentId) { return markersByCommitId[parentId]; });
 				/* The "tile coordinates" here indicate positions relative to the commit graph (not the game world).
 				 * (0,0) is the lower-left corner, and the Y axis points upward. */
@@ -59,9 +58,17 @@ define([
 					parentMarkers[0].removeComponent('gitk_commit_current');
 					parentMarkers[0].addComponent('gitk_commit_old');
 					parentMarkers[0].attr({w: COMMIT_SIZE, h: COMMIT_SIZE})
-					marker.attr({tileX: parentMarkers[0].tileX + 1, tileY: parentMarkers[0].tileY});
+					marker.attr({tileX: parentMarkers[0].tileX + 1, tileY: parentMarkers[0].tileY + parentMarkers[0].commit.childRevIds.length - 1});
 				}
 				marker.attr({x: (COMMIT_SIZE * 2 *marker.tileX) + 32 + 8, y: viewHeight - (COMMIT_SIZE * 2 *marker.tileY) - 32 - 16 + 8});
+				marker.attr({commit: commit});
+				marker.bind('ClickNoDrag', function() {
+					var revData = versions.checkout(this.commit.id).data;
+					var tileX = revData.hero.x;
+					var tileY = revData.hero.y;
+					hero.setPos(tileX, tileY, heightMap[tileX+","+tileY].surfaceZ);
+					hero.setWalkTarget(tileX, tileY);
+				});
 				markersByCommitId[commit.id] = marker;
 			});
 			//Draw BG for gitk UI
@@ -77,7 +84,9 @@ define([
 		})();
 		/* Commit the initial game state. This needs to be done after the event handler above is installed,
 		 * so that the handler will pick up this initial commit. */
-		versions.commit(initGameState);
+		versions.commit({
+			hero: {x: hero.tileX, y: hero.tileY}
+		});
 		Crafty.viewport.clampToEntities = false;
 		mouselook.start();
 	});
