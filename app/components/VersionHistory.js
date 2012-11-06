@@ -1,18 +1,22 @@
 define([ 'Crafty' ], function() {
 	Crafty.c('VersionHistory', {
 		init: function() {
+			this._rootRevId = null;
 			this._headRevId = null;
 			this._nextRevId = 1;
 			this._revisions = {};
 		},
-		headRev: function() {
+		rootRevId: function() {
+			return this._rootRevId;
+		},
+		headRevId: function() {
 			return this._headRevId;
 		},
-		show: function(revId) {
+		getRev: function(revId) {
 			if (revId === undefined) {
 				return this._revisions[this._headRevId];
 			} else {
-				return this._revisions[revId].data;
+				return this._revisions[revId];
 			}
 		},
 		commit: function(data) {
@@ -25,6 +29,7 @@ define([ 'Crafty' ], function() {
 				this._revisions[this._headRevId].childRevIds.push(this._nextRevId);
 				newRevision.parentRevIds = [this._headRevId];
 			} else {
+				this._rootRevId = newRevision.id;
 				newRevision.parentRevIds = [];
 			}
 

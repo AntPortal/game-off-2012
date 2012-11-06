@@ -34,18 +34,47 @@ define([
 
 			var self = this;
 			this._versionHistory = versionHistory;
+
+			function calcBreadths() {
+				var breadthsById = {};
+				function calcBreadthRecur(id) {
+					var commit = self._versionHistory.getRev(id);
+					console.log(commit);
+					commit.childRevIds.forEach(calcBreadthRecur);
+					if (commit.childRevIds.length === 0) {
+						breadthsById[commit.id] = 1;
+					} else {
+						var sum = 0;
+						commit.childRevIds.forEach(function(id) {
+							sum += breadthsById[id];
+						});
+						breadthsById[commit.id] = sum;
+					}
+				}
+				calcBreadthRecur(self._versionHistory.rootRevId());
+				return breadthsById;
+			}
+
 			this._versionHistory.bind("Commit", function(commit) {
 				var marker = {commit: commit};
-				var parentMarkers = commit.parentRevIds.map(function(parentId) { return self._commitMarkersById[parentId]; });
-				if (parentMarkers.length === 0) {
-					marker.x = 0;
-					marker.y = 0;
-				} else {
-					marker.x = parentMarkers[0].x + 1;
-					marker.y = parentMarkers[0].y + parentMarkers[0].commit.childRevIds.length - 1;
-				}
-				marker.pixelCoords = {x: 32*marker.x + 8, y: 32*marker.y + 8, w: 16, h: 16};
 				self._commitMarkersById[commit.id] = marker;
+
+				var breadthsById = calcBreadths();
+				function setCoordsRecur(id, x, y) {
+					var marker = self._commitMarkersById[id];
+					marker.x = x;
+					marker.y = y;
+					var accum = y;
+					marker.commit.childRevIds.forEach(function(id) {
+						setCoordsRecur(id, x+1, accum);
+						accum += breadthsById[id];
+					});
+				}
+				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
+
+				self._forEachCommitMarker(function(marker) {
+					marker.pixelCoords = {x: 32*marker.x + 8, y: 32*marker.y + 8, w: 16, h: 16};
+				});
 				self._redraw();
 			});
 
@@ -154,7 +183,7 @@ define([
 			/* Draw commit symbols */
 			this._forEachCommitMarker(function(marker) {
 				var coords = marker.pixelCoords;
-				var isActive = self._versionHistory.headRev() === marker.commit.id;
+				var isActive = self._versionHistory.headRevId() === marker.commit.id;
 				var isLeaf = marker.commit.childRevIds.length === 0;
 				var spriteX = isActive ? 1 : (isLeaf ? 3 : 2);
 				ctx.drawImage(
