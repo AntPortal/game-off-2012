@@ -128,7 +128,7 @@ define([
 				self.bind('EnterFrame', function(ev) {
 					var oldScrollOffset = self._scrollOffset;
 					var maxScrollOffset = Math.max(0, this._maxNodeYCoord() - self._nodesContext.canvas.height);
-					self._scrollOffset += scrollDir;
+					self._scrollOffset += scrollDir * 8;
 					self._scrollOffset = Crafty.math.clamp(self._scrollOffset, 0, maxScrollOffset);
 					if (oldScrollOffset !== self._scrollOffset) {
 						self._drawNodes();
