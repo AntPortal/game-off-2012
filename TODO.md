@@ -62,12 +62,17 @@ Scene Layout
 
 BUGS
 ====
+<<<<<<< HEAD
 * Get better graphic for tooltips.
 * Find arrows to replace red squares in scroll box.
 * Tweak behaviour of gitk scrolling for when you have many forks.
 * Consider moving gitk UI to top of screen instead of bottom.
 * Add ability to resize gitk UI.
 * Need a click areamap for stairs and slopes.
+=======
+* Figure out why tooltips on name entry sometimes don't work.
+* (DONE) Need a click areamap for stairs and slopes.
+>>>>>>> 9178d6f84e7926f3381c7c524b3e8059cfeaeba2
 * Fix draw ordering (Hasan)
 * Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
   * As part of this, you'll probably want to add an A* path finding algorithm. 
