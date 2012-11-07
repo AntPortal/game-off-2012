@@ -9,10 +9,12 @@ define([
 	var SCROLL_RIGHT_PADDING = 8;
 	var SCROLL_VERT_PADDING = 8;
 	var ORB_SRC_SIZE = 64;
+	var ORB_DST_SIZE_PADDED = 32;
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
 		_breadthsById: null,
+		_maxBreadth: 1,
 		_scrollOffset: 0,
 		init: function() {
 			this.requires('2D, ViewportRelative, Mouse');
@@ -71,7 +73,7 @@ define([
 				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
 
 				self._forEachCommitMarker(function(marker) {
-					marker.pixelCoords = {x: 32*marker.x + 8, y: 32*marker.y + 8, w: 16, h: 16};
+					marker.pixelCoords = {x: ORB_DST_SIZE_PADDED*marker.x + 8, y: ORB_DST_SIZE_PADDED*marker.y + 8, w: 16, h: 16};
 				});
 				self._drawNodes();
 			});
@@ -107,9 +109,9 @@ define([
 						&& Crafty.math.withinRange(pos.y, self._lowerButtonBounds.y, self._lowerButtonBounds.y + self._lowerButtonBounds.h)
 					);
 					if (hitUpper) {
-						scrollDir = 1;
-					} else if (hitLower) {
 						scrollDir = -1;
+					} else if (hitLower) {
+						scrollDir = 1;
 					} else {
 						scrollDir = 0;
 					}
@@ -118,8 +120,11 @@ define([
 					scrollDir = 0;
 				});
 				self.bind('EnterFrame', function(ev) {
-					if (scrollDir) {
-						self._scrollOffset += scrollDir;
+					var oldScrollOffset = self._scrollOffset;
+					var maxScrollOffset = Math.max(0, self._maxBreadth*ORB_DST_SIZE_PADDED - self._nodesContext.canvas.height);
+					self._scrollOffset += scrollDir;
+					self._scrollOffset = Crafty.math.clamp(self._scrollOffset, 0, maxScrollOffset);
+					if (oldScrollOffset !== self._scrollOffset) {
 						self._drawNodes();
 					}
 				});
@@ -130,7 +135,7 @@ define([
 				var clickedMarker = null;
 				/* Translate pos so that it's relative to the inner canvas (the one with the nodes). */
 				pos.x -= (self.x + PADDING);
-				pos.y -= (self.y + PADDING);
+				pos.y -= (self.y + PADDING - self._scrollOffset);
 				self._forEachCommitMarker(function(marker) {
 					var coords = marker.pixelCoords;
 					var hit = (
@@ -166,6 +171,7 @@ define([
 					});
 					self._breadthsById[commit.id] = sum;
 				}
+				self._maxBreadth = Math.max(self._maxBreadth, self._breadthsById[commit.id]);
 			}
 			calcBreadthRecur(this._versionHistory.rootRevId());
 		},
@@ -236,7 +242,7 @@ define([
 			var ctx = this._nodesContext;
 			ctx.save();
 			ctx.clearRect(0, 0, this.w, this.h);
-			ctx.translate(0, this._scrollOffset);
+			ctx.translate(0, -this._scrollOffset);
 			/* Draw lines making up the graph */
 			ctx.strokeStyle = 'white';
 			ctx.beginPath();
