@@ -62,7 +62,11 @@ Scene Layout
 
 BUGS
 ====
-* Figure out why tooltips on name entry sometimes don't work.
+* Get better graphic for tooltips.
+* Find arrows to replace red squares in scroll box.
+* Tweak behaviour of gitk scrolling for when you have many forks.
+* Consider moving gitk UI to top of screen instead of bottom.
+* Add ability to resize gitk UI.
 * Need a click areamap for stairs and slopes.
 * Fix draw ordering (Hasan)
 * Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
@@ -72,3 +76,4 @@ BUGS
 * When forking, check all existing children to see if there's an identical match. If there is, instead of creating a new child, just reuse that existing one.
 * Add a timer so that if the user is stuck on a level for more than, e.g. 30 seconds, the tooltip icon starts flashing.
 * Add some sort of UI to indicate turn limit (maybe a skull and a vertical line on the gitk layer? Maybe if you click on it, it explains why there's a time limit in the story?)
+* Add support for IE.
