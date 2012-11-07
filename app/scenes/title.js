@@ -42,22 +42,24 @@ define([
 					Crafty.scene('newGame');
 				}
 			});
-			var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
-			slotDelete.attr({
-				x: config.viewport.width - 16 - 8,
-				y: 120 * i + 150 + 10,
-				w: 16,
-				h: 16,
-				z: config.zOffset.dialog,
-				saveIndex: i,
-			});
-			slotDelete.bind('Click', function() {
-				console.log('delete clicked');
-				config.saveGames[this.saveIndex] = {};
-				slots[this.saveIndex].face = 'DefaultGithubAvatar';
-				slots[this.saveIndex].msg = getMsgForSaveGameData(this.saveIndex);
-				slots[this.saveIndex].trigger('Change');
-			});
+			if (config.saveGames[i].level) {
+				var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
+				slotDelete.attr({
+					x: config.viewport.width - 16 - 8,
+					y: 120 * i + 150 + 10,
+					w: 16,
+					h: 16,
+					z: config.zOffset.dialog,
+					saveIndex: i,
+				});
+				slotDelete.bind('Click', function() {
+					console.log('delete clicked');
+					config.saveGames[this.saveIndex] = {};
+					slots[this.saveIndex].face = 'DefaultGithubAvatar';
+					slots[this.saveIndex].msg = getMsgForSaveGameData(this.saveIndex);
+					slots[this.saveIndex].trigger('Change');
+				});
+			}
 		}
 	});
 
