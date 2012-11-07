@@ -9,12 +9,14 @@ define([
 	var SCROLL_RIGHT_PADDING = 8;
 	var SCROLL_VERT_PADDING = 8;
 	var ORB_SRC_SIZE = 64;
+	var ORB_DST_SIZE = 16;
+	var ORB_DST_HORZ_PAD = 16;
+	var ORB_DST_VERT_PAD = 8;
 	var ORB_DST_SIZE_PADDED = 32;
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
 		_breadthsById: null,
-		_maxBreadth: 1,
 		_scrollOffset: 0,
 		init: function() {
 			this.requires('2D, ViewportRelative, Mouse');
@@ -43,7 +45,7 @@ define([
 			this._assets = {
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
 				dialog: Crafty.asset('assets/ui/dialog.olive.png')
-			}
+			};
 			this._dialogContext = makeCanvas(x, y, w, h, config.zOffset.gitk).getContext('2d');
 			this._nodesContext = makeCanvas(
 				x + PADDING,
@@ -73,7 +75,11 @@ define([
 				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
 
 				self._forEachCommitMarker(function(marker) {
-					marker.pixelCoords = {x: ORB_DST_SIZE_PADDED*marker.x + 8, y: ORB_DST_SIZE_PADDED*marker.y + 8, w: 16, h: 16};
+					marker.pixelCoords = {
+						x: (ORB_DST_SIZE + ORB_DST_HORZ_PAD) * marker.x + (ORB_DST_HORZ_PAD / 2),
+						y: (ORB_DST_SIZE + ORB_DST_VERT_PAD) * marker.y + (ORB_DST_VERT_PAD / 2),
+						w: ORB_DST_SIZE,
+						h: ORB_DST_SIZE};
 				});
 				self._drawNodes();
 			});
@@ -121,7 +127,7 @@ define([
 				});
 				self.bind('EnterFrame', function(ev) {
 					var oldScrollOffset = self._scrollOffset;
-					var maxScrollOffset = Math.max(0, self._maxBreadth*ORB_DST_SIZE_PADDED - self._nodesContext.canvas.height);
+					var maxScrollOffset = Math.max(0, this._maxNodeYCoord() - self._nodesContext.canvas.height);
 					self._scrollOffset += scrollDir;
 					self._scrollOffset = Crafty.math.clamp(self._scrollOffset, 0, maxScrollOffset);
 					if (oldScrollOffset !== self._scrollOffset) {
@@ -171,7 +177,6 @@ define([
 					});
 					self._breadthsById[commit.id] = sum;
 				}
-				self._maxBreadth = Math.max(self._maxBreadth, self._breadthsById[commit.id]);
 			}
 			calcBreadthRecur(this._versionHistory.rootRevId());
 		},
@@ -269,6 +274,13 @@ define([
 				);
 			});
 			ctx.restore();
+		},
+		_maxNodeYCoord: function() {
+			var retVal = 0;
+			this._forEachCommitMarker(function(marker) {
+				retVal = Math.max(retVal, marker.pixelCoords.y + marker.pixelCoords.h);
+			});
+			return retVal;
 		},
 		_forEachCommitMarker: function(func) {
 			var commitMarkersById = this._commitMarkersById;
