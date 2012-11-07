@@ -42,11 +42,7 @@ define([
 		})();
 
 		(function() {
-			/* Display a commit marker any time a commit is made. This currently only handles linear sequences of commits. */
 			var COMMIT_SIZE = 16;
-			var markersByCommitId = {};
-			var viewHeight = config.viewport.height;
-
 			Crafty.e('Gitk').Gitk(
 				'cr-stage',
 				COMMIT_SIZE * 2, /* x */
