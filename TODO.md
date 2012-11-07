@@ -64,12 +64,9 @@ BUGS
 ====
 * Get better graphic for tooltips.
 * Find arrows to replace red squares in scroll box.
-* Tweak behaviour of gitk scrolling for when you have many forks.
 * Consider moving gitk UI to top of screen instead of bottom.
-* Add ability to resize gitk UI.
+* Add ability to resize gitk UI. (e.g button to click to toggle between various sizes).
 * Need a click areamap for stairs and slopes.
-* (DONE) Need a click areamap for stairs and slopes.
-* Fix draw ordering (Hasan)
 * Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
   * As part of this, you'll probably want to add an A* path finding algorithm. 
 * Volume controls don't work on ipad.
