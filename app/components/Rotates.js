@@ -1,4 +1,4 @@
-define([Crafty], function() {
+define(['Crafty'], function() {
 	Crafty.c('Rotates', {
 		init : function() {
 			var me = this;
