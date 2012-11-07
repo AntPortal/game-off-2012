@@ -3,11 +3,13 @@
  <image source="../tiles/iso-64x64-outside.png" width="640" height="1024"/>
  <tile id="31">
   <properties>
+   <property name="areaMap" value="slopeNE"/>
    <property name="heightoffset" value="0.5"/>
   </properties>
  </tile>
  <tile id="33">
   <properties>
+   <property name="areaMap" value="slopeE"/>
    <property name="heightoffset" value="0.5"/>
   </properties>
  </tile>

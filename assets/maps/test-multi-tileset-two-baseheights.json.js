@@ -181,10 +181,12 @@ define(function(){return(
                 },
              "31":
                 {
+                 "areaMap":"slopeNE",
                  "heightoffset":"0.5"
                 },
              "33":
                 {
+                 "areaMap":"slopeE",
                  "heightoffset":"0.5"
                 },
              "34":
@@ -228,6 +230,7 @@ define(function(){return(
             {
              "54":
                 {
+                 "areaMap":"slopeNE",
                  "heightoffset":"0.5"
                 },
              "56":

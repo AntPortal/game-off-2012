@@ -3,6 +3,7 @@
  <image source="../tiles/iso-64x64-building_2.png" width="640" height="512"/>
  <tile id="54">
   <properties>
+   <property name="areaMap" value="slopeNE"/>
    <property name="heightoffset" value="0.5"/>
   </properties>
  </tile>
