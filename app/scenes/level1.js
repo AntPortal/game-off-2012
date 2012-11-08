@@ -56,115 +56,119 @@ define([
 						}
 					}
 				}
-				utils.centerViewportOn(Crafty, clickedTileEntity, 60);
+				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 				var heroName = config.getCurShortName();
+				var actions = [];
+				actions.push({
+					label: "Deliver Newspaper",
+					enabled: (nearbyNPC != null),
+					subscript: nearbyNPC ? "Delivers a newspaper." : "You must move next to the person you want to give the newspaper to.",
+					onClick: function() {
+						function createNewspaperScript(face, firstDialog, subsequentDialog, hasNewspaperKey) {
+							var vm = Crafty.e('2D, ScriptRunner');
+							vm.ScriptRunner([
+								{
+									action: 'dialog',
+									params: {
+										x: clickedTileEntity.x - 300,
+										y: clickedTileEntity.y - 125,
+										w: 400,
+										h: 70,
+										face: face,
+										msg: hasNewspaper[hasNewspaperKey] ? subsequentDialog : firstDialog
+									}
+								},
+								{ action: 'PACADOC' },
+								{ action: 'arbitraryCode', code: function(curState, callback) {
+									hasNewspaper[hasNewspaperKey] = true;
+									actionMenuActive = false;
+									vm.destroy();
+								}},
+							]);
+							return vm;
+						}
+						switch(nearbyNPC.name) {
+						case 'townfolk':
+							createNewspaperScript(
+								'face_townfolkM',
+								"Hey, thanks for delivering this, " + heroName + "!",
+								"Hmm, it says here tensions are rising at the border.",
+								'townfolk'
+							).run();
+							break;
+						case 'healer':
+							createNewspaperScript(
+									'face_healerF',
+									"Hey, thanks for delivering this, " + heroName + "!", //TODO
+									"Hmm, it says here tensions are rising at the border.", //TODO
+									'healer'
+								).run();
+							break;
+						case 'oldwoman': //intentional fallthrough to dog
+						case 'dog':
+							//TODO
+							actionMenuActive = false;
+							break;
+						case 'oldman':
+							createNewspaperScript(
+									'face_oldman',
+									"Hey, thanks for delivering this, " + heroName + "!", //TODO
+									"Hmm, it says here tensions are rising at the border.", //TODO
+									'oldman'
+								).run();
+							break;
+						case 'dancerF':
+							createNewspaperScript(
+								'face_dancerF',
+								"Hey, thanks for delivering this, " + heroName + "!", //TODO
+								"Hmm, it says here tensions are rising at the border.", //TODO
+								'dancerF'
+							).run();
+							break;
+						case 'bunny':
+							createNewspaperScript(
+								'face_bunny',
+								"Hey, thanks for delivering this, " + heroName + "!", //TODO
+								"Hmm, it says here tensions are rising at the border.", //TODO
+								'bunny'
+							).run();
+							break;
+						case 'girl': //intentional fallthrough to boy
+						case 'boy':
+							//TODO
+							actionMenuActive = false;
+							break;
+						default:
+							console.error('Unrecognized NPC: ', nearbyNPC.name);
+							break;
+						}
+						commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
+					}
+				});
+				actions.push({
+					label: "Do Nothing",
+					enabled: true,
+					subscript: "Moves to the selected position, then ends your turn.",
+					onClick: function() {
+						actionMenuActive = false;
+						commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
+					}
+				});
+				actions.push({
+					label: "Cancel",
+					enabled: true,
+					subscript: "Allows you to select a new tile to move to",
+					onClick: function() {
+						actionMenuActive = false;
+						versions.reset();
+					}
+				});
 				Crafty.e('2D, Canvas, ActionMenu').attr({
 					x: clickedTileEntity.x - 300,
 					y: clickedTileEntity.y - 155,
 					w: 400,
 					h: 135,
-					actions: [{
-						label: "Deliver Newspaper",
-						enabled: (nearbyNPC != null),
-						subscript: nearbyNPC ? "Delivers a newspaper." : "You must move next to the person you want to give the newspaper to.",
-						onClick: function() {
-							function createNewspaperScript(face, firstDialog, subsequentDialog, hasNewspaperKey) {
-								var vm = Crafty.e('2D, ScriptRunner');
-								vm.ScriptRunner([
-									{
-										action: 'dialog',
-										params: {
-											x: clickedTileEntity.x - 300,
-											y: clickedTileEntity.y - 125,
-											w: 400,
-											h: 70,
-											face: face,
-											msg: hasNewspaper[hasNewspaperKey] ? subsequentDialog : firstDialog
-										}
-									},
-									{ action: 'PACADOC' },
-									{ action: 'arbitraryCode', code: function(curState, callback) {
-										hasNewspaper[hasNewspaperKey] = true;
-										actionMenuActive = false;
-										vm.destroy();
-									}},
-								]);
-								return vm;
-							}
-							switch(nearbyNPC.name) {
-							case 'townfolk':
-								createNewspaperScript(
-									'face_townfolkM',
-									"Hey, thanks for delivering this, " + heroName + "!",
-									"Hmm, it says here tensions are rising at the border.",
-									'townfolk'
-								).run();
-								break;
-							case 'healer':
-								createNewspaperScript(
-										'face_healerF',
-										"Hey, thanks for delivering this, " + heroName + "!", //TODO
-										"Hmm, it says here tensions are rising at the border.", //TODO
-										'healer'
-									).run();
-								break;
-							case 'oldwoman': //intentional fallthrough to dog
-							case 'dog':
-								//TODO
-								actionMenuActive = false;
-								break;
-							case 'oldman':
-								createNewspaperScript(
-										'face_oldman',
-										"Hey, thanks for delivering this, " + heroName + "!", //TODO
-										"Hmm, it says here tensions are rising at the border.", //TODO
-										'oldman'
-									).run();
-								break;
-							case 'dancerF':
-								createNewspaperScript(
-									'face_dancerF',
-									"Hey, thanks for delivering this, " + heroName + "!", //TODO
-									"Hmm, it says here tensions are rising at the border.", //TODO
-									'dancerF'
-								).run();
-								break;
-							case 'bunny':
-								createNewspaperScript(
-									'face_bunny',
-									"Hey, thanks for delivering this, " + heroName + "!", //TODO
-									"Hmm, it says here tensions are rising at the border.", //TODO
-									'bunny'
-								).run();
-								break;
-							case 'girl': //intentional fallthrough to boy
-							case 'boy':
-								//TODO
-								actionMenuActive = false;
-								break;
-							default:
-								console.error('Unrecognized NPC: ', nearbyNPC.name);
-								break;
-							}
-							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
-						}
-					},{
-						label: "Do Nothing",
-						enabled: true,
-						subscript: "Moves to the selected position, then ends your turn.",
-						onClick: function() {
-							actionMenuActive = false;
-							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
-						}
-					},{
-						label: "Cancel",
-						enabled: true,
-						subscript: "Allows you to select a new tile to move to",
-						onClick: function() {
-							actionMenuActive = false;
-							versions.reset();
-						}
-					}],
+					actions: actions,
 				});
 				sepiaEntity.setVisible(false);
 			}
