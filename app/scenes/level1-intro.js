@@ -40,7 +40,7 @@ define([
 		var hero = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 3, 0, 'hero');
 		hero.visible = false;
 		var mom = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 1, 0, 'mom');
-		var DIALOG_HEIGHT = 90
+		var DIALOG_HEIGHT = 90;
 		var script = [
 			{ 
 				action: 'fade',
