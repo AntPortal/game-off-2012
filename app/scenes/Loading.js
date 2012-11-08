@@ -65,9 +65,11 @@ define([
 				'assets/sprites/dancerF.png',
 				'assets/sprites/dog.png',
 				'assets/sprites/dog2.png',
+				'assets/sprites/healerF.png',
 				'assets/sprites/mom.png',
 				'assets/sprites/oldman.png',
 				'assets/sprites/oldwoman.png',
+				'assets/sprites/townfolkM.png',
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
 				'assets/ui/action_stop.gif',
@@ -100,6 +102,8 @@ define([
 					loadAntifareaCharacterSprite('bunny', 'assets/sprites/bunny.png');
 					loadAntifareaCharacterSprite('dancerF', 'assets/sprites/dancerF.png');
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
+					loadAntifareaCharacterSprite('healerF', 'assets/sprites/healerF.png');
+					loadAntifareaCharacterSprite('townfolkM', 'assets/sprites/townfolkM.png');
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]
 					});
