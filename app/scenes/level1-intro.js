@@ -11,14 +11,14 @@ define([
 	], function(config, mapData, utils) {
 	Crafty.scene('level1-intro', function() {
 		var tileProperties = utils.loadTileset(mapData);
-		var heightMap = utils.loadMap(mapData, tileProperties, function(tileEntity) {
+		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
 			//Does nothing
 		});
 		//Add characters
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-		var hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(heightMap, worldToPixel, 3, 0);
+		var hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(parsedMapData.heightMap, worldToPixel, 3, 0);
 		hero.visible = false;
-		var mom = Crafty.e('2D, Canvas, Character, momSouth').Character(heightMap, worldToPixel, 1, 0);
+		var mom = Crafty.e('2D, Canvas, Character, momSouth').Character(parsedMapData.heightMap, worldToPixel, 1, 0);
 		var script = [
 			{ 
 				action: 'fade',

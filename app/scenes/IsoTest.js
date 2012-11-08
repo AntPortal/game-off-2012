@@ -18,7 +18,7 @@ define([
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
-		var heightMap = utils.loadMap(mapData, tileProperties, function(tileEntity) {
+		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
 			if (hero) {
 				hero.setWalkTarget(tileEntity.tileX, tileEntity.tileY);
 				versions.commit({
@@ -30,7 +30,7 @@ define([
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-			hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(heightMap, worldToPixel, 0, 0);
+			hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(parsedMapData.heightMap, worldToPixel, 0, 0);
 		})();
 		(function() {
 			//Handle HUD
@@ -56,7 +56,7 @@ define([
 			var revData = rev.data;
 			var tileX = revData.hero.x;
 			var tileY = revData.hero.y;
-			hero.setPos(tileX, tileY, heightMap[tileX+","+tileY].surfaceZ);
+			hero.setPos(tileX, tileY, parsedMapData.heightMap[tileX+","+tileY].surfaceZ);
 			hero.setWalkTarget(tileX, tileY);
 			var isLeaf = rev.childRevIds.length == 0;
 			sepiaEntity.setVisible(! isLeaf);

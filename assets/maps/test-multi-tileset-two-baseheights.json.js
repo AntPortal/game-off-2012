@@ -90,6 +90,29 @@ define(function(){return(
          "width":15,
          "x":0,
          "y":0
+        }, 
+        {
+         "height":27,
+         "name":"NPCs",
+         "objects":[
+                {
+                 "height":32,
+                 "name":"oldwoman",
+                 "properties":
+                    {
+
+                    },
+                 "type":"npc",
+                 "width":32,
+                 "x":384,
+                 "y":256
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":15,
+         "x":0,
+         "y":0
         }],
  "orientation":"isometric",
  "properties":
@@ -181,12 +204,10 @@ define(function(){return(
                 },
              "31":
                 {
-                 "areaMap":"slopeNE",
                  "heightoffset":"0.5"
                 },
              "33":
                 {
-                 "areaMap":"slopeE",
                  "heightoffset":"0.5"
                 },
              "34":
@@ -230,7 +251,6 @@ define(function(){return(
             {
              "54":
                 {
-                 "areaMap":"slopeNE",
                  "heightoffset":"0.5"
                 },
              "56":
