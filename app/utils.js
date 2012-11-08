@@ -259,7 +259,7 @@ function(config) {
 		for (key in config.music) {
 			if (key == songId) {
 				if (! Crafty.audio.isPlaying(key)) {
-					Crafty.audio.play(key);
+					Crafty.audio.play(key, -1, effectiveVolume(key));
 				}
 			} else {
 				//Stop all other music
