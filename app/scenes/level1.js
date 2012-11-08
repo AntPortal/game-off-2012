@@ -59,12 +59,64 @@ define([
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 				var heroName = config.getCurShortName();
 				var actions = [];
-				actions.push({
-					label: "Deliver Newspaper",
-					enabled: (nearbyNPC != null),
-					subscript: nearbyNPC ? "Delivers a newspaper." : "You must move next to the person you want to give the newspaper to.",
-					onClick: function() {
-						function createNewspaperScript(face, firstDialog, subsequentDialog, hasNewspaperKey) {
+				if (nearbyNPC == null) {
+					actions.push({
+						label: "Deliver Newspaper",
+						enabled: false,
+						subscript: "You must move next to the person you want to give the newspaper to.",
+						onClick: function() {/*Can never reach here.*/}
+					});
+				} else if (nearbyNPC.name == 'boy' || nearbyNPC.name == 'girl') {
+					var allNewspapersDelivered = true;
+					for (i in hasNewspaper) {
+						allNewspapersDelivered = allNewspapersDelivered && hasNewspaper[i];
+					}
+					actions.push({
+						label: "Head to fair",
+						enabled: allNewspapersDelivered,
+						subscript: allNewspapersDelivered ? "Go with your friends to the Millenial Fair" : "You must deliver all your newspapers before you can go to the fair.",
+						onClick: function() {
+							//TODO
+						}
+					});
+				} else {
+					//We must be near some NPC other than 'boy' or 'girl'
+					var scriptData = {};
+					scriptData.townfolk = {
+						face: 'face_townfolkM',
+						newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
+						chatText: "Hmm, it says here tensions are rising at the border.", //TODO
+					};
+					scriptData.healer = {
+						face: 'face_healerF',
+						newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
+						chatText: "Hmm, it says here tensions are rising at the border.", //TODO
+					};
+					scriptData.oldwoman = {
+							newspaperScript: function() {
+								//TODO;
+								hasNewspaper.oldwoman = true;
+								actionMenuActive = false;
+							}
+					};
+					scriptData.dog = scriptData.oldwoman; //dog copies woman
+					scriptData.oldman = {
+							face: 'face_oldman',
+							newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
+							chatText: "Hmm, it says here tensions are rising at the border.", //TODO
+					};
+					scriptData.dancerF = {
+							face: 'face_dancerF',
+							newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
+							chatText: "Hmm, it says here tensions are rising at the border.", //TODO
+					};
+					scriptData.bunny = {
+							face: 'face_bunny',
+							newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
+							chatText: "Hmm, it says here tensions are rising at the border.", //TODO
+					};
+					function createDialogScript(npcName) {
+						return function() {
 							var vm = Crafty.e('2D, ScriptRunner');
 							vm.ScriptRunner([
 								{
@@ -74,77 +126,37 @@ define([
 										y: clickedTileEntity.y - 125,
 										w: 400,
 										h: 70,
-										face: face,
-										msg: hasNewspaper[hasNewspaperKey] ? subsequentDialog : firstDialog
+										face: scriptData[npcName].face,
+										msg: hasNewspaper[npcName] ? scriptData[npcName].chatText : scriptData[npcName].newspaperText,
 									}
 								},
 								{ action: 'PACADOC' },
 								{ action: 'arbitraryCode', code: function(curState, callback) {
-									hasNewspaper[hasNewspaperKey] = true;
+									hasNewspaper[npcName] = true;
 									actionMenuActive = false;
+									commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
 									vm.destroy();
 								}},
 							]);
-							return vm;
-						}
-						switch(nearbyNPC.name) {
-						case 'townfolk':
-							createNewspaperScript(
-								'face_townfolkM',
-								"Hey, thanks for delivering this, " + heroName + "!",
-								"Hmm, it says here tensions are rising at the border.",
-								'townfolk'
-							).run();
-							break;
-						case 'healer':
-							createNewspaperScript(
-									'face_healerF',
-									"Hey, thanks for delivering this, " + heroName + "!", //TODO
-									"Hmm, it says here tensions are rising at the border.", //TODO
-									'healer'
-								).run();
-							break;
-						case 'oldwoman': //intentional fallthrough to dog
-						case 'dog':
-							//TODO
-							actionMenuActive = false;
-							break;
-						case 'oldman':
-							createNewspaperScript(
-									'face_oldman',
-									"Hey, thanks for delivering this, " + heroName + "!", //TODO
-									"Hmm, it says here tensions are rising at the border.", //TODO
-									'oldman'
-								).run();
-							break;
-						case 'dancerF':
-							createNewspaperScript(
-								'face_dancerF',
-								"Hey, thanks for delivering this, " + heroName + "!", //TODO
-								"Hmm, it says here tensions are rising at the border.", //TODO
-								'dancerF'
-							).run();
-							break;
-						case 'bunny':
-							createNewspaperScript(
-								'face_bunny',
-								"Hey, thanks for delivering this, " + heroName + "!", //TODO
-								"Hmm, it says here tensions are rising at the border.", //TODO
-								'bunny'
-							).run();
-							break;
-						case 'girl': //intentional fallthrough to boy
-						case 'boy':
-							//TODO
-							actionMenuActive = false;
-							break;
-						default:
-							console.error('Unrecognized NPC: ', nearbyNPC.name);
-							break;
-						}
-						commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
+							vm.run();
+						};
 					}
-				});
+					if (hasNewspaper[nearbyNPC.name]) {
+						actions.push({
+							label: "Chat",
+							enabled: true,
+							subscript: "Sees what this person has to say.",
+							onClick: scriptData[nearbyNPC.name].chatScript || createDialogScript(nearbyNPC.name),
+						});
+					} else {
+						actions.push({
+							label: "Deliver Newspaper",
+							enabled: true,
+							subscript: "Gives a newspaper to this person." ,
+							onClick: scriptData[nearbyNPC.name].newspaperScript || createDialogScript(nearbyNPC.name),
+						});
+					}
+				}
 				actions.push({
 					label: "Do Nothing",
 					enabled: true,
