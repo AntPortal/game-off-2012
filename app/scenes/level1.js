@@ -214,6 +214,7 @@ define([
 		Crafty.viewport.clampToEntities = false;
 		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
+		utils.ensureMusicIsPlaying('music/town');
 	});
 	return undefined;
 });
