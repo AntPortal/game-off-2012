@@ -63,7 +63,6 @@ Scene Layout
 BUGS
 ====
 * Implement merging.
-* Add ability to skip the intro scenes.
 * Get better graphic for tooltips.
 * Find arrows to replace red squares in scroll box.
 * Consider moving gitk UI to top of screen instead of bottom.
