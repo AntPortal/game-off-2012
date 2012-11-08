@@ -220,6 +220,15 @@ define([
 			);
 		})();
 		commitPseudoCurrentState(HERO_START.x,HERO_START.y); //initial state
+		versions.mergeFunc = function(base, ours, theirs) {
+			return {
+				hero: {
+					x: ours.hero.x,
+					y: ours.hero.y
+				},
+				hasNewspapers: utils.mergeObjs(ours.hasNewspapers, theirs.hasNewspapers, function(x, y) { return x || y; })
+			}
+		};
 		versions.bind("Checkout", function(rev) {
 			var revData = rev.data;
 			var tileX = revData.hero.x;
