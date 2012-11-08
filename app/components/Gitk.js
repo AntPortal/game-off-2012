@@ -166,7 +166,6 @@ define([
 			this._breadthsById = {};
 			function calcBreadthRecur(id) {
 				var commit = self._versionHistory.getRev(id);
-				console.log(commit);
 				commit.childRevIds.forEach(calcBreadthRecur);
 				if (commit.childRevIds.length === 0) {
 					self._breadthsById[commit.id] = 1;
