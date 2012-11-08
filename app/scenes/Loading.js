@@ -71,6 +71,7 @@ define([
 			Crafty.load(assets, function() {
 				makeSleepUntilFontsLoaded(function() {
 					loadAntifareaCharacterSprite('hero', 'assets/sprites/charsets_warrior.png');
+					loadAntifareaCharacterSprite('oldwoman', 'assets/sprites/oldwoman.png');
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]

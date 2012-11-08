@@ -30,7 +30,19 @@ define([
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-			hero = Crafty.e('2D, Canvas, Character, heroSouth').Character(parsedMapData.heightMap, worldToPixel, 0, 0);
+			hero = Crafty.e('2D, Canvas, Character, heroSouth').
+				Character(parsedMapData.heightMap, worldToPixel, 0, 0);
+			var i = 0;
+			for (i = 0; i < parsedMapData.objects.length; i++) {
+				var object = parsedMapData.objects[i];
+				if (object.type == 'npc') {
+					Crafty.e('2D, Canvas, Character').
+						addComponent(object.name+'South').
+						Character(parsedMapData.heightMap, worldToPixel, object.tileX, object.tileY);
+				} else {
+					console.warn('Unknown object type: ', object.type);
+				}
+			}
 		})();
 		(function() {
 			//Handle HUD

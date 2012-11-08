@@ -34,6 +34,12 @@
    eJxjYBgF1ACVA+0AKoCKgXbAAIObA+2AQQCwhcFouIwCUgAA+bIDfQ==
   </data>
  </layer>
+ <objectgroup name="1 NPCs" width="15" height="27">
+  <properties>
+   <property name="baseheight" value="1"/>
+  </properties>
+  <object name="oldwoman" type="npc" x="384" y="256" width="32" height="32"/>
+ </objectgroup>
  <layer name="2 floor" width="15" height="27">
   <properties>
    <property name="baseheight" value="2"/>
@@ -50,7 +56,4 @@
    eJxjYBgc4CYNzLxFZfNo4cZRMApGwSgYTgAA+BsCjQ==
   </data>
  </layer>
- <objectgroup name="NPCs" width="15" height="27">
-  <object name="oldwoman" type="npc" x="384" y="256" width="32" height="32"/>
- </objectgroup>
 </map>

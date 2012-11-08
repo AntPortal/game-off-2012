@@ -159,71 +159,93 @@ function(config) {
 		var worldToPixel = makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		var parsedMapData = {};
 		parsedMapData.heightMap = {};
-		var i, j;
-		for (i = 0; i < mapData.layers.length; i++) {
-			var layer = mapData.layers[i];
-			if (layer.type == 'tilelayer') {
-				var baseheight;
-				if (layer.visible) {
-					if (layer.properties && layer.properties.baseheight) {
-						baseheight = parseInt(layer.properties.baseheight, 10);
-					} else {
-						baseheight = 0;
-						console.warn('Layer ' + layer.name + ' missing baseheight');
-					}
-					for (j = 0; j < layer.data.length; j++) {
-						if (layer.data[j] != 0) {
-							var tileType = 'tile'+layer.data[j];
-							/*
-							 * We add the baseheight to convert from "Looks right in tiled" to "reflects actual world
-							 * coordinates."
-							 */
-							var tileX = j % layer.width + baseheight;
-							var tileY = Math.floor(j / layer.width) + baseheight;
-							var pixelCoord = worldToPixel(tileX, tileY, baseheight);
-							var entity = Crafty.e('2D, Canvas, ' + tileType);
-							var _justTileProperties = tileProperties[layer.data[j]] || {};
-							var heightoffset;
-							if (_justTileProperties['heightoffset']) {
-								heightoffset = parseFloat(_justTileProperties['heightoffset']);
-								if (isNaN(heightoffset)) {
-									heightoffset = 0;
-									console.warn('Could not parse ' + _justTileProperties['heightoffset']);
-								}
-							} else {
+		parsedMapData.objects = [];
+		function parseTilelayer(layer, baseheight) {
+			if (layer.visible) {
+				var j;
+				for (j = 0; j < layer.data.length; j++) {
+					if (layer.data[j] != 0) {
+						var tileType = 'tile'+layer.data[j];
+						/*
+						 * We add the baseheight to convert from "Looks right in tiled" to "reflects actual world
+						 * coordinates."
+						 */
+						var tileX = j % layer.width + baseheight;
+						var tileY = Math.floor(j / layer.width) + baseheight;
+						var pixelCoord = worldToPixel(tileX, tileY, baseheight);
+						var entity = Crafty.e('2D, Canvas, ' + tileType);
+						var _justTileProperties = tileProperties[layer.data[j]] || {};
+						var heightoffset;
+						if (_justTileProperties['heightoffset']) {
+							heightoffset = parseFloat(_justTileProperties['heightoffset']);
+							if (isNaN(heightoffset)) {
 								heightoffset = 0;
+								console.warn('Could not parse ' + _justTileProperties['heightoffset']);
 							}
-							entity.attr({
-								x: pixelCoord.pixelX - entity.w / 2,
-								y: pixelCoord.pixelY - entity.h,
-								z: tileX + tileY + baseheight,
-								tileX: tileX,
-								tileY: tileY,
-								tileZ: baseheight,
-								surfaceZ: baseheight + heightoffset,
-								tileId: layer.data[j],
-								tileProperties: _justTileProperties
-							});
-							parsedMapData.heightMap[tileX+","+tileY] = entity;
-							if (!entity.tileProperties['noStand']) {
-								entity.addComponent('ClickNoDrag');
-								entity.bind("ClickNoDrag", function() {
-									if (tileClickCallback) {
-										tileClickCallback(this);
-									}
-								});
-								if (entity.areaMap) { //Some scenes, e.g. level1-intro, don't use areamaps.
-									/* The call to .map below makes a deep copy of the array; this is needed because Crafty
-									 * seems to change the provided coordinate arrays in-place, which leads to problems if
-									 * they're shared between multiple entities. */
-									var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
-									var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
-									entity.areaMap(tileAreaMap);
+						} else {
+							heightoffset = 0;
+						}
+						entity.attr({
+							x: pixelCoord.pixelX - entity.w / 2,
+							y: pixelCoord.pixelY - entity.h,
+							z: tileX + tileY + baseheight,
+							tileX: tileX,
+							tileY: tileY,
+							tileZ: baseheight,
+							surfaceZ: baseheight + heightoffset,
+							tileId: layer.data[j],
+							tileProperties: _justTileProperties
+						});
+						parsedMapData.heightMap[tileX+","+tileY] = entity;
+						if (!entity.tileProperties['noStand']) {
+							entity.addComponent('ClickNoDrag');
+							entity.bind("ClickNoDrag", function() {
+								if (tileClickCallback) {
+									tileClickCallback(this);
 								}
+							});
+							if (entity.areaMap) { //Some scenes, e.g. level1-intro, don't use areamaps.
+								/* The call to .map below makes a deep copy of the array; this is needed because Crafty
+								 * seems to change the provided coordinate arrays in-place, which leads to problems if
+								 * they're shared between multiple entities. */
+								var _areaMapType = entity.tileProperties['areaMap'] || 'default'; 
+								var tileAreaMap = new Crafty.polygon(config.areaMaps[_areaMapType].map(function(a) { return a.slice(); }));
+								entity.areaMap(tileAreaMap);
 							}
 						}
 					}
 				}
+			}
+		}
+		function parseObjectlayer(layer, baseheight) {
+			var i;
+			if (layer.visible) {
+				for (i = 0; i < layer.objects.length; i++) {
+					var object = layer.objects[i];
+					parsedMapData.objects.push({
+						tileX: object.x / 32 + baseheight, //TODO: How do we know it's 32?
+						tileY: object.y / 32 + baseheight, //TODO: How do we know it's 32?
+						name: object.name,
+						type: object.type,
+						properties: object.properties,
+					});
+				}
+			}
+		}
+		var i;
+		for (i = 0; i < mapData.layers.length; i++) {
+			var layer = mapData.layers[i];
+			var baseheight;
+			if (layer.properties && layer.properties.baseheight) {
+				baseheight = parseInt(layer.properties.baseheight, 10);
+			} else {
+				baseheight = 0;
+				console.warn('Layer ' + layer.name + ' missing baseheight');
+			}
+			if (layer.type == 'tilelayer') {
+				parseTilelayer(layer, baseheight);
+			} else if (layer.type == 'objectgroup') {
+				parseObjectlayer(layer, baseheight);
 			}
 		}
 		return parsedMapData;
