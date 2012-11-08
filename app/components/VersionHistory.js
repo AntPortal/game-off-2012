@@ -45,6 +45,10 @@ define([ 'Crafty' ], function() {
 			this._headRevId = revId;
 			this.trigger("Checkout", rev);
 			return rev;
+		},
+		//Triggers the 'checkout' event on the current revision
+		reset: function() {
+			this.checkout(this._headRevId);
 		}
 	});
 });
