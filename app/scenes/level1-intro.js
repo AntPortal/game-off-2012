@@ -7,10 +7,11 @@ define([
 		'components/Character',
 		'components/Dialog',
 		'components/ScriptRunner',
-		'scenes/IsoTest', //TODO change to level1
+		'scenes/level1',
+		'components/AutoDestroy',
 	], function(config, mapData, utils) {
 	Crafty.scene('level1-intro', function() {
-		var nextScene = 'IsoTest'; //TODO change to level1
+		var nextScene = 'level1';
 		var tileProperties = utils.loadTileset(mapData);
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
 			//Does nothing
@@ -40,6 +41,7 @@ define([
 		var hero = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 3, 0, 'hero');
 		hero.visible = false;
 		var mom = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 1, 0, 'mom');
+		var DIALOG_HEIGHT = 90;
 		var script = [
 			{ 
 				action: 'fade',
@@ -55,7 +57,7 @@ define([
 					x: 150,
 					y: 100,
 					w: 400,
-					h: 70,
+					h: DIALOG_HEIGHT,
 					msg: config.getCurShortName() + "...",
 					showMore: true,
 				}
@@ -67,7 +69,7 @@ define([
 					x: 150,
 					y: 100,
 					w: 400,
-					h: 70,
+					h: DIALOG_HEIGHT,
 					msg: config.getCurShortName() + "!",
 					showMore: true,
 				}
@@ -79,7 +81,7 @@ define([
 					x: 150,
 					y: 100,
 					w: 400,
-					h: 70,
+					h: DIALOG_HEIGHT,
 					msg: "Good morning, "+config.getCurShortName() +"!",
 					showMore: true,
 				}
@@ -100,10 +102,10 @@ define([
 					x: 150,
 					y: 100,
 					w: 400,
-					h: 70,
+					h: DIALOG_HEIGHT,
 					msg: "Mom: Come on, sleepy head! Get up!",
 					showMore: true,
-					face: 'face_villagerF',
+					face: 'face_townfolkF',
 				}
 			},
 			{ action: 'PACADOC' },
@@ -118,13 +120,13 @@ define([
 					x: 150,
 					y: 100,
 					w: 400,
-					h: 70,
+					h: DIALOG_HEIGHT,
 					msg: [
 						"Mom: You were so excited about the Millenial",
 						"Fair that you didn't sleep well, did you...?",
 					],
 					showMore: true,
-					face: 'face_villagerF',
+					face: 'face_townfolkF',
 				}
 			},
 			{ action: 'PACADOC' },
@@ -134,18 +136,76 @@ define([
 					x: 150,
 					y: 100,
 					w: 400,
-					h: 70,
+					h: DIALOG_HEIGHT,
 					msg: [
-						"Mom: I want you to behave yourself today!",
+						"Mom: By the way, those two friends of yours came over",
+						"earlier asking if you were ready to go yet, but I had",
+						"to turn them away since you were still sleeping.",
 					],
 					showMore: true,
-					face: 'face_villagerF',
+					face: 'face_townfolkF',
+				}
+			},
+			{ action: 'PACADOC' },
+			{ action: 'arbitraryCode', code: function(curState, callback) {
+				hero.setWalkTarget(0,2);
+				mom.setWalkTarget(1,2);
+				callback(curState + 1);
+			}},
+			{
+				action: 'dialog',
+				params: {
+					x: 150,
+					y: 100,
+					w: 400,
+					h: DIALOG_HEIGHT,
+					msg: [
+						"Mom: Hold it! Before you go running off with your",
+						"friends, remember that you have to deliver your",
+						"newspapers!",
+					],
+					showMore: true,
+					face: 'face_townfolkF',
+				}
+			},
+			{ action: 'PACADOC' },
+			{
+				action: 'dialog',
+				params: {
+					x: 150,
+					y: 100,
+					w: 400,
+					h: DIALOG_HEIGHT,
+					msg: [
+						"Mom: I want you to behave yourself today! Promise me",
+						"you won't go to the fair until you've delivered all",
+						"the papers.",
+					],
+					showMore: true,
+					face: 'face_townfolkF',
+				}
+			},
+			{ action: 'PACADOC' },
+			{
+				action: 'dialog',
+				params: {
+					x: 150,
+					y: 100,
+					w: 400,
+					h: DIALOG_HEIGHT,
+					msg: [
+						"Mom: Let's get moving now! Don't forget, people are",
+						"depending on you. Run along now, and be back before",
+						"dinner.",
+					],
+					showMore: true,
+					face: 'face_townfolkF',
 				}
 			},
 			{ action: 'PACADOC' },
 			{ action: 'loadScene', scene: nextScene},
 		];
-		Crafty.e('2D, ScriptRunner').ScriptRunner(script).run();
+		Crafty.e('ScriptRunner, AutoDestroy').ScriptRunner(script).run();
 		Crafty.viewport.clampToEntities = false;
 		Crafty.viewport.y = config.viewport.height / 2;
 	});

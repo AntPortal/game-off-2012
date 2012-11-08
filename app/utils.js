@@ -252,7 +252,20 @@ function(config) {
 	}
 	function stopAllMusic() {
 		for (key in config.music) {
-			Crafty.audio.stop();
+			Crafty.audio.stop(key);
+		}
+	}
+	function ensureMusicIsPlaying(songId) {
+		for (key in config.music) {
+			if (key == songId) {
+				if (! Crafty.audio.isPlaying(key)) {
+					Crafty.audio.play(key, -1, effectiveVolume(key));
+				}
+			} else {
+				//Stop all other music
+				Crafty.audio.stop(key);
+			}
+			
 		}
 	}
 	/**
@@ -525,5 +538,6 @@ function(config) {
 		withGitHubAvatarUrls: withGitHubAvatarUrls,
 		removeDuplicates: removeDuplicates,
 		centerViewportOn: centerViewportOn,
+		ensureMusicIsPlaying: ensureMusicIsPlaying,
 	};
 });

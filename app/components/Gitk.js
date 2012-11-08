@@ -12,21 +12,22 @@ define([
 	var ORB_DST_SIZE = 16;
 	var ORB_DST_HORZ_PAD = 16;
 	var ORB_DST_VERT_PAD = 8;
-	var ORB_DST_SIZE_PADDED = 32;
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
 		_breadthsById: null,
 		_scrollOffset: 0,
+		_refElem: null, //the HTML DOM element that will contain any created canvases.
+		_boundCommitFunction: null, //The function that is bound to the 'commit' event of the version history.
 		init: function() {
 			this.requires('2D, ViewportRelative, Mouse');
 			this._commitMarkersById = {};
 			this._breadthsById = {};
+			this.bind('Remove', this._removed);
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
-			var refElem = document.getElementById(baseElemId);
 			var self = this;
-
+			this._refElem = document.getElementById(baseElemId);
 			function makeCanvas(x, y, w, h, zIndex) {
 				var canvas = document.createElement('canvas');
 				canvas.width = w;
@@ -37,7 +38,7 @@ define([
 				canvas.style.width = w+'px';
 				canvas.style.height = h+'px';
 				canvas.style.zIndex = zIndex;
-				refElem.appendChild(canvas);
+				self._refElem.appendChild(canvas);
 				return canvas;
 			}
 
@@ -55,10 +56,8 @@ define([
 				config.zOffset.gitk + 1
 			).getContext('2d');
 
-			var self = this;
 			this._versionHistory = versionHistory;
-
-			this._versionHistory.bind("Commit", function(commit) {
+			this._boundCommitFunction = function(commit) {
 				var marker = {commit: commit};
 				self._commitMarkersById[commit.id] = marker;
 				self._calcBreadths();
@@ -82,7 +81,8 @@ define([
 						h: ORB_DST_SIZE};
 				});
 				self._drawNodes();
-			});
+			};
+			this._versionHistory.bind("Commit", this._boundCommitFunction);
 
 			(function() {
 				var canvas = self._dialogContext.canvas;
@@ -292,6 +292,11 @@ define([
 					}
 				}
 			}
+		},
+		_removed: function() {
+			this._refElem.removeChild(this._dialogContext.canvas);
+			this._refElem.removeChild(this._nodesContext.canvas);
+			this._versionHistory.unbind("Commit", this._boundCommitFunction);
 		}
 	});
 });

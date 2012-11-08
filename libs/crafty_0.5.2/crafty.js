@@ -8774,6 +8774,12 @@ Crafty.extend({
 				return 0;
 			var s = this.sounds[id];
 			return s.obj.currentTime;
+		},
+		isPlaying : function(id) {
+			if (!Crafty.support.audio || !id || !this.sounds[id])
+				return false;
+			var s = this.sounds[id];
+			return !s.obj.paused;
 		}
 	}
 });
