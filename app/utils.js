@@ -14,6 +14,14 @@ function(config) {
 		};
 	}
 	/**
+	 * Tests whether a point is in a rectangle. The point must be an
+	 * object with "x" and "y" properties; the rectangle must be an
+	 * object with "x", "y", "w", and "h" properties.
+	 */
+	function pointInRect(pt, rect) {
+		return pt.x >= rect.x && pt.x <= (rect.x + rect.w) && pt.y >= rect.y && pt.y <= (rect.y + rect.h);
+	}
+	/**
 	 * Loads a tileset from a map (i.e. creates or updates the
 	 * appropriate components), and returns a tileproperties object,
 	 * which is a map from global tile id, e.g. "55", to their
@@ -525,6 +533,7 @@ function(config) {
 	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
+		pointInRect : pointInRect,
 		loadTileset : loadTileset,
 		effectiveVolume : effectiveVolume,
 		setMusicVolume : setMusicVolume,

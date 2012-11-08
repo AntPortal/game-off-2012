@@ -1,8 +1,9 @@
 define([
 	'config',
+	'utils',
 	'Crafty',
 	'components/ViewportRelative'
-], function(config) {
+], function(config, utils) {
 	var DIALOG_TILE_SIZE = 16;
 	var PADDING = DIALOG_TILE_SIZE / 2;
 	var SCROLL_BUTTON_SIZE = 16;
@@ -12,6 +13,9 @@ define([
 	var ORB_DST_SIZE = 16;
 	var ORB_DST_HORZ_PAD = 16;
 	var ORB_DST_VERT_PAD = 8;
+	var MERGE_BUTTON_LEFT_PADDING = 8;
+	var MERGE_BUTTON_WIDTH = 40;
+	var MERGE_BUTTON_HEIGHT = 16;
 
 	Crafty.c('Gitk', {
 		_commitMarkersById: null,
@@ -106,14 +110,8 @@ define([
 					/* Translate pos so that it's relative to the outer canvas (the one with the background). */
 					pos.x -= self.x;
 					pos.y -= self.y;
-					var hitUpper = (
-						Crafty.math.withinRange(pos.x, self._upperButtonBounds.x, self._upperButtonBounds.x + self._upperButtonBounds.w)
-						&& Crafty.math.withinRange(pos.y, self._upperButtonBounds.y, self._upperButtonBounds.y + self._upperButtonBounds.h)
-					);
-					var hitLower = (
-						Crafty.math.withinRange(pos.x, self._lowerButtonBounds.x, self._lowerButtonBounds.x + self._lowerButtonBounds.w)
-						&& Crafty.math.withinRange(pos.y, self._lowerButtonBounds.y, self._lowerButtonBounds.y + self._lowerButtonBounds.h)
-					);
+					var hitUpper = utils.pointInRect(pos, self._upperButtonBounds);
+					var hitLower = utils.pointInRect(pos, self._lowerButtonBounds);
 					if (hitUpper) {
 						scrollDir = -1;
 					} else if (hitLower) {
@@ -139,23 +137,32 @@ define([
 			this.bind('Click', function(ev) {
 				var pos = Crafty.DOM.translate(ev.clientX, ev.clientY);
 				var clickedMarker = null;
+				var clickedMerge = false;
 				/* Translate pos so that it's relative to the inner canvas (the one with the nodes). */
 				pos.x -= (self.x + PADDING);
 				pos.y -= (self.y + PADDING - self._scrollOffset);
 				self._forEachCommitMarker(function(marker) {
 					var coords = marker.pixelCoords;
-					var hit = (
-						Crafty.math.withinRange(pos.x, coords.x, coords.x + coords.w)
-						&& Crafty.math.withinRange(pos.y, coords.y, coords.y + coords.h)
-					);
+					var hit = utils.pointInRect(pos, coords);
 					if (hit) {
 						clickedMarker = marker;
 						return false;
 					}
+
+					var commitProps = self._commitProps(marker.commit);
+					if (commitProps.isMergeable && utils.pointInRect(pos, self._getMergeButtonCoords(marker))) {
+						clickedMarker = marker;
+						clickedMerge = true;
+						return false;
+					}
 				});
 				if (clickedMarker) {
-					self._versionHistory.checkout(clickedMarker.commit.id);
-					self._drawNodes();
+					if (clickedMerge) {
+						self._versionHistory.merge(clickedMarker.commit.id);
+					} else {
+						self._versionHistory.checkout(clickedMarker.commit.id);
+					}
+					self._drawNodes(); /* may be redundant, as the merge will trigger a commit event if it's not a fast-forward */
 				}
 			});
 			this._drawDialog();
@@ -263,14 +270,20 @@ define([
 			/* Draw commit symbols */
 			this._forEachCommitMarker(function(marker) {
 				var coords = marker.pixelCoords;
-				var isActive = self._versionHistory.headRevId() === marker.commit.id;
-				var isLeaf = marker.commit.childRevIds.length === 0;
-				var spriteX = isActive ? 1 : (isLeaf ? 3 : 2);
+				var commitProps = self._commitProps(marker.commit);
+				var spriteX = commitProps.isActive ? 1 : (commitProps.isLeaf ? 3 : 2);
 				ctx.drawImage(
 					self._assets.orbs,
 					spriteX*ORB_SRC_SIZE, 0, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
 					coords.x, coords.y, coords.w, coords.h
 				);
+				if (commitProps.isMergeable) {
+					var mergeCoords = self._getMergeButtonCoords(marker);
+					ctx.fillStyle = 'yellow';
+					ctx.fillRect(mergeCoords.x, mergeCoords.y, mergeCoords.w, mergeCoords.h);
+					ctx.fillStyle = 'black';
+					ctx.fillText("Merge", mergeCoords.x + 2, mergeCoords.y + mergeCoords.h - 2);
+				}
 			});
 			ctx.restore();
 		},
@@ -292,6 +305,23 @@ define([
 					}
 				}
 			}
+		},
+		_commitProps: function(commit) {
+			var isActive = this._versionHistory.headRevId() === commit.id;
+			var isLeaf = commit.childRevIds.length === 0;
+			return {
+				isActive: isActive,
+				isLeaf: isLeaf,
+				isMergeable: !isActive && isLeaf /* TODO: account for other criteria, like timestamps */
+			};
+		},
+		_getMergeButtonCoords: function(marker) {
+			return {
+				x: marker.pixelCoords.x + marker.pixelCoords.w + MERGE_BUTTON_LEFT_PADDING,
+				y: marker.pixelCoords.y,
+				w: MERGE_BUTTON_WIDTH,
+				h: MERGE_BUTTON_HEIGHT
+			};
 		},
 		_removed: function() {
 			this._refElem.removeChild(this._dialogContext.canvas);
