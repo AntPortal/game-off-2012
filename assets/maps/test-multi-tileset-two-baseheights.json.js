@@ -133,7 +133,7 @@ define(function(){return(
                  "name":"dog",
                  "properties":
                     {
-                     "sprite":"dog"
+                     "sprite":"dog2"
                     },
                  "type":"npc",
                  "width":32,

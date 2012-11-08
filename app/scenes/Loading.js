@@ -10,6 +10,9 @@ define([
 	function loadAntifareaCharacterSprite(id, url) {
 		var NUM_FRAMES = 3;
 		var asset = Crafty.asset(url);
+		if (!asset) {
+			throw "Could not load " + url;
+		}
 		var w = asset.width / 3;
 		var h = asset.height / 4;
 		var directions = ['N', 'E', 'S', 'W'];
@@ -61,6 +64,7 @@ define([
 				'assets/sprites/childM.png',
 				'assets/sprites/dancerF.png',
 				'assets/sprites/dog.png',
+				'assets/sprites/dog2.png',
 				'assets/sprites/mom.png',
 				'assets/sprites/oldman.png',
 				'assets/sprites/oldwoman.png',
@@ -88,6 +92,7 @@ define([
 					loadAntifareaCharacterSprite('hero', 'assets/sprites/charsets_warrior.png');
 					loadAntifareaCharacterSprite('oldwoman', 'assets/sprites/oldwoman.png');
 					loadAntifareaCharacterSprite('dog', 'assets/sprites/dog.png');
+					loadAntifareaCharacterSprite('dog2', 'assets/sprites/dog2.png');
 					loadAntifareaCharacterSprite('oldman', 'assets/sprites/oldman.png');
 					loadAntifareaCharacterSprite('childF', 'assets/sprites/childF.png');
 					loadAntifareaCharacterSprite('childM', 'assets/sprites/childM.png');
