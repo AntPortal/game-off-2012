@@ -9,12 +9,13 @@ define([
 		'components/Character',
 		'components/VersionHistory',
 		'components/Dialog',
-		'components/Rotates',
-		'components/Gitk'
+		'components/Gitk',
+		'components/Sepia',
 	], function(config, mapData, mouselook, utils) {
 	Crafty.scene('IsoTest', function() {
 		var versions = Crafty.e('VersionHistory');
-
+		var sepiaEntity = Crafty.e('Sepia').
+			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
 		var heightMap = utils.loadMap(mapData, tileProperties, function(tileEntity) {
@@ -29,6 +30,7 @@ define([
 				versions.commit({
 					hero: {x: tileEntity.tileX, y: tileEntity.tileY}
 				});
+				sepiaEntity.setVisible(false);
 			}
 		});
 		(function() {
@@ -40,7 +42,6 @@ define([
 			//Handle HUD
 			utils.addMusicControlEntity(Crafty);
 		})();
-
 		(function() {
 			var COMMIT_SIZE = 16;
 			Crafty.e('Gitk').Gitk(
@@ -63,6 +64,8 @@ define([
 			var tileY = revData.hero.y;
 			hero.setPos(tileX, tileY, heightMap[tileX+","+tileY].surfaceZ);
 			hero.setWalkTarget(tileX, tileY);
+			var isLeaf = rev.childRevIds.length == 0;
+			sepiaEntity.setVisible(! isLeaf);
 		});
 		Crafty.viewport.clampToEntities = false;
 		mouselook.start();
