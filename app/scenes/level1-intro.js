@@ -8,6 +8,7 @@ define([
 		'components/Dialog',
 		'components/ScriptRunner',
 		'scenes/level1',
+		'components/AutoDestroy',
 	], function(config, mapData, utils) {
 	Crafty.scene('level1-intro', function() {
 		var nextScene = 'level1';
@@ -204,7 +205,7 @@ define([
 			{ action: 'PACADOC' },
 			{ action: 'loadScene', scene: nextScene},
 		];
-		Crafty.e('2D, ScriptRunner').ScriptRunner(script).run();
+		Crafty.e('ScriptRunner, AutoDestroy').ScriptRunner(script).run();
 		Crafty.viewport.clampToEntities = false;
 		Crafty.viewport.y = config.viewport.height / 2;
 	});
