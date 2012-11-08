@@ -54,10 +54,8 @@ define([
 		_attributeChanged: function() {
 			var i;
 			this._removed();
-			var atLeastOneActionEnabled = false;
 			for (i = 0; i < this.actions.length; i++) {
 				var action = this.actions[i];
-				atLeastOneActionEnabled = atLeastOneActionEnabled || action.enabled;
 				var entities = {};
 				entities['labelEntity'] = Crafty.e('2D, Canvas, BetterText').attr({
 					text: action.label,
@@ -91,9 +89,6 @@ define([
 					h: 14
 				});
 				this._actionEntities.push(entities);
-			}
-			if (!atLeastOneActionEnabled) {
-				console.warn('Invoked a menu with no enabled actions.');
 			}
 		},
 		_removed: function() {
