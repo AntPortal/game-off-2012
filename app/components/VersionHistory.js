@@ -3,8 +3,7 @@ define([ 'Crafty' ], function() {
 		init: function() {
 			this._rootRevId = null;
 			this._headRevId = null;
-			this._nextRevId = 1;
-			this._revisions = {};
+			this._revisions = [];
 		},
 		rootRevId: function() {
 			return this._rootRevId;
@@ -20,22 +19,22 @@ define([ 'Crafty' ], function() {
 			}
 		},
 		commit: function(data) {
+			var newRevId = this._revisions.length;
 			var newRevision = {
-				id: this._nextRevId,
+				id: newRevId,
 				data: data,
 				childRevIds: []
 			};
 			if (this._headRevId !== null) {
-				this._revisions[this._headRevId].childRevIds.push(this._nextRevId);
+				this._revisions[this._headRevId].childRevIds.push(newRevId);
 				newRevision.parentRevIds = [this._headRevId];
 			} else {
 				this._rootRevId = newRevision.id;
 				newRevision.parentRevIds = [];
 			}
 
-			this._revisions[this._nextRevId] = newRevision;
-			this._headRevId = this._nextRevId;
-			this._nextRevId += 1;
+			this._revisions.push(newRevision);
+			this._headRevId = newRevId;
 			// console.log(JSON.stringify(this._revisions));
 			this.trigger("Commit", newRevision);
 			return this._headRevId;
