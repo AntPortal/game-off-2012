@@ -62,6 +62,7 @@ Scene Layout
 
 BUGS
 ====
+* Have the version history manager perform a deep copy of the data that is passed into it.
 * Implement merging.
 * Add ability to skip the intro scenes.
 * Get better graphic for tooltips.
@@ -74,4 +75,5 @@ BUGS
 * When forking, check all existing children to see if there's an identical match. If there is, instead of creating a new child, just reuse that existing one.
 * Add a timer so that if the user is stuck on a level for more than, e.g. 30 seconds, the tooltip icon starts flashing.
 * Add some sort of UI to indicate turn limit (maybe a skull and a vertical line on the gitk layer? Maybe if you click on it, it explains why there's a time limit in the story?)
+* In some places, we add the 2D component so that the entity gets auto-destroyed on scene change. Instead, design a component AutoDestroy for this.
 * Add support for IE.
