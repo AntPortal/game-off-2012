@@ -13,6 +13,7 @@ define([
 		'components/Sepia',
 		'components/ActionMenu',
 	], function(config, mapData, mouselook, utils) {
+	var HERO_START = {x: 0, y: 0};
 	Crafty.scene('IsoTest', function() {
 		var versions = Crafty.e('VersionHistory');
 		var sepiaEntity = Crafty.e('Sepia').
@@ -72,7 +73,7 @@ define([
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 			hero = Crafty.e('2D, Canvas, Character').
-				Character(parsedMapData.heightMap, worldToPixel, 0, 0, 'hero');
+				Character(parsedMapData.heightMap, worldToPixel, HERO_START.x, HERO_START.y, 'hero');
 			var i = 0;
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
@@ -99,11 +100,7 @@ define([
 				versions
 			);
 		})();
-		/* Commit the initial game state. This needs to be done after the event handler above is installed,
-		 * so that the handler will pick up this initial commit. */
-		versions.commit({
-			hero: {x: hero.tileX, y: hero.tileY}
-		});
+		commitPseudoCurrentState(HERO_START.x,HERO_START.y); //initial state
 		versions.bind("Checkout", function(rev) {
 			var revData = rev.data;
 			var tileX = revData.hero.x;
