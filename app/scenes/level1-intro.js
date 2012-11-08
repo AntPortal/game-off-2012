@@ -7,10 +7,10 @@ define([
 		'components/Character',
 		'components/Dialog',
 		'components/ScriptRunner',
-		'scenes/IsoTest', //TODO change to level1
+		'scenes/level1',
 	], function(config, mapData, utils) {
 	Crafty.scene('level1-intro', function() {
-		var nextScene = 'IsoTest'; //TODO change to level1
+		var nextScene = 'level1';
 		var tileProperties = utils.loadTileset(mapData);
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
 			//Does nothing

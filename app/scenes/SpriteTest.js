@@ -1,6 +1,5 @@
 define([
 		'config',
-		'maps/test-multi-tileset-two-baseheights.json',
 		'mouselook',
 		'utils',
 		'Crafty',

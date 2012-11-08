@@ -1,6 +1,6 @@
 define([
 		'config',
-		'maps/test-multi-tileset-two-baseheights.json',
+		'maps/level1.json',
 		'mouselook',
 		'utils',
 		'Crafty',
@@ -14,7 +14,7 @@ define([
 		'components/ActionMenu',
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 8, y: 26};
-	Crafty.scene('IsoTest', function() {
+	Crafty.scene('level1', function() {
 		var versions = Crafty.e('VersionHistory');
 		var sepiaEntity = Crafty.e('Sepia').
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
