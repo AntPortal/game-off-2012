@@ -43,21 +43,27 @@ define([
 		_createOnClickHandler: function(action) {
 			var me = this;
 			return function(e) {
-				me.destroy();
-				action.onClick(e);
+				if (action.enabled) {
+					me.destroy();
+					action.onClick(e);
+				} else {
+					//do nothing
+				}
 			};
 		},
 		_attributeChanged: function() {
 			var i;
 			this._removed();
+			var atLeastOneActionEnabled = false;
 			for (i = 0; i < this.actions.length; i++) {
 				var action = this.actions[i];
+				atLeastOneActionEnabled = atLeastOneActionEnabled || action.enabled;
 				var entities = {};
 				entities['labelEntity'] = Crafty.e('2D, Canvas, BetterText').attr({
 					text: action.label,
 					fontSize: '18px',
 					fontFamily: 'Patrick Hand',
-					textColor: 'white',
+					textColor: action.enabled ? '#FFF' : '#888',
 					x: this.x + this.TILE_SIZE * 0.5,
 					y: this.y + this.TILE_SIZE * 0.25 + ACTION_VERT_SPACE * i,
 					z: this.z + 1,
@@ -85,6 +91,9 @@ define([
 					h: 14
 				});
 				this._actionEntities.push(entities);
+			}
+			if (!atLeastOneActionEnabled) {
+				console.warn('Invoked a menu with no enabled actions.');
 			}
 		},
 		_removed: function() {
