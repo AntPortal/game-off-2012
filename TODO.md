@@ -64,7 +64,6 @@ BUGS
 ====
 * Have the version history manager perform a deep copy of the data that is passed into it.
 * Implement merging.
-* Add ability to skip the intro scenes.
 * Get better graphic for tooltips.
 * Find arrows to replace red squares in scroll box.
 * Consider moving gitk UI to top of screen instead of bottom.
