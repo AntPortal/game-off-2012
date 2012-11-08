@@ -57,6 +57,7 @@ define([
 		utils.withGitHubAvatarUrls(githubAccountNames, function(githubAvatarUrls) {
 			var i;
 			var assets = [ //Try to keep alphabetical
+				'assets/faces/48x48_Faces_4th_Sheet_Update_CharlesGabriel_OGA_0.png',
 				'assets/faces/faces1.png',
 				'assets/sprites/bunny.png',
 				'assets/sprites/charsets_warrior.png',
@@ -141,13 +142,22 @@ define([
 					});
 					(function() {
 						//Loads the faces as face_warriorM, face_warriorF, face_mageM, etc.
-						var temp = ['warrior', 'mage', 'healer', 'ninja', 'ranger', 'villager'];
+						var temp = ['warrior', 'mage', 'healer', 'ninja', 'ranger', 'townfolk'];
 						var spriteParam = {};
 						for (i = 0; i < temp.length; i++) {
 							spriteParam['face_'+temp[i]+'M'] = [i, 0];
 							spriteParam['face_'+temp[i]+'F'] = [i, 1];
 						}
 						Crafty.sprite(48, 'assets/faces/faces1.png', spriteParam);
+						
+						Crafty.sprite(48, 'assets/faces/48x48_Faces_4th_Sheet_Update_CharlesGabriel_OGA_0.png', {
+							face_bunny: [5, 7],
+							face_childF: [1,7],
+							face_childM: [1,6],
+							face_dancerF: [5, 6],
+							face_oldman: [4, 6],
+							face_oldwoman: [4, 7],
+						});
 					})();
 					//Create sprites for github avatars from save files.
 					for (i = 0; i < githubAvatarUrls.length; i++) {
