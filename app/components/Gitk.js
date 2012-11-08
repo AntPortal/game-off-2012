@@ -6,6 +6,7 @@ define([
 ], function(config, utils) {
 	var DIALOG_TILE_SIZE = 16;
 	var PADDING = DIALOG_TILE_SIZE / 2;
+	var ARROW_SRC_SIZE = 16;
 	var SCROLL_BUTTON_SIZE = 16;
 	var SCROLL_RIGHT_PADDING = 8;
 	var SCROLL_VERT_PADDING = 8;
@@ -49,7 +50,8 @@ define([
 			this.attr({x: x, y: y, w: w, h: h, z: config.zOffset.gitk});
 			this._assets = {
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
-				dialog: Crafty.asset('assets/ui/dialog.olive.png')
+				dialog: Crafty.asset('assets/ui/dialog.olive.png'),
+				arrows: Crafty.asset('assets/ui/arrows.png')
 			};
 			this._dialogContext = makeCanvas(x, y, w, h, config.zOffset.gitk).getContext('2d');
 			this._nodesContext = makeCanvas(
@@ -244,9 +246,17 @@ define([
 				2*DIALOG_TILE_SIZE, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
 				canvasWidth - DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
 			);
-			ctx.fillStyle = 'red';
-			ctx.fillRect(this._upperButtonBounds.x, this._upperButtonBounds.y, this._upperButtonBounds.w, this._upperButtonBounds.h);
-			ctx.fillRect(this._lowerButtonBounds.x, this._lowerButtonBounds.y, this._lowerButtonBounds.w, this._lowerButtonBounds.h);
+			/* Draw arrows */
+			ctx.drawImage(
+				this._assets.arrows,
+				0, 0, ARROW_SRC_SIZE, ARROW_SRC_SIZE,
+				this._upperButtonBounds.x, this._upperButtonBounds.y, this._upperButtonBounds.w, this._upperButtonBounds.h
+			);
+			ctx.drawImage(
+				this._assets.arrows,
+				0, ARROW_SRC_SIZE, ARROW_SRC_SIZE, ARROW_SRC_SIZE,
+				this._lowerButtonBounds.x, this._lowerButtonBounds.y, this._lowerButtonBounds.w, this._lowerButtonBounds.h
+			);
 		},
 		_drawNodes: function() {
 			var self = this;

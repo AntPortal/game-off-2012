@@ -74,6 +74,7 @@ define([
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
 				'assets/ui/action_stop.gif',
+				'assets/ui/arrows.png',
 				'assets/ui/bg-blue.png',
 				'assets/ui/comment_new.gif',
 				'assets/ui/dialog.blue.png',
