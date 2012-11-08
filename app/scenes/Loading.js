@@ -4,7 +4,7 @@ define([
 		'Crafty',
 		'scenes/Title-intro',
 		'scenes/level1-intro',
-		'scenes/spriteTest',
+		'scenes/SpriteTest',
 		'components/BetterText',
 ], function(config, utils) {
 	function loadAntifareaCharacterSprite(id, url) {

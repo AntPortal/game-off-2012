@@ -10,10 +10,31 @@ define([
 		'scenes/IsoTest', //TODO change to level1
 	], function(config, mapData, utils) {
 	Crafty.scene('level1-intro', function() {
+		var nextScene = 'IsoTest'; //TODO change to level1
 		var tileProperties = utils.loadTileset(mapData);
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
 			//Does nothing
 		});
+
+		// Add "skip intro" button
+		var skipIntro = Crafty.e('2D, Canvas, Mouse, BetterText, ViewportRelative');
+		skipIntro.attr({
+				text: "Skip",
+				textColor: 'white',
+				fontFamily: 'Patrick Hand',
+				fontSize: '16px',
+				x: 8,
+				y: config.viewport.height - 20 - 8,
+				w: 100,
+				h: 20,
+				/* The +1 here puts this above the overlays that the script runner uses
+				 * for fades and PACADOC instructions. */
+				z: config.zOffset.meta + 1
+		});
+		skipIntro.bind('Click', function() {
+			Crafty.scene(nextScene);
+		});
+
 		//Add characters
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 		var hero = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 3, 0, 'hero');
@@ -122,7 +143,7 @@ define([
 				}
 			},
 			{ action: 'PACADOC' },
-			{ action: 'loadScene', scene: 'IsoTest' },
+			{ action: 'loadScene', scene: nextScene},
 		];
 		Crafty.e('2D, ScriptRunner').ScriptRunner(script).run();
 		Crafty.viewport.clampToEntities = false;
