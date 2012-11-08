@@ -11,6 +11,7 @@ define([
 		'components/Dialog',
 		'components/Gitk',
 		'components/Sepia',
+		'components/ActionMenu',
 	], function(config, mapData, mouselook, utils) {
 	Crafty.scene('IsoTest', function() {
 		var versions = Crafty.e('VersionHistory');
@@ -18,11 +19,51 @@ define([
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
-		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
-			if (hero) {
-				hero.setWalkTarget(tileEntity.tileX, tileEntity.tileY);
-				versions.commit({
-					hero: {x: tileEntity.tileX, y: tileEntity.tileY}
+		var actionMenuActive = false;
+		function commitPseudoCurrentState(heroX, heroY) {
+			versions.commit({
+				hero: {
+					x: heroX,
+					y: heroY
+				}
+			});
+		}
+		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
+			if (hero && !actionMenuActive) {
+				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
+				actionMenuActive = true;
+				Crafty.e('2D, Canvas, ActionMenu').attr({
+					x: 0, //TODO
+					y: 0, //TODO
+					w: 300,
+					h: 150,
+					actions: [{
+						label: 'Deliver Newspaper',
+						enabled: false,
+						subscript: 'deliver newspaper subtext',
+						onClick: function() {
+							console.log('Chose to deliver newspaper.');
+							actionMenuActive = false;
+							//TODO
+							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
+						}
+					},{
+						label: 'Do Nothing',
+						enabled: true,
+						subscript: 'Move to the selected position, then ends your turn.',
+						onClick: function() {
+							actionMenuActive = false;
+							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
+						}
+					},{
+						label: 'Cancel',
+						enabled: true,
+						subscript: 'Allows you to select a new tile to move to',
+						onClick: function() {
+							actionMenuActive = false;
+							versions.reset();
+						}
+					}],
 				});
 				sepiaEntity.setVisible(false);
 			}

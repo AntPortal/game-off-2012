@@ -74,6 +74,7 @@ define([
 				'assets/ui/bg-blue.png',
 				'assets/ui/comment_new.gif',
 				'assets/ui/dialog.blue.png',
+				'assets/ui/dialog.brown.png',
 				'assets/ui/dialog.olive.png',
 				'assets/ui/music.png',
 				'assets/ui/OrbzPrw.png',
@@ -106,6 +107,7 @@ define([
 						var temp = {
 							'speech' : 'assets/ui/dialog.blue.png',
 							'forkUi' : 'assets/ui/dialog.olive.png',
+							'actionUi' : 'assets/ui/dialog.brown.png',
 						};
 						for (name in temp) {
 							var url = temp[name];
