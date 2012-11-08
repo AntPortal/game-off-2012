@@ -57,7 +57,12 @@ define([
 			}
 			var me = this;
 			Crafty.e('2D, Mouse, ViewportRelative').attr({
-				x: 0, y: 0, w: config.viewport.width, h: config.viewport.height, clicked: false
+				x: 0,
+				y: 0,
+				z: config.zOffset.meta,
+				w: config.viewport.width,
+				h: config.viewport.height,
+				clicked: false,
 			}).bind('Click', function() {
 				Crafty('Dialog').destroy(); //Destroy all dialogs
 				this.destroy(); //Destroy this mouse listener
