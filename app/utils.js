@@ -489,6 +489,27 @@ function(config) {
 			});
 		}
 	}
+	/**
+	 * The built in Crafty.viewport.centerOn is not correctly implemented, so this is offered as a replacement
+	 * implementation.
+	 */
+	function centerViewportOn(Crafty, target, time) {
+		var worldTargetCenter = {
+			x: target.x + target.w / 2,
+			y: target.y + target.h / 2
+		};
+		var screenTargetCenter = {
+			x: worldTargetCenter.x + Crafty.viewport.x,
+			y: worldTargetCenter.y + Crafty.viewport.y
+		};
+		var screenCenter = {
+			x: config.viewport.width / 2,
+			y: config.viewport.height / 2,
+		};
+		Crafty.viewport.pan('reset');
+		Crafty.viewport.pan('x', screenTargetCenter.x - screenCenter.x, time);
+		Crafty.viewport.pan('y', screenTargetCenter.y - screenCenter.y, time);
+	}
 	return {
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		loadTileset : loadTileset,
@@ -503,5 +524,6 @@ function(config) {
 		withGitHubAvatarUrl: withGitHubAvatarUrl,
 		withGitHubAvatarUrls: withGitHubAvatarUrls,
 		removeDuplicates: removeDuplicates,
+		centerViewportOn: centerViewportOn,
 	};
 });
