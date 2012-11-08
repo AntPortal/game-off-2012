@@ -63,7 +63,8 @@ Scene Layout
 BUGS
 ====
 * Have the version history manager perform a deep copy of the data that is passed into it.
-* (Partially done) Implement merging.
+* Don't display the "merge" icon for merges that would be fast-forwards.
+* Implement same-timestamp restriction for merges.
 * Get better graphic for tooltips.
 * Get better graphic/icon for "Merge" buttons.
 * Find arrows to replace red squares in scroll box.
