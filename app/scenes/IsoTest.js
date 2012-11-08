@@ -13,12 +13,20 @@ define([
 		'components/Sepia',
 		'components/ActionMenu',
 	], function(config, mapData, mouselook, utils) {
-	var HERO_START = {x: 0, y: 0};
+	var HERO_START = {x: 8, y: 26};
 	Crafty.scene('IsoTest', function() {
 		var versions = Crafty.e('VersionHistory');
 		var sepiaEntity = Crafty.e('Sepia').
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene
+		var hasNewspaper = {
+			townfolk: false,
+			healer: false,
+			oldwoman: false,
+			bunny: false,
+			dancerF: false,
+			oldman: false,
+		}
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
 		function commitPseudoCurrentState(heroX, heroY) {
@@ -26,7 +34,8 @@ define([
 				hero: {
 					x: heroX,
 					y: heroY
-				}
+				},
+				hasNewspaper: hasNewspaper,
 			});
 		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
@@ -47,10 +56,11 @@ define([
 						}
 					}
 				}
+				utils.centerViewportOn(Crafty, clickedTileEntity, 60);
 				var heroName = config.getCurShortName();
 				Crafty.e('2D, Canvas, ActionMenu').attr({
-					x: 0, //TODO
-					y: 0, //TODO
+					x: clickedTileEntity.x - 300,
+					y: clickedTileEntity.y - 155,
 					w: 400,
 					h: 135,
 					actions: [{
@@ -58,30 +68,82 @@ define([
 						enabled: (nearbyNPC != null),
 						subscript: nearbyNPC ? "Delivers a newspaper." : "You must move next to the person you want to give the newspaper to.",
 						onClick: function() {
-							switch(nearbyNPC.name) {
-							case 'townfolk':
+							function createNewspaperScript(face, firstDialog, subsequentDialog, hasNewspaperKey) {
 								var vm = Crafty.e('2D, ScriptRunner');
 								vm.ScriptRunner([
 									{
 										action: 'dialog',
 										params: {
-											x: 100,
-											y: 100,
+											x: clickedTileEntity.x - 300,
+											y: clickedTileEntity.y - 125,
 											w: 400,
 											h: 70,
-											msg: "Hey, thanks for delivering this, " + heroName + "!"
+											face: face,
+											msg: hasNewspaper[hasNewspaperKey] ? subsequentDialog : firstDialog
 										}
 									},
 									{ action: 'PACADOC' },
 									{ action: 'arbitraryCode', code: function(curState, callback) {
-										//TODO record newspaper was delivered.
+										hasNewspaper[hasNewspaperKey] = true;
 										actionMenuActive = false;
 										vm.destroy();
 									}},
-								]).run();
+								]);
+								return vm;
+							}
+							switch(nearbyNPC.name) {
+							case 'townfolk':
+								createNewspaperScript(
+									'face_townfolkM',
+									"Hey, thanks for delivering this, " + heroName + "!",
+									"Hmm, it says here tensions are rising at the border.",
+									'townfolk'
+								).run();
+								break;
+							case 'healer':
+								createNewspaperScript(
+										'face_healerF',
+										"Hey, thanks for delivering this, " + heroName + "!", //TODO
+										"Hmm, it says here tensions are rising at the border.", //TODO
+										'healer'
+									).run();
+								break;
+							case 'oldwoman': //intentional fallthrough to dog
+							case 'dog':
+								//TODO
+								actionMenuActive = false;
+								break;
+							case 'oldman':
+								createNewspaperScript(
+										'face_oldman',
+										"Hey, thanks for delivering this, " + heroName + "!", //TODO
+										"Hmm, it says here tensions are rising at the border.", //TODO
+										'oldman'
+									).run();
+								break;
+							case 'dancerF':
+								createNewspaperScript(
+									'face_dancerF',
+									"Hey, thanks for delivering this, " + heroName + "!", //TODO
+									"Hmm, it says here tensions are rising at the border.", //TODO
+									'dancerF'
+								).run();
+								break;
+							case 'bunny':
+								createNewspaperScript(
+									'face_bunny',
+									"Hey, thanks for delivering this, " + heroName + "!", //TODO
+									"Hmm, it says here tensions are rising at the border.", //TODO
+									'bunny'
+								).run();
+								break;
+							case 'girl': //intentional fallthrough to boy
+							case 'boy':
+								//TODO
+								actionMenuActive = false;
 								break;
 							default:
-								console.error('TODO Implement ', nearbyNPC.name);
+								console.error('Unrecognized NPC: ', nearbyNPC.name);
 								break;
 							}
 							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
@@ -143,12 +205,14 @@ define([
 			var revData = rev.data;
 			var tileX = revData.hero.x;
 			var tileY = revData.hero.y;
+			hasNewspapers = revData.hasNewspapers;
 			hero.setPos(tileX, tileY, parsedMapData.heightMap[tileX+","+tileY].surfaceZ);
 			hero.setWalkTarget(tileX, tileY);
 			var isLeaf = rev.childRevIds.length == 0;
 			sepiaEntity.setVisible(! isLeaf);
 		});
 		Crafty.viewport.clampToEntities = false;
+		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
 	});
 	return undefined;
