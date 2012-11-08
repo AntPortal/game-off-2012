@@ -320,6 +320,32 @@ function(config) {
 		}
 		return binarySearchRecurr(0, array.length);
 	}
+	/**
+	 * Merges two objects, using the given function to combine
+	 * values from keys that are found in both. Example:
+	 *
+	 * mergeObjs({a: 1, b: 2}, {b: 3, c: 4}, function(x,y) { return x+y; })
+	 *
+	 * returns {a: 1, b: 5, c: 4}.
+	 */
+	function mergeObjs(obj1, obj2, combineFunc) {
+		var result = {};
+		for (k in obj1) {
+			if (obj1.hasOwnProperty(k)) {
+				result[k] = obj1[k];
+			}
+		}
+		for (k in obj2) {
+			if (obj2.hasOwnProperty(k)) {
+				if (result.hasOwnProperty(k)) {
+					result[k] = combineFunc(result[k], obj2[k]);
+				} else {
+					result[k] = obj2[k];
+				}
+			}
+		}
+		return result;
+	}
 	function createTitleEntity(Crafty) {
 		var title = Crafty.e('2D, DOM, BetterText');
 		title.attr({
@@ -541,6 +567,7 @@ function(config) {
 		loadMap: loadMap,
 		stopAllMusic: stopAllMusic,
 		binarySearch: binarySearch,
+		mergeObjs: mergeObjs,
 		createTitleEntity: createTitleEntity,
 		getShortName: getShortName,
 		withGitHubAvatarUrl: withGitHubAvatarUrl,
