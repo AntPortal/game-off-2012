@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="isometric" width="10" height="10" tilewidth="64" tileheight="32">
+ <tileset firstgid="1" source="iso-64x64-building_2.tsx"/>
+ <tileset firstgid="81" source="iso-64x64-outside.tsx"/>
+ <layer name="0 floor" width="10" height="10">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxdkEsOwCAIRL2iterCfxM/9z9BMXkmTRcTgWEGsCmlkmAKvMAIIu+ua4EjzoILLlDfmgFfyJfgxrPRm/GdxB1dAx6/Cmfpq8yM5INaYY8Or6kvegOeDY2Ffz65oT+j98RnbgDnP84NDuSf1nN3YqfzZxM/x9zIXpOeSry5F2ooI/8=
+  </data>
+ </layer>
+ <layer name="0 decoration" width="10" height="10">
+  <properties>
+   <property name="baseheight" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJx7zgABzxlQATofHTzHwSYGkKqe2oAS+7HpRQ8LQmrwmQ0AQdcLvA==
+  </data>
+ </layer>
+</map>

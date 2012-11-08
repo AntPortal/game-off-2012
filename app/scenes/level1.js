@@ -12,6 +12,7 @@ define([
 		'components/Gitk',
 		'components/Sepia',
 		'components/ActionMenu',
+		'scenes/level2-intro',
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 8, y: 26};
 	Crafty.scene('level1', function() {
@@ -76,6 +77,7 @@ define([
 						enabled: allNewspapersDelivered,
 						subscript: allNewspapersDelivered ? "Go with your friends to the Millenial Fair" : "You must deliver all your newspapers before you can go to the fair.",
 						onClick: function() {
+							Crafty.scene('level2-intro');
 							//TODO
 						}
 					});
