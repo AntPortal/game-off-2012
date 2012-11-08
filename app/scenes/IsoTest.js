@@ -33,33 +33,71 @@ define([
 			if (hero && !actionMenuActive) {
 				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
 				actionMenuActive = true;
+				var i = 0;
+				var nearbyNPC = null;
+				for (i = 0; i < parsedMapData.objects.length; i++) {
+					var object = parsedMapData.objects[i];
+					if (object.type == 'npc') {
+						var xDistance = Math.abs(object.tileX - clickedTileEntity.tileX);
+						var yDistance = Math.abs(object.tileY - clickedTileEntity.tileY);
+						if (xDistance + yDistance == 1) {
+							//Has to be exactly 1 tile away, no diagonals, and not 0 distance.
+							nearbyNPC = object; //If there are multiple choices, choose one arbitrarily.
+							break;
+						}
+					}
+				}
+				var heroName = config.getCurShortName();
 				Crafty.e('2D, Canvas, ActionMenu').attr({
 					x: 0, //TODO
 					y: 0, //TODO
-					w: 300,
-					h: 150,
+					w: 400,
+					h: 135,
 					actions: [{
-						label: 'Deliver Newspaper',
-						enabled: false,
-						subscript: 'deliver newspaper subtext',
+						label: "Deliver Newspaper",
+						enabled: (nearbyNPC != null),
+						subscript: nearbyNPC ? "Delivers a newspaper." : "You must move next to the person you want to give the newspaper to.",
 						onClick: function() {
-							console.log('Chose to deliver newspaper.');
-							actionMenuActive = false;
-							//TODO
+							switch(nearbyNPC.name) {
+							case 'townfolk':
+								var vm = Crafty.e('2D, ScriptRunner');
+								vm.ScriptRunner([
+									{
+										action: 'dialog',
+										params: {
+											x: 100,
+											y: 100,
+											w: 400,
+											h: 70,
+											msg: "Hey, thanks for delivering this, " + heroName + "!"
+										}
+									},
+									{ action: 'PACADOC' },
+									{ action: 'arbitraryCode', code: function(curState, callback) {
+										//TODO record newspaper was delivered.
+										actionMenuActive = false;
+										vm.destroy();
+									}},
+								]).run();
+								break;
+							default:
+								console.error('TODO Implement ', nearbyNPC.name);
+								break;
+							}
 							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
 						}
 					},{
-						label: 'Do Nothing',
+						label: "Do Nothing",
 						enabled: true,
-						subscript: 'Move to the selected position, then ends your turn.',
+						subscript: "Moves to the selected position, then ends your turn.",
 						onClick: function() {
 							actionMenuActive = false;
 							commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
 						}
 					},{
-						label: 'Cancel',
+						label: "Cancel",
 						enabled: true,
-						subscript: 'Allows you to select a new tile to move to',
+						subscript: "Allows you to select a new tile to move to",
 						onClick: function() {
 							actionMenuActive = false;
 							versions.reset();
