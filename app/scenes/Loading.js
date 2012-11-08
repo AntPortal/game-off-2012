@@ -7,8 +7,9 @@ define([
 		'components/BetterText',
 ], function(config, utils) {
 	function loadAntifareaCharacterSprite(id, url) {
-		var w = 16*2;
-		var h = 18*2;
+		var asset = Crafty.asset(url);
+		var w = asset.width / 3;
+		var h = asset.height / 4;
 		var spriteParam = {};
 		spriteParam[id + 'North'] = [0, h*0, w, h];
 		spriteParam[id + 'East'] = [0, h*1, w, h];
@@ -47,8 +48,15 @@ define([
 			var i;
 			var assets = [ //Try to keep alphabetical
 				'assets/faces/faces1.png',
+				'assets/sprites/bunny.png',
 				'assets/sprites/charsets_warrior.png',
+				'assets/sprites/childF.png',
+				'assets/sprites/childM.png',
+				'assets/sprites/dancerF.png',
+				'assets/sprites/dog.png',
 				'assets/sprites/mom.png',
+				'assets/sprites/oldman.png',
+				'assets/sprites/oldwoman.png',
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
 				'assets/ui/action_stop.gif',
@@ -72,6 +80,12 @@ define([
 				makeSleepUntilFontsLoaded(function() {
 					loadAntifareaCharacterSprite('hero', 'assets/sprites/charsets_warrior.png');
 					loadAntifareaCharacterSprite('oldwoman', 'assets/sprites/oldwoman.png');
+					loadAntifareaCharacterSprite('dog', 'assets/sprites/dog.png');
+					loadAntifareaCharacterSprite('oldman', 'assets/sprites/oldman.png');
+					loadAntifareaCharacterSprite('childF', 'assets/sprites/childF.png');
+					loadAntifareaCharacterSprite('childM', 'assets/sprites/childM.png');
+					loadAntifareaCharacterSprite('bunny', 'assets/sprites/bunny.png');
+					loadAntifareaCharacterSprite('dancerF', 'assets/sprites/dancerF.png');
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]

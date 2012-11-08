@@ -37,7 +37,7 @@ define([
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
 					Crafty.e('2D, Canvas, Character').
-						addComponent(object.name+'South').
+						addComponent(object.properties.sprite+'South').
 						Character(parsedMapData.heightMap, worldToPixel, object.tileX, object.tileY);
 				} else {
 					console.warn('Unknown object type: ', object.type);
