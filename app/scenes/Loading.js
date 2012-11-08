@@ -4,18 +4,25 @@ define([
 		'Crafty',
 		'scenes/Title-intro',
 		'scenes/level1-intro',
+		'scenes/spriteTest',
 		'components/BetterText',
 ], function(config, utils) {
 	function loadAntifareaCharacterSprite(id, url) {
+		var NUM_FRAMES = 3;
 		var asset = Crafty.asset(url);
 		var w = asset.width / 3;
 		var h = asset.height / 4;
+		var directions = ['N', 'E', 'S', 'W'];
 		var spriteParam = {};
-		spriteParam[id + 'North'] = [0, h*0, w, h];
-		spriteParam[id + 'East'] = [0, h*1, w, h];
-		spriteParam[id + 'South'] = [0, h*2, w, h];
-		spriteParam[id + 'West'] = [0, h*3, w, h];
-		Crafty.sprite(url, spriteParam);
+		var i, j;
+		for (i = 0; i < directions.length; i++) {
+			var direction = directions[i];
+			for (j = 0; j < NUM_FRAMES; j++) {
+				var key = 'sprite_'+id+'_'+direction+j;
+				spriteParam[key] = [j, i];
+			}
+		}
+		Crafty.sprite(w, h, url, spriteParam);
 	}
 	Crafty.scene('Loading', function() {
 		Crafty.background('#000');

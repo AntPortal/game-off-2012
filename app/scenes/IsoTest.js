@@ -30,15 +30,14 @@ define([
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-			hero = Crafty.e('2D, Canvas, Character, heroSouth').
-				Character(parsedMapData.heightMap, worldToPixel, 0, 0);
+			hero = Crafty.e('2D, Canvas, Character').
+				Character(parsedMapData.heightMap, worldToPixel, 0, 0, 'hero');
 			var i = 0;
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
 					Crafty.e('2D, Canvas, Character').
-						addComponent(object.properties.sprite+'South').
-						Character(parsedMapData.heightMap, worldToPixel, object.tileX, object.tileY);
+						Character(parsedMapData.heightMap, worldToPixel, object.tileX, object.tileY, object.properties.sprite);
 				} else {
 					console.warn('Unknown object type: ', object.type);
 				}
