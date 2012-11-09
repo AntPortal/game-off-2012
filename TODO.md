@@ -63,10 +63,11 @@ Scene Layout
 BUGS
 ====
 * Have the version history manager perform a deep copy of the data that is passed into it.
-* Don't display the "merge" icon for merges that would be fast-forwards.
-* Implement same-timestamp restriction for merges.
+* Show task list
+* Get better graphic for merge button.
+* Fix bug with dog taking an extra newspaper.
 * Get better graphic for tooltips.
-* Get better graphic/icon for "Merge" buttons.
+* Add variety in dialog for newspaper recipients on level1.
 * Consider moving gitk UI to top of screen instead of bottom.
 * Add ability to resize gitk UI. (e.g button to click to toggle between various sizes).
 * Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
@@ -76,3 +77,5 @@ BUGS
 * Add a timer so that if the user is stuck on a level for more than, e.g. 30 seconds, the tooltip icon starts flashing.
 * Add some sort of UI to indicate turn limit (maybe a skull and a vertical line on the gitk layer? Maybe if you click on it, it explains why there's a time limit in the story?)
 * Add support for IE.
+* Implement same-timestamp restriction for merges.
+* Don't display the "merge" icon for merges that would be fast-forwards.
