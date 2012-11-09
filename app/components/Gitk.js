@@ -114,7 +114,7 @@ define([
 						return false;
 					}
 
-					var commitProps = self._commitProps(marker.commit);
+					var commitProps = self._markerProps(marker);
 					if (commitProps.isMergeable && utils.pointInRect(pos, self._getMergeButtonCoords(marker))) {
 						clickedMarker = marker;
 						clickedMerge = true;
@@ -254,7 +254,7 @@ define([
 			commitMarkersById.forEach(function(marker) {
 				var maxDepth = self._versionHistory.getDepthLimit();
 				var coords = marker.pixelCoords;
-				var commitProps = self._commitProps(marker.commit);
+				var commitProps = self._markerProps(marker);
 				var spriteX, spriteY;
 				if (marker.x >= maxDepth) {
 					spriteX = 0;
@@ -300,13 +300,16 @@ define([
 			});
 			return retVal;
 		},
-		_commitProps: function(commit) {
-			var isActive = this._versionHistory.headRevId() === commit.id;
-			var isLeaf = commit.childRevIds.length === 0;
+		_markerProps: function(marker) {
+			var headRevId = this._versionHistory.headRevId();
+			var currentStateMarker = this._getCommitMarkersById()[headRevId];
+			var isActive = headRevId === marker.commit.id;
+			var isLeaf = marker.commit.childRevIds.length === 0;
+			var isMergeable = !isActive && isLeaf && marker.x == currentStateMarker.x;
 			return {
 				isActive: isActive,
 				isLeaf: isLeaf,
-				isMergeable: !isActive && isLeaf /* TODO: account for other criteria, like timestamps */
+				isMergeable: isMergeable
 			};
 		},
 		_getMergeButtonCoords: function(marker) {
