@@ -257,7 +257,8 @@ define([
 			ctx.strokeStyle = 'red';
 			ctx.beginPath();
 			ctx.moveTo(limitX, 0);
-			ctx.lineTo(limitX, ctx.canvas.height);
+			//TODO: Probably better to draw this on another layer which ignores the canvas transforms?
+			ctx.lineTo(limitX, 9999);
 			ctx.stroke();
 			ctx.restore();
 		},
