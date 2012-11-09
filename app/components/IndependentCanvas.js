@@ -11,6 +11,7 @@ function() {
 		},
 		IndependentCanvas : function(baseElemId) {
 			this._refElem = document.getElementById(baseElemId);
+			return this;
 		},
 		createCanvas : function(x, y, cssZ, w, h) {
 			var me = this;

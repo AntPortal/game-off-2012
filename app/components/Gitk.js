@@ -4,6 +4,7 @@ define([
 	'Crafty',
 	'components/ViewportRelative',
 	'components/IndependentCanvas',
+	'components/IndependentCanvasDialog',
 ], function(config, utils) {
 	var DIALOG_TILE_SIZE = 16;
 	var PADDING = DIALOG_TILE_SIZE / 2;
@@ -25,7 +26,7 @@ define([
 		_scrollOffset: 0,
 		_boundCommitFunction: null, //The function that is bound to the 'commit' event of the version history.
 		init: function() {
-			this.requires('2D, ViewportRelative, Mouse, IndependentCanvas');
+			this.requires('2D, ViewportRelative, Mouse, IndependentCanvas, IndependentCanvasDialog');
 			this._commitMarkersById = {};
 			this._breadthsById = {};
 			this.bind('Remove', this._removed);
@@ -178,60 +179,7 @@ define([
 			var ctx = this._dialogContext;
 			var canvasWidth = ctx.canvas.width;
 			var canvasHeight = ctx.canvas.height;
-			/* Draw upper-left part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				0, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				0, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw upper-center part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				DIALOG_TILE_SIZE, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				DIALOG_TILE_SIZE, 0, canvasWidth - 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw upper-right part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				2*DIALOG_TILE_SIZE, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				canvasWidth - DIALOG_TILE_SIZE, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw center-left part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, canvasHeight - 2*DIALOG_TILE_SIZE
-			);
-			/* Draw center part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, canvasWidth - 2*DIALOG_TILE_SIZE, canvasHeight - 2*DIALOG_TILE_SIZE
-			);
-			/* Draw center-right part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				canvasWidth - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, canvasHeight - 2*DIALOG_TILE_SIZE
-			);
-			/* Draw lower-left part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				0, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				0, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw lower-center part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				DIALOG_TILE_SIZE, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, canvasWidth - 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw lower-right part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				2*DIALOG_TILE_SIZE, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				canvasWidth - DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
+			this.drawDialog(ctx, this._assets.dialog, DIALOG_TILE_SIZE, 0, 0, canvasWidth,canvasHeight);
 			/* Draw arrows */
 			ctx.drawImage(
 				this._assets.arrows,
