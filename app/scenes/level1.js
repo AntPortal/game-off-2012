@@ -31,7 +31,7 @@ define([
 			bunny: false,
 			dancerF: false,
 			oldman: false,
-		}
+		};
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
 		function updateTaskList() {
@@ -60,7 +60,7 @@ define([
 			});
 		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
-			if (hero && !actionMenuActive) {
+			if (hero && !actionMenuActive && versions.isMoreCommitsAllowed()) {
 				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
 				actionMenuActive = true;
 				var i = 0;
