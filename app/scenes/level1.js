@@ -13,7 +13,6 @@ define([
 		'components/Sepia',
 		'components/ActionMenu',
 		'scenes/level2-intro',
-		'components/AutoDestroy',
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 8, y: 26};
 	Crafty.scene('level1', function() {
@@ -120,7 +119,7 @@ define([
 					};
 					function createDialogScript(npcName) {
 						return function() {
-							var vm = Crafty.e('ScriptRunner, AutoDestroy');
+							var vm = Crafty.e('ScriptRunner');
 							vm.ScriptRunner([
 								{
 									action: 'dialog',
