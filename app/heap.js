@@ -11,11 +11,9 @@ define([], function() {
 	Heap.prototype.add = function(item) {
 		var newItemIndex = this._array.length;
 		this._array.push(item);
-		if (this._array.length === 1) { return; }
-
 
 		var parentIndex = this._parentIndex(newItemIndex);
-		while (this._compareAt(newItemIndex, parentIndex) < 0) {
+		while (parentIndex >=0 && this._compareAt(newItemIndex, parentIndex) < 0) {
 			this._swapAt(newItemIndex, parentIndex);
 			newItemIndex = parentIndex;
 			parentIndex = this._parentIndex(newItemIndex);
