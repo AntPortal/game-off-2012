@@ -13,16 +13,17 @@ define(['heap', 'set'], function(Heap, Set) {
 		this._problemParams = problemParams;
 	}
 
-	PathFinder.prototype.findPath = function(initState, goalTest) {
+	PathFinder.prototype.findPath = function(initState, goalTest, costEstimator) {
 		var self = this;
 		var node = {
 			state: initState,
 			parent: null,
 			action: null,
-			pathCost: 0
+			pathCost: 0,
+			estCostToGoal: costEstimator(initState)
 		};
 		var frontier = {
-			_heap: new Heap(function(n1,n2) { return n1.pathCost - n2.pathCost; }),
+			_heap: new Heap(function(n1,n2) { return (n1.pathCost + n1.estCostToGoal) - (n2.pathCost + n2.estCostToGoal); }),
 			_set: new Set(function(node) { return self._problemParams.stateKey(node.state); }),
 			add: function(node) {
 				this._heap.add(node);
@@ -56,8 +57,13 @@ define(['heap', 'set'], function(Heap, Set) {
 			this._problemParams.actions(node.state).forEach(function(action) {
 				var child = self._childNode(node, action);
 				if (!explored.contains(child.state) && !frontier.contains(child)) {
+					child.estCostToGoal = costEstimator(child.state);
 					frontier.add(child);
 				}
+				/* TODO: this should also check if the frontier already contains
+				 * a node for `child.state` with a higher `pathCost`, and if it does,
+				 * replace that node with `child`; this seems complicated to implement,
+				 * however, because of the need to restore the heap property afterward. */
 			});
 		}
 	}
