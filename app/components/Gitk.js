@@ -21,14 +21,10 @@ define([
 	var MERGE_BUTTON_HEIGHT = 16;
 
 	Crafty.c('Gitk', {
-		_commitMarkersById: null,
-		_breadthsById: null,
 		_scrollOffset: 0,
 		_boundCommitFunction: null, //The function that is bound to the 'commit' event of the version history.
 		init: function() {
 			this.requires('2D, ViewportRelative, Mouse, IndependentCanvas, IndependentCanvasDialog');
-			this._commitMarkersById = {};
-			this._breadthsById = {};
 			this.bind('Remove', this._removed);
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
@@ -51,29 +47,13 @@ define([
 
 			this._versionHistory = versionHistory;
 			this._boundCommitFunction = function(commit) {
-				var marker = {commit: commit};
-				self._commitMarkersById[commit.id] = marker;
-				self._calcBreadths();
-				function setCoordsRecur(id, x, y) {
-					var marker = self._commitMarkersById[id];
-					marker.x = x;
-					marker.y = y;
-					var accum = y;
-					marker.commit.childRevIds.forEach(function(id) {
-						setCoordsRecur(id, x+1, accum);
-						accum += self._breadthsById[id];
-					});
-				}
-				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
-
-				self._forEachCommitMarker(function(marker) {
-					marker.pixelCoords = self._logicalCoordToPixelCoord(marker.x, marker.y);
-				});
+				self._cachedCommitMarkersById = null; //invalidate cache
 				self._drawNodes();
 			};
 			this._versionHistory.bind("Commit", this._boundCommitFunction);
 
 			(function() {
+				// Scroll buttons
 				var canvas = self._dialogContext.canvas;
 				var canvasWidth = canvas.width;
 				var canvasHeight = canvas.height;
@@ -126,7 +106,7 @@ define([
 				/* Translate pos so that it's relative to the inner canvas (the one with the nodes). */
 				pos.x -= (self.x + PADDING);
 				pos.y -= (self.y + PADDING - self._scrollOffset);
-				self._forEachCommitMarker(function(marker) {
+				self._getCommitMarkersById().forEach(function(marker) {
 					var coords = marker.pixelCoords;
 					var hit = utils.pointInRect(pos, coords);
 					if (hit) {
@@ -147,7 +127,7 @@ define([
 					} else {
 						self._versionHistory.checkout(clickedMarker.commit.id);
 					}
-					self._drawNodes(); /* may be redundant, as the merge will trigger a commit event if it's not a fast-forward */
+					self._drawNodes(); /*TODO may be redundant, as the merge will trigger a commit event if it's not a fast-forward */
 				}
 			});
 			this._drawDialog();
@@ -164,24 +144,6 @@ define([
 				w: ORB_DST_SIZE,
 				h: ORB_DST_SIZE
 			};
-		},
-		_calcBreadths: function() {
-			var self = this;
-			this._breadthsById = {};
-			function calcBreadthRecur(id) {
-				var commit = self._versionHistory.getRev(id);
-				commit.childRevIds.forEach(calcBreadthRecur);
-				if (commit.childRevIds.length === 0) {
-					self._breadthsById[commit.id] = 1;
-				} else {
-					var sum = 0;
-					commit.childRevIds.forEach(function(id) {
-						sum += self._breadthsById[id];
-					});
-					self._breadthsById[commit.id] = sum;
-				}
-			}
-			calcBreadthRecur(this._versionHistory.rootRevId());
 		},
 		_drawDialog: function() {
 			var ctx = this._dialogContext;
@@ -200,19 +162,87 @@ define([
 				this._lowerButtonBounds.x, this._lowerButtonBounds.y, this._lowerButtonBounds.w, this._lowerButtonBounds.h
 			);
 		},
+		_cachedCommitMarkersById: null,
+		/**
+		 * Returns a list of markers. Each marker is an object with the
+		 * following structure:
+		 * {
+		 * 	commit: {...},
+		 * 	breadth: 1,
+		 * 	x: 1,
+		 * 	y: 2,
+		 * 	pixelCoord: {
+		 * 		x: 100,
+		 * 		y: 200,
+		 * 	}
+		 * }
+		 */
+		_getCommitMarkersById: function() {
+			if (this._cachedCommitMarkersById != null) {
+				return this._cachedCommitMarkersById;
+			}
+			var self = this;
+			var allRevs = this._versionHistory.getAllRevs();
+			if (allRevs.length == 0) {
+				return [];
+			}
+			var i;
+			// Convert to simply markers
+			var retVal = [];
+			for (i = 0; i < allRevs.length; i++) {
+				retVal[i] = {
+					commit : allRevs[i]
+				};
+			}
+			// Calculate breadth
+			function calcBreadthRecur(id) {
+				var commit = allRevs[id];
+				commit.childRevIds.forEach(calcBreadthRecur);
+				if (commit.childRevIds.length === 0) {
+					retVal[commit.id].breadth = 1;
+				} else {
+					var sum = 0;
+					commit.childRevIds.forEach(function(id) {
+						sum += retVal[id].breadth;
+					});
+					retVal[commit.id].breadth = sum;
+				}
+			}
+			calcBreadthRecur(this._versionHistory.rootRevId());
+			// Calculate x and y coordinates
+			function setCoordsRecur(id, x, y) {
+				var marker = retVal[id];
+				marker.x = x;
+				marker.y = y;
+				var accum = y;
+				marker.commit.childRevIds.forEach(function(id) {
+					setCoordsRecur(id, x + 1, accum);
+					accum += retVal[id].breadth;
+				});
+			}
+			setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
+			// Calculate pixelCoord
+			retVal.forEach(function(marker) {
+				marker.pixelCoords = self._logicalCoordToPixelCoord(
+						marker.x, marker.y);
+			});
+			this._cachedCommitMarkersById = retVal;
+			return retVal;
+		},
 		_drawNodes: function() {
 			var self = this;
 			var ctx = this._nodesContext;
+			var commitMarkersById = this._getCommitMarkersById();
 			ctx.save();
 			ctx.clearRect(0, 0, this.w, this.h);
 			ctx.translate(0, -this._scrollOffset);
 			/* Draw lines making up the graph */
 			ctx.strokeStyle = 'white';
 			ctx.beginPath();
-			this._forEachCommitMarker(function(marker) {
+			commitMarkersById.forEach(function(marker) {
 				var coords = marker.pixelCoords;
 				marker.commit.childRevIds.forEach(function(childId) {
-					var childMarker = self._commitMarkersById[childId];
+					var childMarker = commitMarkersById[childId];
 					var childCoords = childMarker.pixelCoords;
 					ctx.moveTo(coords.x + coords.w/2, coords.y + coords.h/2);
 					ctx.lineTo(childCoords.x + childCoords.w/2, childCoords.y + childCoords.h/2);
@@ -220,7 +250,7 @@ define([
 			});
 			ctx.stroke();
 			/* Draw commit symbols */
-			this._forEachCommitMarker(function(marker) {
+			commitMarkersById.forEach(function(marker) {
 				var maxDepth = self._versionHistory.getDepthLimit();
 				var coords = marker.pixelCoords;
 				var commitProps = self._commitProps(marker.commit);
@@ -240,7 +270,7 @@ define([
 				}
 				ctx.drawImage(
 					self._assets.orbs,
-					spriteX*ORB_SRC_SIZE, spriteY*ORB_SRC_SIZE, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
+					spriteX*ORB_SRC_SIZE, spriteY*ORB_SRC_SIZE, ORB_SRC_SIZE, ORB_SRC_SIZE,
 					coords.x, coords.y, coords.w, coords.h
 				);
 				if (commitProps.isMergeable) {
@@ -264,22 +294,10 @@ define([
 		},
 		_maxNodeYCoord: function() {
 			var retVal = 0;
-			this._forEachCommitMarker(function(marker) {
+			this._getCommitMarkersById().forEach(function(marker) {
 				retVal = Math.max(retVal, marker.pixelCoords.y + marker.pixelCoords.h);
 			});
 			return retVal;
-		},
-		_forEachCommitMarker: function(func) {
-			var commitMarkersById = this._commitMarkersById;
-			for (id in commitMarkersById) {
-				if (commitMarkersById.hasOwnProperty(id)) {
-					var marker = commitMarkersById[id];
-					var funcRetVal = func(marker);
-					if (funcRetVal === false) {
-						break;
-					}
-				}
-			}
 		},
 		_commitProps: function(commit) {
 			var isActive = this._versionHistory.headRevId() === commit.id;

@@ -26,6 +26,9 @@ define([ 'Crafty', 'underscore' ], function() {
 				return this._revisions[revId];
 			}
 		},
+		getAllRevs: function() {
+			return Crafty.clone(this._revisions);
+		},
 		commit: function(data) {
 			var newRevId = this._revisions.length;
 			var newRevision = {
@@ -43,16 +46,17 @@ define([ 'Crafty', 'underscore' ], function() {
 
 			this._revisions.push(newRevision);
 			this._headRevId = newRevId;
-			this.trigger("Commit", newRevision);
-			this.trigger('HeadRevChanged', newRevision);
+			var safeClone = Crafty.clone(newRevision);
+			this.trigger("Commit", safeClone);
+			this.trigger('HeadRevChanged', safeClone);
 			return this._headRevId;
 		},
 		checkout: function(revId) {
-			var rev = Crafty.clone(this._revisions[revId]);
+			var safeClone = Crafty.clone(this._revisions[revId]);
 			this._headRevId = revId;
-			this.trigger("Checkout", rev);
-			this.trigger('HeadRevChanged', rev);
-			return rev;
+			this.trigger("Checkout", safeClone);
+			this.trigger('HeadRevChanged', safeClone);
+			return safeClone;
 		},
 		merge: function(revId) {
 			/* Compute the nearest common ancestor of the head commit and the given commit.
@@ -64,7 +68,13 @@ define([ 'Crafty', 'underscore' ], function() {
 				this.checkout(Math.max(revId, this._headRevId));
 				return this._headRevId;
 			} else {
-				var mergeResult = this.mergeFunc(this._revisions[baseRevId].data, this._revisions[this._headRevId].data, this._revisions[revId].data);
+				var mergeResult = Crafty.clone(
+					this.mergeFunc(
+						Crafty.clone(this._revisions[baseRevId].data),
+						Crafty.clone(this._revisions[this._headRevId].data),
+						Crafty.clone(this._revisions[revId].data)
+					)
+				);
 				var resultRevId = this._revisions.length;
 				var resultRev = {
 					id: resultRevId,
@@ -76,8 +86,9 @@ define([ 'Crafty', 'underscore' ], function() {
 				this._revisions[revId].childRevIds.push(resultRevId);
 				this._revisions.push(resultRev);
 				this._headRevId = resultRevId;
-				this.trigger("Commit", resultRev);
-				this.trigger('HeadRevChanged', resultRev);
+				var safeClone = Crafty.clone(resultRev);
+				this.trigger("Commit", safeClone);
+				this.trigger('HeadRevChanged', safeClone);
 				return this._headRevId;
 			}
 		},
