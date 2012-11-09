@@ -103,6 +103,25 @@ define([ 'Crafty', 'underscore' ], function() {
 				return _.union.apply(null, [revId].concat(parentIds.map(ancestorsRec)));
 			}
 			return ancestorsRec(revId);
+		},
+		/**
+		 * Returns 0 for the root, 1 for any child of the root, etc.
+		 */
+		getRevDepth: function(id) {
+			if (id == this._rootRevId) {
+				return 0;
+			} else {
+				var rev = this._revisions[id];
+				/*
+				 * There must be at least one parent, 'cause we're not the root. We can choose any parent arbitrarily because
+				 * of the rule that says you can only merge two nodes if they are of the same depth.
+				 */
+				var arbitraryParentId = rev.parentRevIds[0];
+				return 1 + this.getRevDepth(arbitraryParentId);
+			}
+		},
+		isMoreCommitsAllowed: function() {
+			return this.getRevDepth(this._headRevId) < this._depthLimit;
 		}
 	});
 });
