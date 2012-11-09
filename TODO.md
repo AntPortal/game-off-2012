@@ -62,6 +62,7 @@ Scene Layout
 
 BUGS
 ====
+* Water tile does not correctly have the noStand flag set.
 * If the user switches commits while the action menu is active, this should implicitly be interpreted as a "cancel" command.
 * Get better graphic for merge button.
 * Fix bug with dog taking an extra newspaper.
