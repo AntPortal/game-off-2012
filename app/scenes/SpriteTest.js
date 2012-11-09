@@ -1,16 +1,7 @@
 define([
-		'config',
-		'mouselook',
-		'utils',
 		'Crafty',
-		'components/ViewportRelative',
-		'components/ClickNoDrag',
-		'components/Character',
-		'components/VersionHistory',
-		'components/Dialog',
-		'components/Gitk',
-		'components/Sepia',
-	], function(config, mapData, mouselook, utils) {
+		'components/BetterText'
+	], function() {
 	Crafty.scene('SpriteTest', function() {
 		var directions = ['N', 'E', 'S', 'W'];
 		var i, j;
