@@ -127,7 +127,8 @@ define([
 					} else {
 						self._versionHistory.checkout(clickedMarker.commit.id);
 					}
-					self._drawNodes(); /*TODO may be redundant, as the merge will trigger a commit event if it's not a fast-forward */
+					//This is necessary for checkouts (which don't trigger commits) and fast-forward merges.
+					self._drawNodes();
 				}
 			});
 			this._drawDialog();
