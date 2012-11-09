@@ -1,8 +1,9 @@
 define([
 		'config',
+		'path_finder',
 		'components/BetterText',
 ],
-function(config) {
+function(config, PathFinder) {
 	function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 		return function(worldX, worldY, worldZ) {
 			return {
@@ -258,6 +259,54 @@ function(config) {
 		}
 		return parsedMapData;
 	}
+
+	/**
+	 * Creates a PathFinder (see path_finder.js) that can compute paths
+	 * within the given parsed map data.
+	 *
+	 * The states of the returned PathFinder are tile entities; the actions
+	 * are functions that accept a source tile entity and return a destination
+	 * tile entity, or `undefined` if the action isn't allowed (because it
+	 * would go where there's no tile).
+	 *
+	 * @param parsedMapData  parsed map data as returned by loadMap.
+	 */
+	function makePathFinder(parsedMapData) {
+		function makeActionFunc(dx, dy) {
+			return function(ent) {
+				var newX = ent.tileX + dx;
+				var newY = ent.tileY + dy;
+				return parsedMapData.heightMap[newX+","+newY];
+			}
+		}
+		var ALL_ACTIONS = [
+			makeActionFunc(1,0),
+			makeActionFunc(-1,0),
+			makeActionFunc(0,1),
+			makeActionFunc(0,-1)
+		];
+
+		return new PathFinder({
+			actions: function(state) {
+				return ALL_ACTIONS.filter(function(act) {
+					var dest = act(state); /* might be undefined, if it would go where there's no tile */
+					if (dest === undefined) {
+						return false;
+					} else if (dest.noStand) {
+						return false;
+					} else {
+						var srcHeight = parsedMapData.heightMap[state.tileX+","+state.tileY].surfaceZ;
+						var destHeight = parsedMapData.heightMap[dest.tileX+","+dest.tileY].surfaceZ;
+						return Math.abs(srcHeight - destHeight) <= 0.5;
+					}
+				});
+			},
+			cost: function(state, action) { return 1; },
+			result: function(state, action) { return action(state); },
+			stateKey: function(state) { return state.tileX + "," + state.tileY; }
+		});
+	}
+
 	function stopAllMusic() {
 		for (key in config.music) {
 			Crafty.audio.stop(key);
@@ -572,6 +621,7 @@ function(config) {
 		setMusicVolume : setMusicVolume,
 		addMusicControlEntity: addMusicControlEntity,
 		loadMap: loadMap,
+		makePathFinder: makePathFinder,
 		stopAllMusic: stopAllMusic,
 		binarySearch: binarySearch,
 		mergeObjs: mergeObjs,

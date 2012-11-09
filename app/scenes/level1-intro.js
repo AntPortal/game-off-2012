@@ -38,9 +38,10 @@ define([
 
 		//Add characters
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-		var hero = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 3, 0, 'hero');
+		var pathFinder = utils.makePathFinder(parsedMapData);
+		var hero = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, pathFinder, 3, 0, 'hero');
 		hero.visible = false;
-		var mom = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, 1, 0, 'mom');
+		var mom = Crafty.e('2D, Canvas, Character').Character(parsedMapData.heightMap, worldToPixel, pathFinder, 1, 0, 'mom');
 		var DIALOG_HEIGHT = 90;
 		var script = [
 			{ 

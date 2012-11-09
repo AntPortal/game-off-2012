@@ -1,27 +1,30 @@
-define(['config', 'utils', 'Crafty'], function(config) {
+define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 	/**
 	 * Defines a character, either a playable one, or an AI one.
 	 */
 	Crafty.c('Character', {
 		_targetX: 0, //in world coordinates
 		_targetY: 0, //in world coordinates
+		_pathToTarget: null,
 		_spriteName: '', //E.g. 'hero', from which 'sprite_hero_N0' will be derived.
 		_facing: 'S', //One of 'N', 'E', 'S' or 'W'.
 		_currentSprite: null,
-		_frameOffset: 0, 
+		_frameOffset: 0,
 		heightMap: null, //Must be set by caller!
 		worldToPixel: null, //Must be set by caller!
+		pathFinder: null, //Must be set by caller
 		init: function() {
 			this.requires('2D');
 			this.bind('EnterFrame', this._enterFrame);
 			this._frameOffset = Crafty.math.randomInt(0, 100); //So that not all characters are exactly in sync.
 		},
-		Character: function(heightMap, worldToPixel, initialX, initialY, spriteName) {
+		Character: function(heightMap, worldToPixel, pathFinder, initialX, initialY, spriteName) {
 			this._spriteName = spriteName;
 			this._currentSprite = 'sprite_' + spriteName + '_S0';
 			this.addComponent(this._currentSprite);
 			this.heightMap = heightMap;
 			this.worldToPixel = worldToPixel;
+			this.pathFinder = pathFinder;
 			var initialZ = heightMap[initialX+','+initialY].surfaceZ;
 			this.setPos(initialX,initialY,initialZ);
 			this._targetX = initialX;
@@ -41,8 +44,15 @@ define(['config', 'utils', 'Crafty'], function(config) {
 			return this;
 		},
 		setWalkTarget: function(worldX, worldY) {
+			var self = this;
+			var startTile = this.heightMap[this.tileX+','+this.tileY];
 			this._targetX = worldX;
 			this._targetY = worldY;
+			this._pathToTarget = this.pathFinder.findPath(
+				startTile, /* initial state */
+				function(state) { return (self._targetX === state.tileX) && (self._targetY === state.tileY); }, /* goal test */
+				function(state) { return Math.abs(self._targetX - state.tileX) + Math.abs(self._targetY - state.tileY); } /* heuristic */
+			);
 		},
 		_getTopLeftPixelCoords: function(worldX, worldY, worldZ) {
 			var bottomPixelCoord = this.worldToPixel(worldX, worldY, worldZ);
@@ -81,21 +91,10 @@ define(['config', 'utils', 'Crafty'], function(config) {
 				if (Crafty.math.squaredDistance(curTilePixelTopLeft.x, curTilePixelTopLeft.y, this.x, this.y) < 192) {
 					this.z = this.tileX + this.tileY + Math.ceil(this.tileZ);
 				}
-			} else if (this._targetX != this.tileX || this._targetY != this.tileY) {
-				//Not at the right tile, so choose the next tile to move into
-				//TODO: Do pathing so you don't walk over impossible tiles.
-				if (this._targetX < this.tileX) {
-					this.tileX--;
-				}
-				if (this._targetX > this.tileX) {
-					this.tileX++;
-				}
-				if (this._targetY < this.tileY) {
-					this.tileY--;
-				}
-				if (this._targetY > this.tileY) {
-					this.tileY++;
-				}
+			} else if (this._pathToTarget !== null && this._pathToTarget.length > 0) {
+				var nextTile = this._pathToTarget.shift();
+				this.tileX = nextTile.state.tileX;
+				this.tileY = nextTile.state.tileY;
 				this.tileZ = this.heightMap[this.tileX+','+this.tileY].surfaceZ;
 			}
 		},
