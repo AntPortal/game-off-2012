@@ -537,6 +537,13 @@ function(config) {
 		}
 	}
 	/**
+	 * Sets a value on an object, and then returns the original object; useful for chaining setters on native objects.
+	 */
+	function chainSet(obj, key, value) {
+		obj[key] = value;
+		return obj;
+	}
+	/**
 	 * The built in Crafty.viewport.centerOn is not correctly implemented, so this is offered as a replacement
 	 * implementation.
 	 */
@@ -575,5 +582,6 @@ function(config) {
 		removeDuplicates: removeDuplicates,
 		centerViewportOn: centerViewportOn,
 		ensureMusicIsPlaying: ensureMusicIsPlaying,
+		chainSet: chainSet,
 	};
 });

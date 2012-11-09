@@ -264,7 +264,113 @@ define([
 		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
 		utils.ensureMusicIsPlaying('music/town');
-		updateTaskList();
+		(function() { //Initial dialog from boy and girl to hero.
+			var vm = Crafty.e('ScriptRunner');
+			var chainSet = utils.chainSet;
+			var template = {
+				boy: {
+					x: -280,
+					y: 580,
+					w: 400,
+					h: 90,
+					face: 'face_childM',
+				},
+				girl: {
+					x: -560,
+					y: 420,
+					w: 400,
+					h: 90,
+					face: 'face_childF',
+				}
+			};
+			vm.ScriptRunner([{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.boy), 'msg', [
+					"Finally! What took you so long? We're almost out of",
+					"time for the fair!",
+				]),
+			},{
+					action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.girl), 'msg', [
+					"Hurry up and deliver those newspapers so we can get",
+					"out of here!",
+				]),
+			},{
+					action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.boy), 'msg', [
+					"You remember how, right? Just click next to the guy,",
+					"to walk up to him and then pick \"Deliver Newspaper\"",
+					"from the action menu!",
+				]),
+			},{
+					action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.girl), 'msg', [
+					"The key is always to move, then perform an action,",
+					"in that order. You can't move twice in a row without",
+					"an action in between.",
+				]),
+			},{
+				action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.boy), 'msg', [
+					"I mean, if you REALLY want to just move somewhere, and",
+					"then not do an action, pick the \"Do nothing\" action..."
+				]),
+			},{
+				action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.girl), 'msg', [
+					"But don't waste any time \"doing nothing\" here, 'cause",
+					"we gotta get to the fair before it closes!",
+				]),
+			},{
+				action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.boy), 'msg', [
+					"If you mess up your movement, you can always choose",
+					"\"cancel\" from the action menu to try again!"
+				]),
+			},{
+				action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.girl), 'msg', [
+					"And if you REALLY mess up, you could always use your",
+					"magic powers to rewind time!"
+				]),
+			},{
+				action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.boy), 'msg', [
+					"Now get going! We're gonna be late!"
+				]),
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.girl), 'msg', [
+					"Now get going! We're gonna be late!"
+				]),
+			},{
+				action: 'PACADOC'
+			}, {
+				action: 'arbitraryCode',
+				code: function(curState, callback) {
+					updateTaskList();
+					vm.destroy();
+				}
+			}
+			]);
+			vm.run();
+		})();
 	}
 	function uninit() {
 		if (sepiaEntity) {
