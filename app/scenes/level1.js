@@ -58,7 +58,6 @@ define([
 				},
 				hasNewspaper: hasNewspaper,
 			});
-			updateTaskList();
 		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
 			if (hero && !actionMenuActive) {
@@ -246,14 +245,14 @@ define([
 					x: ours.hero.x,
 					y: ours.hero.y
 				},
-				hasNewspapers: utils.mergeObjs(ours.hasNewspapers, theirs.hasNewspapers, function(x, y) { return x || y; })
-			}
+				hasNewspaper: utils.mergeObjs(ours.hasNewspaper, theirs.hasNewspaper, function(x, y) { return x || y; })
+			};
 		};
-		versions.bind("Checkout", function(rev) {
+		versions.bind('HeadRevChanged', function(rev) {
 			var revData = rev.data;
 			var tileX = revData.hero.x;
 			var tileY = revData.hero.y;
-			hasNewspapers = revData.hasNewspapers;
+			hasNewspaper = revData.hasNewspaper;
 			hero.setPos(tileX, tileY, parsedMapData.heightMap[tileX+","+tileY].surfaceZ);
 			hero.setWalkTarget(tileX, tileY);
 			var isLeaf = rev.childRevIds.length == 0;
