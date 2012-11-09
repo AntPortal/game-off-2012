@@ -67,11 +67,7 @@ define([
 				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
 
 				self._forEachCommitMarker(function(marker) {
-					marker.pixelCoords = {
-						x: (ORB_DST_SIZE + ORB_DST_HORZ_PAD) * marker.x + (ORB_DST_HORZ_PAD / 2),
-						y: (ORB_DST_SIZE + ORB_DST_VERT_PAD) * marker.y + (ORB_DST_VERT_PAD / 2),
-						w: ORB_DST_SIZE,
-						h: ORB_DST_SIZE};
+					marker.pixelCoords = self._logicalCoordToPixelCoord(marker.x, marker.y);
 				});
 				self._drawNodes();
 			};
@@ -157,6 +153,18 @@ define([
 			this._drawDialog();
 			this._drawNodes();
 		},
+		/**
+		 * Converts from the marker's logical coordinates ((0,0) is the root, (1,0) is that root's first child, etc.), to
+		 * pixel coordinates.
+		 */
+		_logicalCoordToPixelCoord: function(x, y) {
+			return {
+				x: (ORB_DST_SIZE + ORB_DST_HORZ_PAD) * x + (ORB_DST_HORZ_PAD / 2),
+				y: (ORB_DST_SIZE + ORB_DST_VERT_PAD) * y + (ORB_DST_VERT_PAD / 2),
+				w: ORB_DST_SIZE,
+				h: ORB_DST_SIZE
+			};
+		},
 		_calcBreadths: function() {
 			var self = this;
 			this._breadthsById = {};
@@ -213,12 +221,26 @@ define([
 			ctx.stroke();
 			/* Draw commit symbols */
 			this._forEachCommitMarker(function(marker) {
+				var maxDepth = self._versionHistory.getDepthLimit();
 				var coords = marker.pixelCoords;
 				var commitProps = self._commitProps(marker.commit);
-				var spriteX = commitProps.isActive ? 1 : (commitProps.isLeaf ? 3 : 2);
+				var spriteX, spriteY;
+				if (marker.x >= maxDepth) {
+					spriteX = 0;
+					spriteY = 1;
+				} else if (commitProps.isActive) {
+					spriteX = 1;
+					spriteY = 0;
+				} else if (commitProps.isLeaf) {
+					spriteX = 3;
+					spriteY = 0;
+				} else {
+					spriteX = 2;
+					spriteY = 0;
+				}
 				ctx.drawImage(
 					self._assets.orbs,
-					spriteX*ORB_SRC_SIZE, 0, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
+					spriteX*ORB_SRC_SIZE, spriteY*ORB_SRC_SIZE, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
 					coords.x, coords.y, coords.w, coords.h
 				);
 				if (commitProps.isMergeable) {
@@ -229,6 +251,14 @@ define([
 					ctx.fillText("Merge", mergeCoords.x + 2, mergeCoords.y + mergeCoords.h - 2);
 				}
 			});
+			/* Draw depth limit line */
+			var limitPixelCoord = this._logicalCoordToPixelCoord(5, 0);
+			var limitX = limitPixelCoord.x + (limitPixelCoord.w / 2);
+			ctx.strokeStyle = 'red';
+			ctx.beginPath();
+			ctx.moveTo(limitX, 0);
+			ctx.lineTo(limitX, ctx.canvas.height);
+			ctx.stroke();
 			ctx.restore();
 		},
 		_maxNodeYCoord: function() {

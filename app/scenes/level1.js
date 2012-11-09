@@ -20,7 +20,7 @@ define([
 	var versions = null;
 	var taskList = null;
 	function init() {
-		versions = Crafty.e('VersionHistory');
+		versions = Crafty.e('VersionHistory').VersionHistory(5);
 		sepiaEntity = Crafty.e('Sepia').
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene

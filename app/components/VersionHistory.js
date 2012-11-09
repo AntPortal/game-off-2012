@@ -6,6 +6,13 @@ define([ 'Crafty', 'underscore' ], function() {
 			this._headRevId = null;
 			this._revisions = [];
 		},
+		VersionHistory: function(depthLimit) {
+			this._depthLimit = depthLimit;
+			return this;
+		},
+		getDepthLimit: function() {
+			return this._depthLimit;
+		},
 		rootRevId: function() {
 			return this._rootRevId;
 		},
