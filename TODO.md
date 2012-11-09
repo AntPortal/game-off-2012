@@ -73,9 +73,9 @@ BUGS
   * As part of this, you'll probably want to add an A* path finding algorithm. 
 * Improve performance in Firefox.
 * Volume controls don't work on ipad.
-* When forking, check all existing children to see if there's an identical match. If there is, instead of creating a new child, just reuse that existing one.
 * Add a timer so that if the user is stuck on a level for more than, e.g. 30 seconds, the tooltip icon starts flashing.
 * Add some sort of UI to indicate turn limit (maybe a skull and a vertical line on the gitk layer? Maybe if you click on it, it explains why there's a time limit in the story?)
 * Add support for IE.
-* Implement same-timestamp restriction for merges.
 * Don't display the "merge" icon for merges that would be fast-forwards.
+* When forking, check all existing children to see if there's an identical match. If there is, instead of creating a new child, just reuse that existing one.
+  * Note this breaks if the current restriction of only being able to merge leafs remains implemented.
