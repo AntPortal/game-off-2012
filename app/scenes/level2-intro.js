@@ -79,8 +79,9 @@ define([
 			}
 		});
 		var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
+		var pathFinder = utils.makePathFinder(parsedMapData);
 		var hero = Crafty.e('2D, Canvas, Character').
-			Character(parsedMapData.heightMap, worldToPixel, HERO_START.x, HERO_START.y, 'hero');
+			Character(parsedMapData.heightMap, worldToPixel, pathFinder, HERO_START.x, HERO_START.y, 'hero');
 		(function() {
 			//Add characters
 			var i = 0;
@@ -88,7 +89,7 @@ define([
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
 					Crafty.e('2D, Canvas, Character').
-						Character(parsedMapData.heightMap, worldToPixel, object.tileX, object.tileY, object.properties.sprite);
+						Character(parsedMapData.heightMap, worldToPixel, pathFinder, object.tileX, object.tileY, object.properties.sprite);
 				} else {
 					console.warn('Unknown object type: ', object.type);
 				}

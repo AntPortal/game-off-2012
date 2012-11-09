@@ -21,10 +21,14 @@ define([], function() {
 	}
 
 	Heap.prototype.removeMin = function() {
-		var retVal = this._array[0];
-		this._array[0] = this._array.pop();
-		this._reheapify(0);
-		return retVal;
+		if (this._array.length === 1) {
+			return this._array.pop();
+		} else {
+			var retVal = this._array[0];
+			this._array[0] = this._array.pop();
+			this._reheapify(0);
+			return retVal;
+		}
 	}
 
 	Heap.prototype._parentIndex = function(idx) {
