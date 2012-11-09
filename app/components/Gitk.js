@@ -2,7 +2,8 @@ define([
 	'config',
 	'utils',
 	'Crafty',
-	'components/ViewportRelative'
+	'components/ViewportRelative',
+	'components/IndependentCanvas',
 ], function(config, utils) {
 	var DIALOG_TILE_SIZE = 16;
 	var PADDING = DIALOG_TILE_SIZE / 2;
@@ -22,44 +23,29 @@ define([
 		_commitMarkersById: null,
 		_breadthsById: null,
 		_scrollOffset: 0,
-		_refElem: null, //the HTML DOM element that will contain any created canvases.
 		_boundCommitFunction: null, //The function that is bound to the 'commit' event of the version history.
 		init: function() {
-			this.requires('2D, ViewportRelative, Mouse');
+			this.requires('2D, ViewportRelative, Mouse, IndependentCanvas');
 			this._commitMarkersById = {};
 			this._breadthsById = {};
 			this.bind('Remove', this._removed);
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
 			var self = this;
-			this._refElem = document.getElementById(baseElemId);
-			function makeCanvas(x, y, w, h, zIndex) {
-				var canvas = document.createElement('canvas');
-				canvas.width = w;
-				canvas.height = h;
-				canvas.style.position = 'absolute';
-				canvas.style.top = y+'px';
-				canvas.style.left = x+'px';
-				canvas.style.width = w+'px';
-				canvas.style.height = h+'px';
-				canvas.style.zIndex = zIndex;
-				self._refElem.appendChild(canvas);
-				return canvas;
-			}
-
+			this.IndependentCanvas(baseElemId);
 			this.attr({x: x, y: y, w: w, h: h, z: config.zOffset.gitk});
 			this._assets = {
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
 				dialog: Crafty.asset('assets/ui/dialog.olive.png'),
 				arrows: Crafty.asset('assets/ui/arrows.png')
 			};
-			this._dialogContext = makeCanvas(x, y, w, h, config.zOffset.gitk).getContext('2d');
-			this._nodesContext = makeCanvas(
+			this._dialogContext = this.createCanvas(x, y, config.zOffset.gitk, w, h).getContext('2d');
+			this._nodesContext = this.createCanvas(
 				x + PADDING,
 				y + PADDING,
+				config.zOffset.gitk + 1,
 				w - 2*PADDING,
-				h - 2*PADDING,
-				config.zOffset.gitk + 1
+				h - 2*PADDING
 			).getContext('2d');
 
 			this._versionHistory = versionHistory;
@@ -334,8 +320,6 @@ define([
 			};
 		},
 		_removed: function() {
-			this._refElem.removeChild(this._dialogContext.canvas);
-			this._refElem.removeChild(this._nodesContext.canvas);
 			this._versionHistory.unbind("Commit", this._boundCommitFunction);
 		}
 	});
