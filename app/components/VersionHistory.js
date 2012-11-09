@@ -30,7 +30,7 @@ define([ 'Crafty', 'underscore' ], function() {
 			var newRevId = this._revisions.length;
 			var newRevision = {
 				id: newRevId,
-				data: data,
+				data: Crafty.clone(data),
 				childRevIds: []
 			};
 			if (this._headRevId !== null) {
@@ -44,12 +44,14 @@ define([ 'Crafty', 'underscore' ], function() {
 			this._revisions.push(newRevision);
 			this._headRevId = newRevId;
 			this.trigger("Commit", newRevision);
+			this.trigger('HeadRevChanged', newRevision);
 			return this._headRevId;
 		},
 		checkout: function(revId) {
-			var rev = this._revisions[revId];
+			var rev = Crafty.clone(this._revisions[revId]);
 			this._headRevId = revId;
 			this.trigger("Checkout", rev);
+			this.trigger('HeadRevChanged', rev);
 			return rev;
 		},
 		merge: function(revId) {
@@ -75,6 +77,7 @@ define([ 'Crafty', 'underscore' ], function() {
 				this._revisions.push(resultRev);
 				this._headRevId = resultRevId;
 				this.trigger("Commit", resultRev);
+				this.trigger('HeadRevChanged', resultRev);
 				return this._headRevId;
 			}
 		},

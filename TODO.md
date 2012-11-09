@@ -62,7 +62,7 @@ Scene Layout
 
 BUGS
 ====
-* Have the version history manager perform a deep copy of the data that is passed into it.
+* If the user switches commits while the action menu is active, this should implicitly be interpreted as a "cancel" command.
 * Get better graphic for merge button.
 * Fix bug with dog taking an extra newspaper.
 * Get better graphic for tooltips.

@@ -41,22 +41,24 @@ define([
 			var ctx = this._canvasContext;
 			//this.drawDialog(ctx, this._dialogAsset, DIALOG_TILE_SIZE, 0, 0, this._w,this._h);
 			ctx.clearRect(0, 0, this._w,this._h);
-			ctx.save();
-			ctx.font = FONT_SIZE+'px Patrick Hand';
-			ctx.strokeStyle = 'black';
-			ctx.fillStyle = 'white';
-			ctx.textBaseline = 'top';
-			function strokeFill(msg, x, y) {
-				ctx.strokeText(msg, x, y);
-				ctx.fillText(msg, x, y);
+			if (this.tasks.length > 0) {
+				ctx.save();
+				ctx.font = FONT_SIZE+'px Patrick Hand';
+				ctx.strokeStyle = 'black';
+				ctx.fillStyle = 'white';
+				ctx.textBaseline = 'top';
+				function strokeFill(msg, x, y) {
+					ctx.strokeText(msg, x, y);
+					ctx.fillText(msg, x, y);
+				}
+				strokeFill("Objectives:", 0, 0);
+				for (i = 0; i < this.tasks.length; i++) {
+					var task = this.tasks[i];
+					var prefix = task.done ? '[X] ' : '[ ] ';
+					strokeFill(prefix + task.label, 0, FONT_SIZE * (i + 1));
+				}
+				ctx.restore();
 			}
-			strokeFill("Objectives:", 0, 0);
-			for (i = 0; i < this.tasks.length; i++) {
-				var task = this.tasks[i];
-				var prefix = task.done ? '[X] ' : '[ ] ';
-				strokeFill(prefix + task.label, 0, FONT_SIZE * (i + 1));
-			}
-			ctx.restore();
 		}
 	});
 	return undefined;
