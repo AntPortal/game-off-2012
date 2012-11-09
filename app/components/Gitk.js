@@ -2,7 +2,9 @@ define([
 	'config',
 	'utils',
 	'Crafty',
-	'components/ViewportRelative'
+	'components/ViewportRelative',
+	'components/IndependentCanvas',
+	'components/IndependentCanvasDialog',
 ], function(config, utils) {
 	var DIALOG_TILE_SIZE = 16;
 	var PADDING = DIALOG_TILE_SIZE / 2;
@@ -22,44 +24,29 @@ define([
 		_commitMarkersById: null,
 		_breadthsById: null,
 		_scrollOffset: 0,
-		_refElem: null, //the HTML DOM element that will contain any created canvases.
 		_boundCommitFunction: null, //The function that is bound to the 'commit' event of the version history.
 		init: function() {
-			this.requires('2D, ViewportRelative, Mouse');
+			this.requires('2D, ViewportRelative, Mouse, IndependentCanvas, IndependentCanvasDialog');
 			this._commitMarkersById = {};
 			this._breadthsById = {};
 			this.bind('Remove', this._removed);
 		},
 		Gitk: function(baseElemId, x, y, w, h, versionHistory) {
 			var self = this;
-			this._refElem = document.getElementById(baseElemId);
-			function makeCanvas(x, y, w, h, zIndex) {
-				var canvas = document.createElement('canvas');
-				canvas.width = w;
-				canvas.height = h;
-				canvas.style.position = 'absolute';
-				canvas.style.top = y+'px';
-				canvas.style.left = x+'px';
-				canvas.style.width = w+'px';
-				canvas.style.height = h+'px';
-				canvas.style.zIndex = zIndex;
-				self._refElem.appendChild(canvas);
-				return canvas;
-			}
-
+			this.IndependentCanvas(baseElemId);
 			this.attr({x: x, y: y, w: w, h: h, z: config.zOffset.gitk});
 			this._assets = {
 				orbs: Crafty.asset('assets/ui/OrbzPrw.png'),
 				dialog: Crafty.asset('assets/ui/dialog.olive.png'),
 				arrows: Crafty.asset('assets/ui/arrows.png')
 			};
-			this._dialogContext = makeCanvas(x, y, w, h, config.zOffset.gitk).getContext('2d');
-			this._nodesContext = makeCanvas(
+			this._dialogContext = this.createCanvas(x, y, config.zOffset.gitk, w, h).getContext('2d');
+			this._nodesContext = this.createCanvas(
 				x + PADDING,
 				y + PADDING,
+				config.zOffset.gitk + 1,
 				w - 2*PADDING,
-				h - 2*PADDING,
-				config.zOffset.gitk + 1
+				h - 2*PADDING
 			).getContext('2d');
 
 			this._versionHistory = versionHistory;
@@ -80,11 +67,7 @@ define([
 				setCoordsRecur(self._versionHistory.rootRevId(), 0, 0);
 
 				self._forEachCommitMarker(function(marker) {
-					marker.pixelCoords = {
-						x: (ORB_DST_SIZE + ORB_DST_HORZ_PAD) * marker.x + (ORB_DST_HORZ_PAD / 2),
-						y: (ORB_DST_SIZE + ORB_DST_VERT_PAD) * marker.y + (ORB_DST_VERT_PAD / 2),
-						w: ORB_DST_SIZE,
-						h: ORB_DST_SIZE};
+					marker.pixelCoords = self._logicalCoordToPixelCoord(marker.x, marker.y);
 				});
 				self._drawNodes();
 			};
@@ -170,6 +153,18 @@ define([
 			this._drawDialog();
 			this._drawNodes();
 		},
+		/**
+		 * Converts from the marker's logical coordinates ((0,0) is the root, (1,0) is that root's first child, etc.), to
+		 * pixel coordinates.
+		 */
+		_logicalCoordToPixelCoord: function(x, y) {
+			return {
+				x: (ORB_DST_SIZE + ORB_DST_HORZ_PAD) * x + (ORB_DST_HORZ_PAD / 2),
+				y: (ORB_DST_SIZE + ORB_DST_VERT_PAD) * y + (ORB_DST_VERT_PAD / 2),
+				w: ORB_DST_SIZE,
+				h: ORB_DST_SIZE
+			};
+		},
 		_calcBreadths: function() {
 			var self = this;
 			this._breadthsById = {};
@@ -192,60 +187,7 @@ define([
 			var ctx = this._dialogContext;
 			var canvasWidth = ctx.canvas.width;
 			var canvasHeight = ctx.canvas.height;
-			/* Draw upper-left part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				0, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				0, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw upper-center part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				DIALOG_TILE_SIZE, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				DIALOG_TILE_SIZE, 0, canvasWidth - 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw upper-right part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				2*DIALOG_TILE_SIZE, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				canvasWidth - DIALOG_TILE_SIZE, 0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw center-left part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				0, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, canvasHeight - 2*DIALOG_TILE_SIZE
-			);
-			/* Draw center part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, canvasWidth - 2*DIALOG_TILE_SIZE, canvasHeight - 2*DIALOG_TILE_SIZE
-			);
-			/* Draw center-right part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				canvasWidth - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, canvasHeight - 2*DIALOG_TILE_SIZE
-			);
-			/* Draw lower-left part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				0, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				0, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw lower-center part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				DIALOG_TILE_SIZE, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, canvasWidth - 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
-			/* Draw lower-right part of dialog */
-			ctx.drawImage(
-				this._assets.dialog,
-				2*DIALOG_TILE_SIZE, 2*DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE,
-				canvasWidth - DIALOG_TILE_SIZE, canvasHeight - DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE
-			);
+			this.drawDialog(ctx, this._assets.dialog, DIALOG_TILE_SIZE, 0, 0, canvasWidth,canvasHeight);
 			/* Draw arrows */
 			ctx.drawImage(
 				this._assets.arrows,
@@ -279,12 +221,26 @@ define([
 			ctx.stroke();
 			/* Draw commit symbols */
 			this._forEachCommitMarker(function(marker) {
+				var maxDepth = self._versionHistory.getDepthLimit();
 				var coords = marker.pixelCoords;
 				var commitProps = self._commitProps(marker.commit);
-				var spriteX = commitProps.isActive ? 1 : (commitProps.isLeaf ? 3 : 2);
+				var spriteX, spriteY;
+				if (marker.x >= maxDepth) {
+					spriteX = 0;
+					spriteY = 1;
+				} else if (commitProps.isActive) {
+					spriteX = 1;
+					spriteY = 0;
+				} else if (commitProps.isLeaf) {
+					spriteX = 3;
+					spriteY = 0;
+				} else {
+					spriteX = 2;
+					spriteY = 0;
+				}
 				ctx.drawImage(
 					self._assets.orbs,
-					spriteX*ORB_SRC_SIZE, 0, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
+					spriteX*ORB_SRC_SIZE, spriteY*ORB_SRC_SIZE, ORB_SRC_SIZE, ORB_SRC_SIZE, /* for the blue orb */
 					coords.x, coords.y, coords.w, coords.h
 				);
 				if (commitProps.isMergeable) {
@@ -295,6 +251,14 @@ define([
 					ctx.fillText("Merge", mergeCoords.x + 2, mergeCoords.y + mergeCoords.h - 2);
 				}
 			});
+			/* Draw depth limit line */
+			var limitPixelCoord = this._logicalCoordToPixelCoord(5, 0);
+			var limitX = limitPixelCoord.x + (limitPixelCoord.w / 2);
+			ctx.strokeStyle = 'red';
+			ctx.beginPath();
+			ctx.moveTo(limitX, 0);
+			ctx.lineTo(limitX, ctx.canvas.height);
+			ctx.stroke();
 			ctx.restore();
 		},
 		_maxNodeYCoord: function() {
@@ -334,8 +298,6 @@ define([
 			};
 		},
 		_removed: function() {
-			this._refElem.removeChild(this._dialogContext.canvas);
-			this._refElem.removeChild(this._nodesContext.canvas);
 			this._versionHistory.unbind("Commit", this._boundCommitFunction);
 		}
 	});

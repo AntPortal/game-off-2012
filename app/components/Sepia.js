@@ -1,4 +1,7 @@
-define([ 'Crafty' ], function() {
+define([
+	'Crafty',
+	'components/IndependentCanvas',
+], function() {
 	Crafty.c('Sepia', {
 		_canvas : null,
 		_canvasContext : null,
@@ -7,28 +10,16 @@ define([ 'Crafty' ], function() {
 		_w: 0,
 		_h: 0,
 		Sepia : function(baseElemId, x, y, cssZ, w, h) {
-			var refElem = document.getElementById(baseElemId);
-			function makeCanvas(x, y, w, h, zIndex) {
-				var canvas = document.createElement('canvas');
-				canvas.width = w;
-				canvas.height = h;
-				canvas.style.position = 'absolute';
-				canvas.style.top = y + 'px';
-				canvas.style.left = x + 'px';
-				canvas.style.width = w + 'px';
-				canvas.style.height = h + 'px';
-				canvas.style.zIndex = zIndex;
-				canvas.style.opacity = '.75';
-				canvas.style.display = 'none';
-				refElem.appendChild(canvas);
-				return canvas;
-			}
+			this.requires('IndependentCanvas');
+			this.IndependentCanvas(baseElemId);
 			this._x = x;
 			this._y = y;
 			this._w = w;
 			this._h = h;
-			this._canvas = makeCanvas(x, y, w, h, cssZ);
+			this._canvas = this.createCanvas(x, y, cssZ, w, h);
 			this._canvasContext = this._canvas.getContext('2d');
+			this._canvas.style.opacity= '.75';
+			this._canvas.style.display = 'none';
 			this.draw();
 			return this;
 		},

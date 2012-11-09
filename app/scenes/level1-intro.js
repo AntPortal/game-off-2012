@@ -8,9 +8,9 @@ define([
 		'components/Dialog',
 		'components/ScriptRunner',
 		'scenes/level1',
-		'components/AutoDestroy',
 	], function(config, mapData, utils) {
-	Crafty.scene('level1-intro', function() {
+	var scriptvm = null;
+	function init() {
 		var nextScene = 'level1';
 		var tileProperties = utils.loadTileset(mapData);
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(tileEntity) {
@@ -205,9 +205,17 @@ define([
 			{ action: 'PACADOC' },
 			{ action: 'loadScene', scene: nextScene},
 		];
-		Crafty.e('ScriptRunner, AutoDestroy').ScriptRunner(script).run();
+		scriptvm = Crafty.e('ScriptRunner').ScriptRunner(script);
+		scriptvm.run();
 		Crafty.viewport.clampToEntities = false;
 		Crafty.viewport.y = config.viewport.height / 2;
-	});
+	};
+	function uninit() {
+		if (scriptvm) {
+			scriptvm.destroy();
+		}
+		scriptvm = null;
+	}
+	Crafty.scene('level1-intro', init, uninit);
 	return undefined;
 });

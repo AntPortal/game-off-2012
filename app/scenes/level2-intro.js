@@ -15,7 +15,7 @@ define([
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 9, y: 5};
 	Crafty.scene('level2-intro', function() {
-		var versions = Crafty.e('VersionHistory');
+		var versions = Crafty.e('VersionHistory').VersionHistory(5);
 		var sepiaEntity = Crafty.e('Sepia').
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var tileProperties = utils.loadTileset(mapData);
