@@ -1,9 +1,10 @@
 define([
 		'config',
 		'path_finder',
+		'set',
 		'components/BetterText',
 ],
-function(config, PathFinder) {
+function(config, PathFinder, Set) {
 	function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 		return function(worldX, worldY, worldZ) {
 			return {
@@ -285,6 +286,10 @@ function(config, PathFinder) {
 			makeActionFunc(0,1),
 			makeActionFunc(0,-1)
 		];
+		var objectPositions = new Set(function(x) { return x; });
+		parsedMapData.objects.forEach(function(obj) {
+			objectPositions.add(obj.tileX+","+obj.tileY);
+		});
 
 		return new PathFinder({
 			actions: function(state) {
@@ -292,7 +297,7 @@ function(config, PathFinder) {
 					var dest = act(state); /* might be undefined, if it would go where there's no tile */
 					if (dest === undefined) {
 						return false;
-					} else if (dest.noStand) {
+					} else if (dest.noStand || objectPositions.contains(dest.tileX+","+dest.tileY)) {
 						return false;
 					} else {
 						var srcHeight = parsedMapData.heightMap[state.tileX+","+state.tileY].surfaceZ;

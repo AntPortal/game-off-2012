@@ -69,8 +69,7 @@ BUGS
 * Add variety in dialog for newspaper recipients on level1.
 * Consider moving gitk UI to top of screen instead of bottom.
 * Add ability to resize gitk UI. (e.g button to click to toggle between various sizes).
-* Need to add pathing rules, so that you can't walk onto tiles with noStand = true, and you can't walk from a tile of height 0 to an adjacent tile of height > 0.5 (i.e. you can walk up slopes, but not up walls).
-  * As part of this, you'll probably want to add an A* path finding algorithm. 
+* Make pathing work even when NPCs move.
 * Improve performance in Firefox.
 * Volume controls don't work on ipad.
 * When forking, check all existing children to see if there's an identical match. If there is, instead of creating a new child, just reuse that existing one.
