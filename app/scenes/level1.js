@@ -13,11 +13,15 @@ define([
 		'components/Sepia',
 		'components/ActionMenu',
 		'scenes/level2-intro',
+		'components/TaskList',
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 8, y: 26};
-	Crafty.scene('level1', function() {
-		var versions = Crafty.e('VersionHistory');
-		var sepiaEntity = Crafty.e('Sepia').
+	var sepiaEntity = null;
+	var versions = null;
+	var taskList = null;
+	function init() {
+		versions = Crafty.e('VersionHistory');
+		sepiaEntity = Crafty.e('Sepia').
 			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene
 		var hasNewspaper = {
@@ -30,6 +34,22 @@ define([
 		}
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
+		function updateTaskList() {
+			var numNewspapers = 0;
+			for (var i in hasNewspaper) {
+				if (hasNewspaper[i] === true) {
+					numNewspapers++;
+				}
+			}
+			taskList.attr({
+				tasks: [{
+					label: "Deliver newspapers ("+numNewspapers+"/6)",
+					done: numNewspapers == 6,
+				},{
+					label: "Go to Millenial Fair",
+					done: false,
+				}]});
+		}
 		function commitPseudoCurrentState(heroX, heroY) {
 			versions.commit({
 				hero: {
@@ -38,6 +58,7 @@ define([
 				},
 				hasNewspaper: hasNewspaper,
 			});
+			updateTaskList();
 		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
 			if (hero && !actionMenuActive) {
@@ -206,8 +227,8 @@ define([
 		(function() {
 			//Handle HUD
 			utils.addMusicControlEntity(Crafty);
-		})();
-		(function() {
+			taskList = Crafty.e('TaskList');
+			taskList.TaskList('cr-stage', config.viewport.width - 220, 0, config.zOffset.gitk, 220, 100)
 			var COMMIT_SIZE = 16;
 			Crafty.e('Gitk').Gitk(
 				'cr-stage',
@@ -237,11 +258,28 @@ define([
 			hero.setWalkTarget(tileX, tileY);
 			var isLeaf = rev.childRevIds.length == 0;
 			sepiaEntity.setVisible(! isLeaf);
+			updateTaskList();
 		});
 		Crafty.viewport.clampToEntities = false;
 		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
 		utils.ensureMusicIsPlaying('music/town');
-	});
+		updateTaskList();
+	}
+	function uninit() {
+		if (sepiaEntity) {
+			sepiaEntity.destroy();
+		}
+		sepiaEntity = null;
+		if (versions) {
+			versions.destroy();
+		}
+		versions = null;
+		if (taskList) {
+			taskList.destroy();
+		}
+		taskList = null;
+	}
+	Crafty.scene('level1', init, uninit);
 	return undefined;
 });

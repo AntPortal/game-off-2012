@@ -63,7 +63,6 @@ Scene Layout
 BUGS
 ====
 * Have the version history manager perform a deep copy of the data that is passed into it.
-* Show task list
 * Get better graphic for merge button.
 * Fix bug with dog taking an extra newspaper.
 * Get better graphic for tooltips.
