@@ -274,6 +274,7 @@ define([
 					w: 400,
 					h: 90,
 					face: 'face_childM',
+					showMore: true,
 				},
 				girl: {
 					x: -560,
@@ -281,6 +282,7 @@ define([
 					w: 400,
 					h: 90,
 					face: 'face_childF',
+					showMore: true,
 				}
 			};
 			vm.ScriptRunner([{
@@ -305,6 +307,15 @@ define([
 					"You remember how, right? Just click next to the guy,",
 					"to walk up to him and then pick \"Deliver Newspaper\"",
 					"from the action menu!",
+				]),
+			},{
+					action: 'PACADOC'
+			},{
+				action: 'dialog',
+				params: chainSet(Crafty.clone(template.girl), 'msg', [
+					"And if you can't see the person you want to deliver",
+					"the paper to, just drag the map until you CAN see them",
+					"and THEN click next to them.",
 				]),
 			},{
 					action: 'PACADOC'
