@@ -260,6 +260,47 @@ define([
 			sepiaEntity.setVisible(! isLeaf);
 			updateTaskList();
 		});
+		versions.bind('Commit', function(revId) {
+			if (!versions.isMoreCommitsAllowed()) {
+				var actions = [
+					{
+						label: "Try again",
+						enabled: true,
+						subscript: "Start this level again from the beginning.",
+						onClick: function() {
+							Crafty.scene('level1');
+						}
+					},
+					{
+						label: "Quit",
+						enabled: true,
+						subscript: "Return to the title screen.",
+						onClick: function() {
+							Crafty.scene('title');
+						}
+					}
+				];
+				Crafty.e('2D, Canvas, BetterText, ViewportRelative').attr({
+					text: "Game Over",
+					fontSize: '36px',
+					fontFamily: 'Patrick Hand',
+					textColor: '#FFF',
+					x: 100,
+					y: 60,
+					z: config.zOffset.dialog,
+					w: 80,
+					h: 30
+				});
+				Crafty.e('2D, Canvas, ActionMenu, ViewportRelative').attr({
+					x: 100,
+					y: 100,
+					w: 260,
+					h: 100,
+					actions: actions,
+				});
+				actionMenuActive = true;
+			}
+		});
 		Crafty.viewport.clampToEntities = false;
 		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
