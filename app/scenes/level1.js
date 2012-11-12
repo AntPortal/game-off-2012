@@ -256,10 +256,12 @@ define([
 			hero.setWalkTarget(tileX, tileY);
 			var isLeaf = rev.childRevIds.length == 0;
 			sepiaEntity.setVisible(! isLeaf);
+			updateTaskList();
+		});
+		versions.bind('Checkout', function() {
 			if (actionMenuActive) {
 				Crafty('ActionMenu').destroy();
 			}
-			updateTaskList();
 		});
 		versions.bind('Commit', function(revId) {
 			if (!versions.isMoreCommitsAllowed()) {
