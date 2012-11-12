@@ -12,6 +12,9 @@ define([ 'Crafty' ], function() {
 		start: function() {
 			Crafty.addEvent(this, Crafty.stage.elem, "mousedown", this._mousedown);
 		},
+		stop: function() {
+			Crafty.removeEvent(this, Crafty.stage.elem, "mousedown", this._mousedown);
+		},
 		_mousedown: function(e) {
 			if(e.button > 1) return;
 			var scrollStart = {x: e.clientX, y: e.clientY};

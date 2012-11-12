@@ -16,6 +16,8 @@ define([
 				(config.saveGames[i].level ? "Level: " + config.saveGames[i].level : "")
 			];
 		}
+		Crafty.viewport.x = 0;
+		Crafty.viewport.y = 0;
 		for (i = 0; i < slots.length; i++) {
 			slots[i] = Crafty.e('Dialog');
 			slots[i].attr({

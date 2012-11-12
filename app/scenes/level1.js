@@ -428,6 +428,7 @@ define([
 		})();
 	}
 	function uninit() {
+		mouselook.stop();
 		if (sepiaEntity) {
 			sepiaEntity.destroy();
 		}

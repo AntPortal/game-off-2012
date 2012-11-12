@@ -68,7 +68,6 @@ BUGS
 * Add variety in dialog for newspaper recipients on level1.
 * Consider moving gitk UI to top of screen instead of bottom.
 * Add ability to resize gitk UI. (e.g button to click to toggle between various sizes).
-* When quitting to the title from the Game Over screen, the title graphics have an unwanted offset.
 * Make pathing work even when NPCs move.
 * Improve performance in Firefox.
 * Volume controls don't work on ipad.
