@@ -36,9 +36,10 @@ define([
 			slots[i].addComponent('Mouse');
 			slots[i].bind('Click', function() {
 				config.curSaveSlot = this.saveIndex;
-				if (config.getCurLevel()) {
+				var curLevel = config.getCurLevel();
+				if (curLevel) {
 					//TODO Load the level
-					Crafty.scene('level1-intro');
+					Crafty.scene('level' + curLevel + '-intro');
 				} else {
 					//Load new save creation system.
 					Crafty.scene('newGame');

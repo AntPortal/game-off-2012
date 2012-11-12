@@ -97,6 +97,7 @@ define([
 						enabled: allNewspapersDelivered,
 						subscript: allNewspapersDelivered ? "Go with your friends to the Millenial Fair" : "You must deliver all your newspapers before you can go to the fair.",
 						onClick: function() {
+							config.setCurLevel(2);
 							Crafty.scene('level2-intro');
 							//TODO
 						}
