@@ -118,7 +118,6 @@ define([
 							newspaperScript: function() {
 								//TODO;
 								hasNewspaper.oldwoman = true;
-								actionMenuActive = false;
 							}
 					};
 					scriptData.dog = scriptData.oldwoman; //dog copies woman
@@ -155,7 +154,6 @@ define([
 								{ action: 'PACADOC' },
 								{ action: 'arbitraryCode', code: function(curState, callback) {
 									hasNewspaper[npcName] = true;
-									actionMenuActive = false;
 									commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
 									vm.destroy();
 								}},
@@ -184,7 +182,6 @@ define([
 					enabled: true,
 					subscript: "Moves to the selected position, then ends your turn.",
 					onClick: function() {
-						actionMenuActive = false;
 						commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
 					}
 				});
@@ -193,7 +190,6 @@ define([
 					enabled: true,
 					subscript: "Allows you to select a new tile to move to",
 					onClick: function() {
-						actionMenuActive = false;
 						versions.reset();
 					}
 				});
@@ -203,6 +199,8 @@ define([
 					w: 400,
 					h: 135,
 					actions: actions,
+				}).bind("Remove", function() {
+					actionMenuActive = false;
 				});
 				sepiaEntity.setVisible(false);
 			}
@@ -258,6 +256,9 @@ define([
 			hero.setWalkTarget(tileX, tileY);
 			var isLeaf = rev.childRevIds.length == 0;
 			sepiaEntity.setVisible(! isLeaf);
+			if (actionMenuActive) {
+				Crafty('ActionMenu').destroy();
+			}
 			updateTaskList();
 		});
 		versions.bind('Commit', function(revId) {
