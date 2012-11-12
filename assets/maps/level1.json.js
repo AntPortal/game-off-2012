@@ -253,7 +253,7 @@ define(function(){return(
             {
              "100":
                 {
-                 "noStand":"noStand"
+                 "noStand":"true"
                 },
              "101":
                 {
@@ -319,10 +319,12 @@ define(function(){return(
                 },
              "31":
                 {
+                 "areaMap":"slopeNE",
                  "heightoffset":"0.5"
                 },
              "33":
                 {
+                 "areaMap":"slopeE",
                  "heightoffset":"0.5"
                 },
              "34":
@@ -342,7 +344,75 @@ define(function(){return(
                 {
                  "noStand":"true"
                 },
+             "82":
+                {
+                 "noStand":"true"
+                },
+             "83":
+                {
+                 "noStand":"true"
+                },
+             "84":
+                {
+                 "noStand":"true"
+                },
+             "85":
+                {
+                 "noStand":"true"
+                },
+             "86":
+                {
+                 "noStand":"true"
+                },
+             "87":
+                {
+                 "noStand":"true"
+                },
+             "88":
+                {
+                 "noStand":"true"
+                },
+             "89":
+                {
+                 "noStand":"true"
+                },
              "90":
+                {
+                 "noStand":"true"
+                },
+             "91":
+                {
+                 "noStand":"true"
+                },
+             "92":
+                {
+                 "noStand":"true"
+                },
+             "93":
+                {
+                 "noStand":"true"
+                },
+             "94":
+                {
+                 "noStand":"true"
+                },
+             "95":
+                {
+                 "noStand":"true"
+                },
+             "96":
+                {
+                 "noStand":"true"
+                },
+             "97":
+                {
+                 "noStand":"true"
+                },
+             "98":
+                {
+                 "noStand":"true"
+                },
+             "99":
                 {
                  "noStand":"true"
                 }
@@ -366,6 +436,7 @@ define(function(){return(
             {
              "54":
                 {
+                 "areaMap":"slopeNE",
                  "heightoffset":"0.5"
                 },
              "56":
