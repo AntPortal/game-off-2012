@@ -4,6 +4,7 @@ define([
 		'mouselook',
 		'utils',
 		'Crafty',
+		'underscore',
 		'components/ViewportRelative',
 		'components/ClickNoDrag',
 		'components/Character',
@@ -212,121 +213,51 @@ define([
 		mouselook.start();
 		utils.ensureMusicIsPlaying('music/town');
 		(function() { //Initial dialog from boy and girl to hero.
+			var heroName = config.getCurShortName();
 			var vm = Crafty.e('ScriptRunner');
 			var chainSet = utils.chainSet;
 			var template = {
-				boy: {
+				Linus: {
 					x: -280,
 					y: 580,
 					w: 400,
 					h: 90,
-					face: 'face_childM',
-					showMore: true,
-				},
-				girl: {
-					x: -560,
-					y: 420,
-					w: 400,
-					h: 90,
-					face: 'face_childF',
+					face: 'face_childM', /* TODO: change? */
 					showMore: true,
 				}
 			};
-			vm.ScriptRunner([{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.boy), 'msg', [
-					"Finally! What took you so long? We're almost out of",
-					"time for the fair!",
-				]),
-			},{
+			function dialogAndPause(templateKey, lines) {
+				return [{
+					action: 'dialog',
+					params: chainSet(Crafty.clone(template[templateKey]), 'msg', lines)
+				}, {
 					action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.girl), 'msg', [
-					"Hurry up and deliver those newspapers so we can get",
-					"out of here!",
-				]),
-			},{
-					action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.boy), 'msg', [
-					"You remember how, right? Just click next to the guy,",
-					"to walk up to him and then pick \"Deliver Newspaper\"",
-					"from the action menu!",
-				]),
-			},{
-					action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.girl), 'msg', [
-					"And if you can't see the person you want to deliver",
-					"the paper to, just drag the map until you CAN see them",
-					"and THEN click next to them.",
-				]),
-			},{
-					action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.girl), 'msg', [
-					"The key is always to move, then perform an action,",
-					"in that order. You can't move twice in a row without",
-					"an action in between.",
-				]),
-			},{
-				action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.boy), 'msg', [
-					"I mean, if you REALLY want to just move somewhere, and",
-					"then not do an action, pick the \"Do nothing\" action..."
-				]),
-			},{
-				action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.girl), 'msg', [
-					"But don't waste any time \"doing nothing\" here, 'cause",
-					"we gotta get to the fair before it closes!",
-				]),
-			},{
-				action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.boy), 'msg', [
-					"If you mess up your movement, you can always choose",
-					"\"cancel\" from the action menu to try again!"
-				]),
-			},{
-				action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.girl), 'msg', [
-					"And if you REALLY mess up, you could always use your",
-					"magic powers to rewind time!"
-				]),
-			},{
-				action: 'PACADOC'
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.boy), 'msg', [
-					"Now get going! We're gonna be late!"
-				]),
-			},{
-				action: 'dialog',
-				params: chainSet(Crafty.clone(template.girl), 'msg', [
-					"Now get going! We're gonna be late!"
-				]),
-			},{
-				action: 'PACADOC'
-			}, {
-				action: 'arbitraryCode',
-				code: function(curState, callback) {
-					updateTaskList();
-					vm.destroy();
-				}
+				}]
 			}
-			]);
+			vm.ScriptRunner(_.flatten([
+				dialogAndPause('Linus', [
+					"Hello " + heroName + "! It's nice of you to come by. Listen, I'm working",
+					"on this new book and I'd love to share my draft with the",
+					"villagers in Sveni. They will be so happy to hear the good news!"
+				]),
+				dialogAndPause('Linus', [
+					"To get a copy of my book, they need to recite the magic words,",
+					"\"git clone https://github.com/AntPortal/game-off-2012.git\".",
+					"But they often git it wrong.",
+				]),
+				dialogAndPause('Linus', [
+					"Your mission: go to the six villagers in Sveni, north of here, and help them",
+					"say the right magic words. You will be rewarded with one copper coin once you",
+					"complete your mission."
+				]),
+				[{
+					action: 'arbitraryCode',
+					code: function(curState, callback) {
+						updateTaskList();
+						vm.destroy();
+					}
+				}]
+			]));
 			vm.run();
 		})();
 	}
