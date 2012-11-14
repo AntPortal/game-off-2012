@@ -39,7 +39,7 @@ define([
 				var curLevel = config.getCurLevel();
 				if (curLevel) {
 					//TODO Load the level
-					Crafty.scene('level' + curLevel + '-intro');
+					Crafty.scene('level' + curLevel);
 				} else {
 					//Load new save creation system.
 					Crafty.scene('newGame');
@@ -230,7 +230,7 @@ define([
 				config.setCurName(name);
 				config.setCurShortName(utils.getShortName(name));
 				config.setCurLevel(1);
-				Crafty.scene('level1-intro');
+				Crafty.scene('level1');
 			}
 		}
 		var tooltip = Crafty.e('2D, Canvas, BetterText, Mouse');

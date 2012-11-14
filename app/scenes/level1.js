@@ -7,22 +7,14 @@ define([
 		'components/ViewportRelative',
 		'components/ClickNoDrag',
 		'components/Character',
-		'components/VersionHistory',
 		'components/Dialog',
-		'components/Gitk',
-		'components/Sepia',
 		'components/ActionMenu',
 		'scenes/level2-intro',
 		'components/TaskList',
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 8, y: 26};
-	var sepiaEntity = null;
-	var versions = null;
 	var taskList = null;
 	function init() {
-		versions = Crafty.e('VersionHistory').VersionHistory(5);
-		sepiaEntity = Crafty.e('Sepia').
-			Sepia('cr-stage', 0, 0, config.zOffset.gitk - 1, config.viewport.width, config.viewport.height);
 		var hero; //entity global to this scene
 		var hasNewspaper = {
 			townfolk: false,
@@ -50,17 +42,8 @@ define([
 					done: false,
 				}]});
 		}
-		function commitPseudoCurrentState(heroX, heroY) {
-			versions.commit({
-				hero: {
-					x: heroX,
-					y: heroY
-				},
-				hasNewspaper: hasNewspaper,
-			});
-		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
-			if (hero && !actionMenuActive && versions.isMoreCommitsAllowed()) {
+			if (hero && !actionMenuActive) {
 				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
 				actionMenuActive = true;
 				var i = 0;
@@ -155,7 +138,6 @@ define([
 								{ action: 'PACADOC' },
 								{ action: 'arbitraryCode', code: function(curState, callback) {
 									hasNewspaper[npcName] = true;
-									commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
 									vm.destroy();
 								}},
 							]);
@@ -182,17 +164,13 @@ define([
 					label: "Do Nothing",
 					enabled: true,
 					subscript: "Moves to the selected position, then ends your turn.",
-					onClick: function() {
-						commitPseudoCurrentState(clickedTileEntity.tileX, clickedTileEntity.tileY);
-					}
+					onClick: function() { }
 				});
 				actions.push({
 					label: "Cancel",
 					enabled: true,
 					subscript: "Allows you to select a new tile to move to",
-					onClick: function() {
-						versions.reset();
-					}
+					onClick: function() { }
 				});
 				Crafty.e('2D, Canvas, ActionMenu').attr({
 					x: clickedTileEntity.x - 300,
@@ -203,7 +181,6 @@ define([
 				}).bind("Remove", function() {
 					actionMenuActive = false;
 				});
-				sepiaEntity.setVisible(false);
 			}
 		});
 		(function() {
@@ -228,83 +205,8 @@ define([
 			utils.addMusicControlEntity(Crafty);
 			taskList = Crafty.e('TaskList');
 			taskList.TaskList('cr-stage', config.viewport.width - 220, 0, config.zOffset.gitk, 220, 100)
-			var COMMIT_SIZE = 16;
-			Crafty.e('Gitk').Gitk(
-				'cr-stage',
-				COMMIT_SIZE * 2, /* x */
-				config.viewport.height - (COMMIT_SIZE * 6) - 16, /* y */
-				config.viewport.width - 64, /* width */
-				(COMMIT_SIZE * 6), /* height */
-				versions
-			);
 		})();
-		commitPseudoCurrentState(HERO_START.x,HERO_START.y); //initial state
-		versions.mergeFunc = function(base, ours, theirs) {
-			return {
-				hero: {
-					x: ours.hero.x,
-					y: ours.hero.y
-				},
-				hasNewspaper: utils.mergeObjs(ours.hasNewspaper, theirs.hasNewspaper, function(x, y) { return x || y; })
-			};
-		};
-		versions.bind('HeadRevChanged', function(rev) {
-			var revData = rev.data;
-			var tileX = revData.hero.x;
-			var tileY = revData.hero.y;
-			hasNewspaper = revData.hasNewspaper;
-			hero.setPos(tileX, tileY, parsedMapData.heightMap[tileX+","+tileY].surfaceZ);
-			hero.setWalkTarget(tileX, tileY);
-			var isLeaf = rev.childRevIds.length == 0;
-			sepiaEntity.setVisible(! isLeaf);
-			updateTaskList();
-		});
-		versions.bind('Checkout', function() {
-			if (actionMenuActive) {
-				Crafty('ActionMenu').destroy();
-			}
-		});
-		versions.bind('Commit', function(revId) {
-			if (!versions.isMoreCommitsAllowed()) {
-				var actions = [
-					{
-						label: "Try again",
-						enabled: true,
-						subscript: "Start this level again from the beginning.",
-						onClick: function() {
-							Crafty.scene('level1');
-						}
-					},
-					{
-						label: "Quit",
-						enabled: true,
-						subscript: "Return to the title screen.",
-						onClick: function() {
-							Crafty.scene('title');
-						}
-					}
-				];
-				Crafty.e('2D, Canvas, BetterText, ViewportRelative').attr({
-					text: "Game Over",
-					fontSize: '36px',
-					fontFamily: 'Patrick Hand',
-					textColor: '#FFF',
-					x: 100,
-					y: 60,
-					z: config.zOffset.dialog,
-					w: 80,
-					h: 30
-				});
-				Crafty.e('2D, Canvas, ActionMenu, ViewportRelative').attr({
-					x: 100,
-					y: 100,
-					w: 260,
-					h: 100,
-					actions: actions,
-				});
-				actionMenuActive = true;
-			}
-		});
+
 		Crafty.viewport.clampToEntities = false;
 		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
@@ -430,14 +332,6 @@ define([
 	}
 	function uninit() {
 		mouselook.stop();
-		if (sepiaEntity) {
-			sepiaEntity.destroy();
-		}
-		sepiaEntity = null;
-		if (versions) {
-			versions.destroy();
-		}
-		versions = null;
 		if (taskList) {
 			taskList.destroy();
 		}
