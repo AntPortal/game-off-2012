@@ -20,16 +20,31 @@ define([
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
+
+		var villagerDisplayNames = {
+			healer: 'Mergee',
+			townfolk: 'Conflictee',
+			oldwoman: 'Berkeley',
+			oldman: 'Colin',
+			dancerF: 'Disco',
+			bunny: 'Apache'
+		}
+		var villagerPronouns = {
+			healer: 'She',
+			townfolk: 'He',
+			oldwoman: 'She',
+			oldman: 'He',
+			dancerF: 'She',
+			bunny: 'She'
+		}
+		var remainingVillagers = ['healer', 'townfolk', 'oldwoman', 'oldman', 'dancerF', 'bunny'];
 		function updateTaskList() {
-			var numNewspapers = 0;
 			taskListEntity.attr({
 				tasks: [{
-					label: "Deliver newspapers ("+numNewspapers+"/6)",
-					done: numNewspapers == 6,
-				},{
-					label: "Go to Millenial Fair",
-					done: false,
-				}]});
+					label: "Clone Linus' book ("+(6-remainingVillagers.length)+"/6)",
+					done: remainingVillagers.length == 0
+				}]
+			});
 		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
 			if (hero && !actionMenuActive) {
@@ -57,12 +72,27 @@ define([
 					scriptUtils.env = {
 						heroName: config.getCurShortName()
 					};
+					if (remainingVillagers.length > 0) {
+						var villager = remainingVillagers[_.random(remainingVillagers.length - 1)];
+						scriptUtils.env.villagerName = villagerDisplayNames[villager];
+						scriptUtils.env.villagerPronoun = villagerPronouns[villager];
+					}
 
 					var rightAnswerAction = {
 						label: "git clone https://github.com/AntPortal/game-off-2012.git",
-						result: scriptUtils.dialogAndPause(
-							"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! Maybe you could go help all my neighbours get the book? They don't live too far from here..."
-						)
+						result: _.flatten([
+							scriptUtils.dialogAndPause(
+								"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! Maybe you could go help @villagerName@? @villagerPronoun@ doesn't live too far from here..."
+							),
+							{
+								action: 'arbitraryCode',
+								code: function(curState, callback) {
+									remainingVillagers = _.without(remainingVillagers, nearbyNPC.name);
+									updateTaskList();
+									callback(curState + 1);
+								}
+							}
+						])
 					};
 					var jokeAnswerAction = {
 						label: "rm -rf ~",

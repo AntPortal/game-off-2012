@@ -12,7 +12,7 @@ define([
 
 	ScriptUtils.prototype.dialogAndPause = function(msg) {
 		var self = this;
-		var interpolated = msg.replace(/@(\w+)@/, function(_, name) { return self.env[name]; });
+		var interpolated = msg.replace(/@(\w+)@/g, function(_, name) { return self.env[name]; });
 		return [
 			{
 				action: 'dialog',
