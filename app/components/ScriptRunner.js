@@ -23,6 +23,9 @@ define([
 			case 'dialog':
 				this._dialog(instruction);
 				break;
+			case 'menu':
+				this._menu(instruction);
+				break;
 			case 'PACADOC': //Pause and close all dialogs on click
 				this._PACADOC(instruction);
 				break;
@@ -48,6 +51,14 @@ define([
 				throw dialogInst;
 			}
 			Crafty.e('2D, Canvas, Dialog').attr(dialogInst.params);
+			this._curState++;
+			this.run();
+		},
+		_menu: function(menuInst) {
+			if (menuInst.action != 'menu') {
+				throw dialogInst;
+			}
+			Crafty.e('2D, Canvas, ActionMenu').attr(menuInst.params);
 			this._curState++;
 			this.run();
 		},

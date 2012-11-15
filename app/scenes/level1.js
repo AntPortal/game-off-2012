@@ -48,7 +48,11 @@ define([
 					}
 				}
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
+
 				if (nearbyNPC != null) {
+					var heroName = config.getCurShortName();
+					var chosenAction = null;
+					var actionCallback = null;
 					//actionMenuActive = true;
 					/* The use of setTimeout here defers the enclosed until after the "click"
 					 * event for this tile click tile has already passed. Note that this code
@@ -60,6 +64,7 @@ define([
 					 * they were displayed. */
 					setTimeout(function() {
 						var vm = Crafty.e('ScriptRunner');
+						/* TODO: refactor */
 						vm.ScriptRunner([{
 							action: 'dialog',
 							params: {
@@ -68,13 +73,71 @@ define([
 								w: 400,
 								h: 70,
 								face: undefined,
-								msg: "TODO: Write some code for me.",
+								msg: "Hi " + heroName + "! I've been trying to clone that book from Linus. What are the magic words to get it?"
+							}
+						},
+						{ action: 'PACADOC' },
+						{ action: 'menu', params: {
+							x: clickedTileEntity.x - 300,
+							y: clickedTileEntity.y - 125,
+							w: 400,
+							h: 90,
+							actions: [
+							{
+								label: "git clone https://github.com/AntPortal/game-off-2012.git",
+								onClick: function() { chosenAction = 0; actionCallback(); }
+							},
+							{
+								label: "clone git https://github.com/AntPortal/game-off-2012.git",
+								onClick: function() { chosenAction = 1; actionCallback(); }
+							},
+							{
+								label: "git-clone https://github.com/AntPortal/game-off-2012.git",
+								onClick: function() { chosenAction = 2; actionCallback(); }
+							}
+						]}},
+						{ action: 'arbitraryCode', code: function(curState, callback) {
+							actionMenuActive = true;
+							actionCallback = function() { actionMenuActive = false; callback(curState+1); };
+						}},
+						{ action: 'arbitraryCode', code: function(curState, callback) {
+							callback(chosenAction === 0 ? curState + 4 : curState + 1);
+						}},
+
+						/* Wrong answer */
+						{
+							action: 'dialog',
+							params: {
+								x: clickedTileEntity.x - 300,
+								y: clickedTileEntity.y - 125,
+								w: 400,
+								h: 70,
+								face: undefined,
+								msg: "Hmm " + heroName + "! That didn’t work! Please go tell Linus my piece of mind about his git magic. It doesn’t work!! Or maybe come talk to me again when you’ve listened more carefully to Linus’ lessons."
 							}
 						},
 						{ action: 'PACADOC' },
 						{ action: 'arbitraryCode', code: function(curState, callback) {
-							vm.destroy();
+							callback(curState + 3);
 						}},
+
+						/* Right answer */
+						{
+							action: 'dialog',
+							params: {
+								x: clickedTileEntity.x - 300,
+								y: clickedTileEntity.y - 125,
+								w: 400,
+								h: 70,
+								face: undefined,
+								msg: "Thanks " + heroName + "! It worked! Please help other fellow Svenites learn about this new magic! Maybe you could go help all my neighbours get the book? They don't live too far from here..."
+							}
+						},
+						{ action: 'PACADOC' },
+
+						{ action: 'arbitraryCode', code: function(curState, callback) {
+							vm.destroy();
+						}}
 						]);
 						vm.run();
 					}, 1);
