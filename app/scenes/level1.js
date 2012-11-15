@@ -100,7 +100,10 @@ define([
 							scriptUtils.dialogAndPause(
 								"Hi @heroName@! I've been trying to clone that book from Linus. What are the magic words to get it?"
 							),
-							scriptUtils.actionBranch(_.shuffle([rightAnswerAction, jokeAnswerAction, wrongAnswerAction])),
+							scriptUtils.actionBranch(
+								_.shuffle([rightAnswerAction, jokeAnswerAction, wrongAnswerAction]),
+								function(menuActive) { actionMenuActive = menuActive; }
+							),
 							[{
 								action: 'arbitraryCode',
 								code: function(curState, callback) {

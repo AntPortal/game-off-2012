@@ -29,7 +29,7 @@ define([
 		];
 	}
 
-	ScriptUtils.prototype.actionBranch = function(actions) {
+	ScriptUtils.prototype.actionBranch = function(actions, menuCallback) {
 		var self = this;
 		var chosenAction = null;
 		var actionCallback = null;
@@ -57,7 +57,8 @@ define([
 			{
 				action: 'arbitraryCode',
 				code: function(curState, callback) {
-					actionCallback = function(jump) { callback(curState+jump); };
+					menuCallback(true);
+					actionCallback = function(jump) { menuCallback(false); callback(curState+jump); };
 				}
 			}
 		];
