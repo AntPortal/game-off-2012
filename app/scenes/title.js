@@ -12,8 +12,7 @@ define([
 		var slots = [0,1,2];
 		function getMsgForSaveGameData(i) {
 			return [
-				"Save Game Slot " + (i + 1) +": " + (config.saveGames[i].name || "[Empty]"),
-				(config.saveGames[i].level ? "Level: " + config.saveGames[i].level : "")
+				"Save Game Slot " + (i + 1) +": " + (config.saveGames[i].name || "[Empty]")
 			];
 		}
 		Crafty.viewport.x = 0;
@@ -36,16 +35,15 @@ define([
 			slots[i].addComponent('Mouse');
 			slots[i].bind('Click', function() {
 				config.curSaveSlot = this.saveIndex;
-				var curLevel = config.getCurLevel();
-				if (curLevel) {
+				if (config.getCurProgress()) {
 					//TODO Load the level
-					Crafty.scene('level' + curLevel);
+					Crafty.scene('level1');
 				} else {
 					//Load new save creation system.
 					Crafty.scene('newGame');
 				}
 			});
-			if (config.saveGames[i].level) {
+			if (config.saveGames[i].progress) {
 				var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
 				slotDelete.attr({
 					x: config.viewport.width - 16 - 8,
@@ -229,7 +227,9 @@ define([
 			if (name.length > 0) {
 				config.setCurName(name);
 				config.setCurShortName(utils.getShortName(name));
-				config.setCurLevel(1);
+				config.setCurProgress({
+					gitClone: []
+				});
 				Crafty.scene('level1');
 			}
 		}
