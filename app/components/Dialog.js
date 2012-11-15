@@ -9,12 +9,12 @@ define([
 	 * Extends BaseDialog by providing support for text, a portrait, and a "show more..." icon.
 	 */
 	Crafty.c('Dialog', {
-		msg: [''],
+		msg: [''], /* TODO: this doesn't need to be an array anymore, since the text entity is DOM-based and has automatic line breaking */
 		msgColor: '#FFFFFF',
 		init : function() {
 			this.requires('2D');
 			this.requires('BaseDialog');
-			this._msgEntity = [];
+			this._msgEntity = null;
 			this.bind('EnterFrame', this._animateShowMore);
 			this.bind('Change', this._attributeChanged);
 			this.bind('Remove', this._removed);
@@ -69,31 +69,27 @@ define([
 					visible: this.visible
 				});
 			}
-			//Destroy the old message entities
-			for (i = 0; i < this._msgEntity.length; i++) {
-				this._msgEntity[i].destroy();
+			//Destroy the old message entity
+			if (this._msgEntity) {
+				this._msgEntity.destroy();
 			}
-			this._msgEntity = [];
-			//Create new set of message entities
-			for (i = 0; i < this.msg.length; i++) {
-				var msgEntity = Crafty.e('2D, Canvas, BetterText');
-				var baseline = this.y + (i + 1) * (this.TILE_SIZE * 1.5);
-				msgEntity.attr({
-					text: this.msg[i],
-					textColor: this.msgColor,
-					fontFamily: 'Patrick Hand',
-					fontSize: '16px',
-					x : this.x + this.TILE_SIZE + (this.face ? this._faceEntity.w + 2 : 0),
-					y : baseline,
-					z : this.z,
-					w : this.w - (this.TILE_SIZE * 2),
-					h : 16,
-					baseline: baseline,
-					visible: this.visible,
-				});
-				this._msgEntity.push(msgEntity);
-				msgEntity.trigger('Change');
-			}
+			//Create new message entity
+			this._msgEntity = Crafty.e('2D, DOM, BetterText');
+			var paddedFaceWidth = this.face ? this._faceEntity.w + 2 : 0;
+			this._msgEntity.attr({
+				text: this.msg.join(" "),
+				textColor: this.msgColor,
+				fontFamily: 'Patrick Hand',
+				fontSize: '16px',
+				x : this.x + this.TILE_SIZE + paddedFaceWidth,
+				y : this.y + (this.TILE_SIZE / 2),
+				z : this.z,
+				w : this.w - (this.TILE_SIZE * 2) - paddedFaceWidth,
+				h : 16,
+				baseline: null,
+				visible: this.visible,
+			});
+			this._msgEntity.trigger('Change');
 		},
 		_removed: function() {
 			var i;
@@ -103,8 +99,8 @@ define([
 			if (this._faceEntity) {
 				this._faceEntity.destroy();
 			}
-			for (i = 0; i < this._msgEntity.length; i++) {
-				this._msgEntity[i].destroy();
+			if (this._msgEntity) {
+				this._msgEntity.destroy();
 			}
 		}
 	});
