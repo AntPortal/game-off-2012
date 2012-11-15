@@ -3,6 +3,7 @@ define([
 		'maps/level1.json',
 		'mouselook',
 		'utils',
+		'script_utils',
 		'Crafty',
 		'underscore',
 		'components/ViewportRelative',
@@ -12,7 +13,7 @@ define([
 		'components/ActionMenu',
 		'scenes/level2-intro',
 		'components/TaskList',
-	], function(config, mapData, mouselook, utils) {
+	], function(config, mapData, mouselook, utils, ScriptUtils) {
 	var HERO_START = {x: 8, y: 26};
 	var taskListEntity = null;
 	function init() {
@@ -50,9 +51,12 @@ define([
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 
 				if (nearbyNPC != null) {
-					var heroName = config.getCurShortName();
-					var chosenAction = null;
-					var actionCallback = null;
+					var scriptUtils = new ScriptUtils();
+					scriptUtils.x = clickedTileEntity.x - 300;
+					scriptUtils.y = clickedTileEntity.y - 125;
+					scriptUtils.env = {
+						heroName: config.getCurShortName()
+					};
 					//actionMenuActive = true;
 					/* The use of setTimeout here defers the enclosed until after the "click"
 					 * event for this tile click tile has already passed. Note that this code
@@ -64,81 +68,37 @@ define([
 					 * they were displayed. */
 					setTimeout(function() {
 						var vm = Crafty.e('ScriptRunner');
-						/* TODO: refactor */
-						vm.ScriptRunner([{
-							action: 'dialog',
-							params: {
-								x: clickedTileEntity.x - 300,
-								y: clickedTileEntity.y - 125,
-								w: 400,
-								h: 70,
-								face: undefined,
-								msg: "Hi " + heroName + "! I've been trying to clone that book from Linus. What are the magic words to get it?"
-							}
-						},
-						{ action: 'PACADOC' },
-						{ action: 'menu', params: {
-							x: clickedTileEntity.x - 300,
-							y: clickedTileEntity.y - 125,
-							w: 400,
-							h: 90,
-							actions: [
-							{
-								label: "git clone https://github.com/AntPortal/game-off-2012.git",
-								onClick: function() { chosenAction = 0; actionCallback(); }
-							},
-							{
-								label: "clone git https://github.com/AntPortal/game-off-2012.git",
-								onClick: function() { chosenAction = 1; actionCallback(); }
-							},
-							{
-								label: "git-clone https://github.com/AntPortal/game-off-2012.git",
-								onClick: function() { chosenAction = 2; actionCallback(); }
-							}
-						]}},
-						{ action: 'arbitraryCode', code: function(curState, callback) {
-							actionMenuActive = true;
-							actionCallback = function() { actionMenuActive = false; callback(curState+1); };
-						}},
-						{ action: 'arbitraryCode', code: function(curState, callback) {
-							callback(chosenAction === 0 ? curState + 4 : curState + 1);
-						}},
-
-						/* Wrong answer */
-						{
-							action: 'dialog',
-							params: {
-								x: clickedTileEntity.x - 300,
-								y: clickedTileEntity.y - 125,
-								w: 400,
-								h: 70,
-								face: undefined,
-								msg: "Hmm " + heroName + "! That didn’t work! Please go tell Linus my piece of mind about his git magic. It doesn’t work!! Or maybe come talk to me again when you’ve listened more carefully to Linus’ lessons."
-							}
-						},
-						{ action: 'PACADOC' },
-						{ action: 'arbitraryCode', code: function(curState, callback) {
-							callback(curState + 3);
-						}},
-
-						/* Right answer */
-						{
-							action: 'dialog',
-							params: {
-								x: clickedTileEntity.x - 300,
-								y: clickedTileEntity.y - 125,
-								w: 400,
-								h: 70,
-								face: undefined,
-								msg: "Thanks " + heroName + "! It worked! Please help other fellow Svenites learn about this new magic! Maybe you could go help all my neighbours get the book? They don't live too far from here..."
-							}
-						},
-						{ action: 'PACADOC' },
-
-						{ action: 'arbitraryCode', code: function(curState, callback) {
-							vm.destroy();
-						}}
-						]);
+						vm.ScriptRunner(_.flatten([
+							scriptUtils.dialogAndPause(
+								"Hi @heroName@! I've been trying to clone that book from Linus. What are the magic words to get it?"
+							),
+							scriptUtils.actionBranch([
+								{
+									label: "git clone https://github.com/AntPortal/game-off-2012.git",
+									result: scriptUtils.dialogAndPause(
+										"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! Maybe you could go help all my neighbours get the book? They don't live too far from here..."
+									)
+								},
+								{
+									label: "rm -rf ~",
+									result: scriptUtils.dialogAndPause(
+										"Really? That sounds dangerous... are you sure Linus said to use that? Maybe you should check with him again... I wouldn’t want to set my whole bookshelf on fire!"
+									)
+								},
+								{
+									label: "clone git https://github.com/AntPortal/game-off-2012.git",
+									result: scriptUtils.dialogAndPause(
+										"Hmm @heroName@! That didn’t work! Please go tell Linus my piece of mind about his git magic. It doesn’t work!! Or maybe come talk to me again when you’ve listened more carefully to Linus’ lessons."
+									)
+								}
+							]),
+							[{
+								action: 'arbitraryCode',
+								code: function(curState, callback) {
+									vm.destroy();
+								}
+							}]
+						]));
 						vm.run();
 					}, 1);
 				}
