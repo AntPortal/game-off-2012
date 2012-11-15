@@ -40,25 +40,26 @@ define([], function() {
 		/*
 		 * The save game object has the following structure:
 		 * {
-		 *   name: "NebuPookins",
-		 *   shortName: "Nebu"
-		 *   level: 1,
+		 * 	name: "NebuPookins",
+		 * 	shortName: "Nebu"
+		 * 	progress: {
+		 * 		gitClone: ['healerF','Berkley'] //People to whom you've already done the gitClone question.
+		 * 	},
 		 * }
 		 * 
 		 * name is the github account name (alphanumeric and dash, less than 40 char, can't start with dash)
 		 * shortname is a shortened version of the github name.
-		 * level is an integer, with a minimum value of 1. It indicates the level you should load when the savegame is loaded.
 		 * 
-		 * Easiest way to detect that a save slot is empty is to read the level field, and if it's "undefined", it means
+		 * Easiest way to detect that a save slot is empty is to read the progress field, and if it's "undefined", it means
 		 * the slot is empty.
 		 */
 		saveGames: [{},{},{}],
 		curSaveSlot: 0, //must be a value between 0 and 2 inclusive
-		getCurLevel: function() {
-			return this.saveGames[this.curSaveSlot].level;
+		getCurProgress: function() {
+			return this.saveGames[this.curSaveSlot].progress;
 		},
-		setCurLevel: function(newLevel) {
-			this.saveGames[this.curSaveSlot].level = newLevel;
+		setCurProgress: function(newProgress) {
+			this.saveGames[this.curSaveSlot].progress = newProgress;
 			this.serialize();
 		},
 		getCurName: function() {

@@ -14,14 +14,14 @@ define([
 		'components/TaskList',
 	], function(config, mapData, mouselook, utils) {
 	var HERO_START = {x: 8, y: 26};
-	var taskList = null;
+	var taskListEntity = null;
 	function init() {
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
 		function updateTaskList() {
 			var numNewspapers = 0;
-			taskList.attr({
+			taskListEntity.attr({
 				tasks: [{
 					label: "Deliver newspapers ("+numNewspapers+"/6)",
 					done: numNewspapers == 6,
@@ -164,8 +164,8 @@ define([
 		(function() {
 			//Handle HUD
 			utils.addMusicControlEntity(Crafty);
-			taskList = Crafty.e('TaskList');
-			taskList.TaskList('cr-stage', config.viewport.width - 220, 0, config.zOffset.gitk, 220, 100)
+			taskListEntity = Crafty.e('TaskList');
+			taskListEntity.TaskList('cr-stage', config.viewport.width - 220, 0, config.zOffset.gitk, 220, 100)
 		})();
 
 		Crafty.viewport.clampToEntities = false;
@@ -223,10 +223,10 @@ define([
 	}
 	function uninit() {
 		mouselook.stop();
-		if (taskList) {
-			taskList.destroy();
+		if (taskListEntity) {
+			taskListEntity.destroy();
 		}
-		taskList = null;
+		taskListEntity = null;
 	}
 	Crafty.scene('level1', init, uninit);
 	return undefined;
