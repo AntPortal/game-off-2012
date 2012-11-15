@@ -3,7 +3,7 @@ define([
 	'components/BaseDialog',
 	'components/BetterText',
 ], function() {
-	var ACTION_VERT_SPACE = 40;
+	var ACTION_VERT_SPACE = 24;
 	var SUBTEXT_INDENT = 16;
 	/**
 	 * A menu (based on BaseDialog) with a list of clickable actions.
@@ -15,9 +15,7 @@ define([
 		 * 
 		 * {
 		 *   label: "Deliver Newspaper",
-		 *   enabled: false,
-		 *   subscript: "You don't have any newspapers left!",
-		 *   callback: function() { ... },
+		 *   onClick: function() { ... },
 		 * }
 		 */
 		actions: null,
@@ -27,7 +25,6 @@ define([
 		 * {
 		 *   labelEntity: ...,
 		 *   onClickEntity: ...,
-		 *   subscriptEntity: ...,
 		 * }
 		 */
 		_actionEntities: null,
@@ -43,12 +40,8 @@ define([
 		_createOnClickHandler: function(action) {
 			var me = this;
 			return function(e) {
-				if (action.enabled) {
-					me.destroy();
-					action.onClick(e);
-				} else {
-					//do nothing
-				}
+				me.destroy();
+				action.onClick(e);
 			};
 		},
 		_attributeChanged: function() {
@@ -59,14 +52,14 @@ define([
 				var entities = {};
 				entities['labelEntity'] = Crafty.e('2D, Canvas, BetterText').attr({
 					text: action.label,
-					fontSize: '18px',
+					fontSize: '16px',
 					fontFamily: 'Patrick Hand',
-					textColor: action.enabled ? '#FFF' : '#888',
+					textColor: '#FFF',
 					x: this.x + this.TILE_SIZE * 0.5,
 					y: this.y + this.TILE_SIZE * 0.25 + ACTION_VERT_SPACE * i,
 					z: this.z + 1,
 					w: this.w,
-					h: 18
+					h: 16
 				});
 				entities['onClickEntity'] = Crafty.e('2D, Mouse').
 					attr({
@@ -74,20 +67,9 @@ define([
 						y: this.y + this.TILE_SIZE * 0.25 + ACTION_VERT_SPACE * i,
 						z: this.z + 1,
 						w: this.w,
-						h: 18
+						h: 16
 					}).
 					bind('Click', this._createOnClickHandler(action));
-				entities['subscriptEntity'] = Crafty.e('2D, Canvas, BetterText').attr({
-					text: action.subscript,
-					fontSize: '14px',
-					fontFamily: 'Patrick Hand',
-					textColor: 'white',
-					x: this.x + this.TILE_SIZE * 0.5 + SUBTEXT_INDENT,
-					y: this.y + this.TILE_SIZE * 0.25 + ACTION_VERT_SPACE * i + 20,
-					z: this.z + 1,
-					w: this.w,
-					h: 14
-				});
 				this._actionEntities.push(entities);
 			}
 		},
@@ -96,7 +78,6 @@ define([
 			for (i = 0; i < this._actionEntities.length; i++) {
 				var entities = this._actionEntities[i];
 				entities.labelEntity.destroy();
-				entities.subscriptEntity.destroy();
 				entities.onClickEntity.destroy();
 			}
 			this._actionEntities = [];
