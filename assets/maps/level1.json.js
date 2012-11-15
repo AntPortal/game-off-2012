@@ -92,8 +92,8 @@ define(function(){return(
                     },
                  "type":"npc",
                  "width":32,
-                 "x":224,
-                 "y":832
+                 "x":352,
+                 "y":736
                 }],
          "opacity":1,
          "properties":
@@ -150,18 +150,6 @@ define(function(){return(
                  "type":"npc",
                  "width":32,
                  "x":384,
-                 "y":256
-                }, 
-                {
-                 "height":32,
-                 "name":"dog",
-                 "properties":
-                    {
-                     "sprite":"dog2"
-                    },
-                 "type":"npc",
-                 "width":32,
-                 "x":416,
                  "y":256
                 }, 
                 {
