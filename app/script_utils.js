@@ -72,12 +72,10 @@ define([
 
 			script.push({
 				action: 'arbitraryCode',
-				jump: jump, /* for debugging */
 				code: function(curState, callback) { callback(curState + jump); }
 			});
 		});
 
-		console.log(script);
 		return script;
 	}
 
