@@ -17,23 +17,10 @@ define([
 	var taskList = null;
 	function init() {
 		var hero; //entity global to this scene
-		var hasNewspaper = {
-			townfolk: false,
-			healer: false,
-			oldwoman: false,
-			bunny: false,
-			dancerF: false,
-			oldman: false,
-		};
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
 		function updateTaskList() {
 			var numNewspapers = 0;
-			for (var i in hasNewspaper) {
-				if (hasNewspaper[i] === true) {
-					numNewspapers++;
-				}
-			}
 			taskList.attr({
 				tasks: [{
 					label: "Deliver newspapers ("+numNewspapers+"/6)",
@@ -46,7 +33,6 @@ define([
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
 			if (hero && !actionMenuActive) {
 				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
-				actionMenuActive = true;
 				var i = 0;
 				var nearbyNPC = null;
 				for (i = 0; i < parsedMapData.objects.length; i++) {
@@ -62,126 +48,27 @@ define([
 					}
 				}
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
-				var heroName = config.getCurShortName();
-				var actions = [];
-				if (nearbyNPC == null) {
-					actions.push({
-						label: "Deliver Newspaper",
-						enabled: false,
-						subscript: "You must move next to the person you want to give the newspaper to.",
-						onClick: function() {/*Can never reach here.*/}
-					});
-				} else if (nearbyNPC.name == 'boy' || nearbyNPC.name == 'girl') {
-					var allNewspapersDelivered = true;
-					for (i in hasNewspaper) {
-						allNewspapersDelivered = allNewspapersDelivered && hasNewspaper[i];
-					}
-					actions.push({
-						label: "Head to fair",
-						enabled: allNewspapersDelivered,
-						subscript: allNewspapersDelivered ? "Go with your friends to the Millenial Fair" : "You must deliver all your newspapers before you can go to the fair.",
-						onClick: function() {
-							config.setCurLevel(2);
-							Crafty.scene('level2-intro');
-							//TODO
+				if (nearbyNPC != null) {
+					//actionMenuActive = true;
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner([{
+						action: 'dialog',
+						params: {
+							x: clickedTileEntity.x - 300,
+							y: clickedTileEntity.y - 125,
+							w: 400,
+							h: 70,
+							face: undefined,
+							msg: "TODO: Write some code for me.",
 						}
-					});
-				} else {
-					//We must be near some NPC other than 'boy' or 'girl'
-					var scriptData = {};
-					scriptData.townfolk = {
-						face: 'face_townfolkM',
-						newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
-						chatText: "Hmm, it says here tensions are rising at the border.", //TODO
-					};
-					scriptData.healer = {
-						face: 'face_healerF',
-						newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
-						chatText: "Hmm, it says here tensions are rising at the border.", //TODO
-					};
-					scriptData.oldwoman = {
-							newspaperScript: function() {
-								//TODO;
-								hasNewspaper.oldwoman = true;
-							}
-					};
-					scriptData.dog = scriptData.oldwoman; //dog copies woman
-					scriptData.oldman = {
-							face: 'face_oldman',
-							newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
-							chatText: "Hmm, it says here tensions are rising at the border.", //TODO
-					};
-					scriptData.dancerF = {
-							face: 'face_dancerF',
-							newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
-							chatText: "Hmm, it says here tensions are rising at the border.", //TODO
-					};
-					scriptData.bunny = {
-							face: 'face_bunny',
-							newspaperText: "Hey, thanks for delivering this, " + heroName + "!", //TODO
-							chatText: "Hmm, it says here tensions are rising at the border.", //TODO
-					};
-					function createDialogScript(npcName) {
-						return function() {
-							var vm = Crafty.e('ScriptRunner');
-							vm.ScriptRunner([
-								{
-									action: 'dialog',
-									params: {
-										x: clickedTileEntity.x - 300,
-										y: clickedTileEntity.y - 125,
-										w: 400,
-										h: 70,
-										face: scriptData[npcName].face,
-										msg: hasNewspaper[npcName] ? scriptData[npcName].chatText : scriptData[npcName].newspaperText,
-									}
-								},
-								{ action: 'PACADOC' },
-								{ action: 'arbitraryCode', code: function(curState, callback) {
-									hasNewspaper[npcName] = true;
-									vm.destroy();
-								}},
-							]);
-							vm.run();
-						};
-					}
-					if (hasNewspaper[nearbyNPC.name]) {
-						actions.push({
-							label: "Chat",
-							enabled: true,
-							subscript: "Sees what this person has to say.",
-							onClick: scriptData[nearbyNPC.name].chatScript || createDialogScript(nearbyNPC.name),
-						});
-					} else {
-						actions.push({
-							label: "Deliver Newspaper",
-							enabled: true,
-							subscript: "Gives a newspaper to this person." ,
-							onClick: scriptData[nearbyNPC.name].newspaperScript || createDialogScript(nearbyNPC.name),
-						});
-					}
+					},
+					{ action: 'PACADOC' },
+					{ action: 'arbitraryCode', code: function(curState, callback) {
+						vm.destroy();
+					}},
+					]);
+					vm.run();
 				}
-				actions.push({
-					label: "Do Nothing",
-					enabled: true,
-					subscript: "Moves to the selected position, then ends your turn.",
-					onClick: function() { }
-				});
-				actions.push({
-					label: "Cancel",
-					enabled: true,
-					subscript: "Allows you to select a new tile to move to",
-					onClick: function() { }
-				});
-				Crafty.e('2D, Canvas, ActionMenu').attr({
-					x: clickedTileEntity.x - 300,
-					y: clickedTileEntity.y - 155,
-					w: 400,
-					h: 135,
-					actions: actions,
-				}).bind("Remove", function() {
-					actionMenuActive = false;
-				});
 			}
 		});
 		(function() {
