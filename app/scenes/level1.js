@@ -50,24 +50,34 @@ define([
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 				if (nearbyNPC != null) {
 					//actionMenuActive = true;
-					var vm = Crafty.e('ScriptRunner');
-					vm.ScriptRunner([{
-						action: 'dialog',
-						params: {
-							x: clickedTileEntity.x - 300,
-							y: clickedTileEntity.y - 125,
-							w: 400,
-							h: 70,
-							face: undefined,
-							msg: "TODO: Write some code for me.",
-						}
-					},
-					{ action: 'PACADOC' },
-					{ action: 'arbitraryCode', code: function(curState, callback) {
-						vm.destroy();
-					}},
-					]);
-					vm.run();
+					/* The use of setTimeout here defers the enclosed until after the "click"
+					 * event for this tile click tile has already passed. Note that this code
+					 * is actually running in a "mouseup" handler, not a "click" handler, and
+					 * that "mouseup" is always delivered before "click" when both are relevant;
+					 * without the use of setTimeout here, the mouse listener from the PACADOC
+					 * would already exist by the time the "click" event happened, and would
+					 * capture that event, causing all the dialogs to close immediately before
+					 * they were displayed. */
+					setTimeout(function() {
+						var vm = Crafty.e('ScriptRunner');
+						vm.ScriptRunner([{
+							action: 'dialog',
+							params: {
+								x: clickedTileEntity.x - 300,
+								y: clickedTileEntity.y - 125,
+								w: 400,
+								h: 70,
+								face: undefined,
+								msg: "TODO: Write some code for me.",
+							}
+						},
+						{ action: 'PACADOC' },
+						{ action: 'arbitraryCode', code: function(curState, callback) {
+							vm.destroy();
+						}},
+						]);
+						vm.run();
+					}, 1);
 				}
 			}
 		});
