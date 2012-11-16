@@ -97,6 +97,15 @@ define([
 			});
 			this.fader.tween(inst.params, inst.duration);
 		},
+		_jump: function(inst) {
+			if (inst.action != 'jump') {
+				throw inst;
+			}
+			utils.assert(inst.offset != 0, 'jump offset cannot be 0');
+
+			this._curState += inst.offset;
+			this.run();
+		},
 		_arbitraryCode: function(inst) {
 			if (inst.action != 'arbitraryCode') {
 				throw inst;

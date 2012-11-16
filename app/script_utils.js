@@ -113,8 +113,8 @@ define([
 			}
 
 			script.push({
-				action: 'arbitraryCode',
-				code: function(curState, callback) { callback(curState + jump); }
+				action: 'jump',
+				offset: jump
 			});
 		});
 
