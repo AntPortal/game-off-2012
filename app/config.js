@@ -43,8 +43,10 @@ define([], function() {
 		 * 	name: "NebuPookins",
 		 * 	shortName: "Nebu"
 		 * 	progress: {
-		 * 		gitClone: ['healerF','Berkley'] //People to whom you've already done the gitClone question.
+		 * 		'Apache': ['villagerGitClone', 'villagerGitAdd', ...], // Interactions that this character can perform.
+		 *			...
 		 * 	},
+		 * 	coppers: 2
 		 * }
 		 * 
 		 * name is the github account name (alphanumeric and dash, less than 40 char, can't start with dash)
@@ -55,6 +57,13 @@ define([], function() {
 		 */
 		saveGames: [{},{},{}],
 		curSaveSlot: 0, //must be a value between 0 and 2 inclusive
+		getCurCoppers: function() {
+			return this.saveGames[this.curSaveSlot].coppers || 0;
+		},
+		setCurCoppers: function(newCoppers) {
+			this.saveGames[this.curSaveSlot].coppers = newCoppers;
+			this.serialize();
+		},
 		getCurProgress: function() {
 			return this.saveGames[this.curSaveSlot].progress;
 		},

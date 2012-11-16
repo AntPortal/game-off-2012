@@ -14,6 +14,10 @@ define([
 		'scenes/level2-intro',
 		'components/TaskList',
 	], function(config, mapData, mouselook, utils, ScriptUtils) {
+	var COPPER_VALUE = 1;
+	var SILVER_VALUE = 4;
+	var GOLD_VALUE = 16;
+	var PLATINUM_VALUE = 64;
 	var HERO_START = {x: 8, y: 26};
 	var taskListEntity = null;
 	function init() {
