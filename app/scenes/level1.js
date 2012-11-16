@@ -25,9 +25,25 @@ define([
 
 		/* Map from interaction names to objects containing information about those interactions. */
 		var interactionDictionary = {
+			defaultInteraction: {
+				doAction: function(scriptUtils) {
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner(_.flatten([
+						scriptUtils.dialogAndPause(
+							"Hi @heroName@! I've got nothing for you today. Why don't you look around to see if anyone else needs help?"
+						),
+						[{
+							action: 'arbitraryCode',
+							code: function(curState, callback) {
+								vm.destroy();
+							}
+						}]
+					]));
+					vm.run();
+				}
+			},
 			villagerGitClone: {
-				doAction: function(gameState, scriptUtils) {
-					var villagerName = gameState.findVillagerWithReferrable;
+				doAction: function(scriptUtils) {
 					var rightAnswerAction = {
 						label: "git clone https://github.com/AntPortal/game-off-2012.git",
 						result: _.flatten([
@@ -35,13 +51,7 @@ define([
 								"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! "
 									+ "Maybe you could go help my neighbours? They don't live too far from here..."
 							),
-							{
-								action: 'arbitraryCode',
-								code: function(curState, callback) {
-									/* TODO: remove this action and add postGitClone action */
-									callback(curState + 1);
-								}
-							}
+							scriptUtils.removeCurrentInteraction()
 						])
 					};
 					var jokeAnswerAction = {
@@ -120,19 +130,6 @@ define([
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 
 				if (nearbyNPC != null) {
-					var scriptUtils = new ScriptUtils(
-						interactionDictionary,
-						npcDictionary,
-						gameState,
-						{
-							npc: npcDictionary[nearbyNPC.properties.name],
-							face: undefined,
-							x: clickedTileEntity.x - 300,
-							y: clickedTileEntity.y - 125,
-							heroName: config.getCurShortName()
-						}
-					);
-
 					//actionMenuActive = true;
 					/* The use of setTimeout here defers the enclosed until after the "click"
 					 * event for this tile click tile has already passed. Note that this code
@@ -143,9 +140,22 @@ define([
 					 * capture that event, causing all the dialogs to close immediately before
 					 * they were displayed. */
 					setTimeout(function() {
-						var actionName = gameState[nearbyNPC.properties.name][0]; /* TODO: handle empty-list case */
-						var action = interactionDictionary[actionName];
-						action.doAction(gameState, scriptUtils);
+						var actionName = gameState[nearbyNPC.properties.name][0];
+						var action = actionName ? interactionDictionary[actionName] : interactionDictionary.defaultInteraction;
+						var scriptUtils = new ScriptUtils(
+							interactionDictionary,
+							npcDictionary,
+							gameState,
+							{
+								npc: npcDictionary[nearbyNPC.properties.name],
+								interaction: actionName,
+								face: undefined,
+								x: clickedTileEntity.x - 300,
+								y: clickedTileEntity.y - 125,
+								heroName: config.getCurShortName()
+							}
+						);
+						action.doAction(scriptUtils);
 					}, 1);
 				}
 			}

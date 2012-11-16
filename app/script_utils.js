@@ -154,5 +154,21 @@ define([
 		}
 	}
 
+	/**
+	 * Returns a script fragment that removes the current interaction from the current NPC's
+	 * list of available interactions.
+	 */
+	ScriptUtils.prototype.removeCurrentInteraction = function() {
+		var self = this;
+		return [{
+				action: 'arbitraryCode',
+				code: function(curState, callback) {
+					var npcName = self._localState.npc.properties.name;
+					self._gameState[npcName] = _.without(self._gameState[npcName], self._localState.interaction);
+					callback(curState + 1);
+				}
+		}];
+	}
+
 	return ScriptUtils;
 });
