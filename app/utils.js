@@ -5,6 +5,13 @@ define([
 		'components/BetterText',
 ],
 function(config, PathFinder, Set) {
+	function assert(cond, msg) {
+		if (!cond) {
+			debugger;
+			throw msg;
+		}
+	}
+
 	function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 		return function(worldX, worldY, worldZ) {
 			return {
@@ -619,6 +626,7 @@ function(config, PathFinder, Set) {
 		Crafty.viewport.pan('y', screenTargetCenter.y - screenCenter.y, time);
 	}
 	return {
+		assert : assert,
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		pointInRect : pointInRect,
 		loadTileset : loadTileset,

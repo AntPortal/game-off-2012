@@ -2,8 +2,9 @@
  * TODO: document.
  */
 define([
+	'utils',
 	'underscore'
-], function() {
+], function(utils) {
 	function interpolate(msg, env) {
 		return msg.replace(/@(\w+)@/g, function(_, name) { return env[name]; });
 	}
@@ -131,6 +132,8 @@ define([
 	ScriptUtils.prototype.makeReferral = function(refMsg, noRefMsg, prefInteraction) {
 		var self = this;
 		var maybeInteractionInfo = _.reduce(self._gameState, function(foundInteraction, interactions, npcName) {
+			utils.assert(foundInteraction === null || typeof(foundInteraction) === 'object', 'Type of ' + foundInteraction + ' should be object or null');
+
 			if (npcName === self._localState.npc.properties.name) {
 				return foundInteraction;
 			}
@@ -143,7 +146,7 @@ define([
 				return foundInteraction;
 			} else {
 				if (foundInteraction === null) {
-					return _.first(referrableInteractions);
+					return {npcName: npcName, interactionName: _.first(referrableInteractions)};
 				} else {
 					return foundInteraction;
 				}
@@ -151,7 +154,9 @@ define([
 		}, null);
 
 		if (maybeInteractionInfo !== null) {
-			var env = _.extend({}, self._localState, makeNpcVariables(self._npcDictionary[maybeInteractionInfo.npcName], "Ref"));
+			var npc = self._npcDictionary[maybeInteractionInfo.npcName];
+			utils.assert(npc, 'Entity for ' + maybeInteractionInfo.npcName + ' not found');
+			var env = _.extend({}, self._localState, makeNpcVariables(npc, "Ref"));
 			return this._dialogAndPauseWithEnv(refMsg, env);
 		} else {
 			return this._dialogAndPauseWithEnv(noRefMsg, self._localState);
