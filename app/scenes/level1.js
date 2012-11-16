@@ -56,15 +56,29 @@ define([
 			},
 			villagerGitClone: {
 				doAction: function(scriptUtils) {
+					var thisInteraction = 'villagerGitClone';
 					var rightAnswerAction = {
 						label: "git clone https://github.com/AntPortal/game-off-2012.git",
 						result: _.flatten([
 							scriptUtils.removeCurrentInteraction(),
+							[{
+								action: 'arbitraryCode',
+								code: function(curState, callback) {
+									var numClonesLeft = _.reduce(gameState, function(acc, npcInteractions) {
+										return acc + (_.contains(npcInteractions, thisInteraction) ? 1 : 0);
+									}, 0);
+									console.log('clones left:', numClonesLeft);
+									if (numClonesLeft === 0) {
+										gameState['Linus'].push('linusGitCloneComplete');
+									}
+									callback(curState+1);
+								}
+							}],
 							scriptUtils.makeReferral(
 								"@npcName@: Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! "
 									+ "Maybe you could go and help @npcNameRef@? @HeOrSheRef@ doesn't live too far from here...",
 								"Thanks @heroName@! It worked!", /* should never happen */
-								'villagerGitClone'
+								thisInteraction
 							)
 						])
 					};
@@ -105,6 +119,31 @@ define([
 					vm.run();
 				},
 				taskString: "Teach villagers about git clone (@num@ left)",
+				referrable: true,
+				icon: null /* TODO */
+			},
+			linusGitCloneComplete: {
+				doAction: function(scriptUtils) {
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner(_.flatten([
+						scriptUtils.dialogAndPause(
+							"@npcName@: @heroName@, I see in my scrying pool that you have succesfuly helped all "
+							+ "the Svenites obtain the latest copy of my book. Thank you! Here’s your silver coin."
+						),
+						[
+							{
+								action: 'arbitraryCode',
+								code: function(curState, callback) {
+									config.setCurCoppers(config.getCurCoppers() + SILVER_VALUE);
+									callback(curState + 1);
+								}
+							},
+							{ action: 'destroyVM' }
+						]
+					]));
+					vm.run();
+				},
+				taskString: "Report back to Linus",
 				referrable: true,
 				icon: null /* TODO */
 			}
