@@ -106,6 +106,12 @@ define([
 				me._curState = newState;
 				me.run();
 			});
+		},
+		_destroyVM: function(inst) {
+			if (inst.action != 'destroyVM') {
+				throw inst;
+			}
+			this.destroy();
 		}
 	});
 });

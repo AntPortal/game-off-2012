@@ -32,12 +32,7 @@ define([
 						scriptUtils.dialogAndPause(
 							"@npcName@: Hi @heroName@! I've got nothing for you today. Why don't you look around to see if anyone else needs help?"
 						),
-						[{
-							action: 'arbitraryCode',
-							code: function(curState, callback) {
-								vm.destroy();
-							}
-						}]
+						[{ action: 'destroyVM' }]
 					]));
 					vm.run();
 				}
@@ -88,12 +83,7 @@ define([
 							_.shuffle([rightAnswerAction, jokeAnswerAction, wrongAnswerAction]),
 							function(menuActive) { actionMenuActive = menuActive; }
 						),
-						[{
-							action: 'arbitraryCode',
-							code: function(curState, callback) {
-								vm.destroy();
-							}
-						}]
+						[{ action: 'destroyVM' }]
 					]));
 					vm.run();
 				},
