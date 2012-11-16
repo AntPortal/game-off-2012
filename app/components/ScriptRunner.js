@@ -19,30 +19,11 @@ define([
 				return; //Done
 			}
 			var instruction = this.script[this._curState];
-			switch (instruction.action) {
-			case 'dialog':
-				this._dialog(instruction);
-				break;
-			case 'menu':
-				this._menu(instruction);
-				break;
-			case 'PACADOC': //Pause and close all dialogs on click
-				this._PACADOC(instruction);
-				break;
-			case 'loadScene':
-				this._loadScene(instruction);
-				break;
-			case 'playMusic':
-				this._playMusic(instruction);
-				break;
-			case 'fade':
-				this._fade(instruction);
-				break;
-			case 'arbitraryCode':
-				this._arbitraryCode(instruction);
-				break;
-			default:
+			var method = this['_' + instruction.action];
+			if (!method) {
 				throw 'Unsupported scripting action: ' + instruction.action;
+			} else {
+				method.call(this, instruction);
 			}
 			return this;
 		},
