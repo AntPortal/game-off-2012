@@ -77,6 +77,7 @@ define([
 							scriptUtils.makeReferral(
 								"@npcName@: Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! "
 									+ "Maybe you could go and help @npcNameRef@? @HeOrSheRef@ doesn't live too far from here...",
+								"@npcName@: Thanks @heroName@! It worked! Have you spoken to @npcNameRef@ lately? I think @heOrSheRef@ was looking for you.",
 								"Thanks @heroName@! It worked!", /* should never happen */
 								thisInteraction
 							)

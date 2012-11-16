@@ -3,7 +3,8 @@
  */
 define([
 	'utils',
-	'underscore'
+	'underscore',
+	'Crafty'
 ], function(utils) {
 	function interpolate(msg, env) {
 		return msg.replace(/@(\w+)@/g, function(_, name) { return env[name]; });
@@ -125,42 +126,62 @@ define([
 	 * Returns a script fragment that displays a dialog telling the player to visit
 	 * another NPC.
 	 *
-	 * @param  refMsg message to display if an NPC with a referrable interaction is
-	 *                found, e.g. "You should go talk to @npcName@".
+	 * @param  prefMsg  message to display if an NPC with the preferred interation is found.
+	 * @param  nonPrefMsg  message to display if the only interactions available are non-preferred ones.
 	 @ @param  noRefMsg message to display if no NPC with a referrable interaction is found.
+	 * @param  prefInteraction  name of the interaction to refer to if any NPC has it.
 	 */
-	ScriptUtils.prototype.makeReferral = function(refMsg, noRefMsg, prefInteraction) {
+	ScriptUtils.prototype.makeReferral = function(prefMsg, nonPrefMsg, noRefMsg, prefInteraction) {
 		var self = this;
-		var maybeInteractionInfo = _.reduce(self._gameState, function(foundInteraction, interactions, npcName) {
-			utils.assert(foundInteraction === null || typeof(foundInteraction) === 'object', 'Type of ' + foundInteraction + ' should be object or null');
 
-			if (npcName === self._localState.npc.properties.name) {
-				return foundInteraction;
-			}
+		return [{
+			action: 'arbitraryCode',
+			code: function(curState, callback) {
+				var maybeInteractionInfo = _.reduce(self._gameState, function(foundInteraction, interactions, npcName) {
+					utils.assert(foundInteraction === null || typeof(foundInteraction) === 'object', 'Type of ' + foundInteraction + ' should be object or null');
 
-			var referrableInteractions = _.filter(interactions, function(q) { return self._interactionDictionary[q].referrable; });
-			var hasPrefInteraction = _.contains(referrableInteractions, prefInteraction);
-			if (hasPrefInteraction) {
-				return {npcName: npcName, interactionName: prefInteraction};
-			} else if (referrableInteractions.length === 0) {
-				return foundInteraction;
-			} else {
-				if (foundInteraction === null) {
-					return {npcName: npcName, interactionName: _.first(referrableInteractions)};
+					if (npcName === self._localState.npc.properties.name) {
+						return foundInteraction;
+					}
+
+					var referrableInteractions = _.filter(interactions, function(q) { return self._interactionDictionary[q].referrable; });
+					var hasPrefInteraction = _.contains(referrableInteractions, prefInteraction);
+					if (hasPrefInteraction) {
+						return {npcName: npcName, interactionName: prefInteraction};
+					} else if (referrableInteractions.length === 0) {
+						return foundInteraction;
+					} else {
+						if (foundInteraction === null) {
+							return {npcName: npcName, interactionName: _.first(referrableInteractions)};
+						} else {
+							return foundInteraction;
+						}
+					}
+				}, null);
+
+				var vm = Crafty.e('ScriptRunner');
+				var script;
+				if (maybeInteractionInfo !== null) {
+					var npc = self._npcDictionary[maybeInteractionInfo.npcName];
+					utils.assert(npc, 'Entity for ' + maybeInteractionInfo.npcName + ' not found');
+					var env = _.extend({}, self._localState, makeNpcVariables(npc, "Ref"));
+					script = self._dialogAndPauseWithEnv(
+						maybeInteractionInfo.interactionName === prefInteraction ? prefMsg : nonPrefMsg,
+						env
+					);
 				} else {
-					return foundInteraction;
+					script = self._dialogAndPauseWithEnv(noRefMsg, self._localState);
 				}
+				script.push({
+					action: 'arbitraryCode',
+					code: function() {
+						vm.destroy();
+						callback(curState+1);
+					}
+				});
+				vm.ScriptRunner(script).run();
 			}
-		}, null);
-
-		if (maybeInteractionInfo !== null) {
-			var npc = self._npcDictionary[maybeInteractionInfo.npcName];
-			utils.assert(npc, 'Entity for ' + maybeInteractionInfo.npcName + ' not found');
-			var env = _.extend({}, self._localState, makeNpcVariables(npc, "Ref"));
-			return this._dialogAndPauseWithEnv(refMsg, env);
-		} else {
-			return this._dialogAndPauseWithEnv(noRefMsg, self._localState);
-		}
+		}];
 	}
 
 	/**
