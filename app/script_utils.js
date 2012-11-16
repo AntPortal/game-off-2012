@@ -131,6 +131,10 @@ define([
 	ScriptUtils.prototype.makeReferral = function(refMsg, noRefMsg, prefInteraction) {
 		var self = this;
 		var maybeInteractionInfo = _.reduce(self._gameState, function(foundInteraction, interactions, npcName) {
+			if (npcName === self._localState.npc.properties.name) {
+				return foundInteraction;
+			}
+
 			var referrableInteractions = _.filter(interactions, function(q) { return self._interactionDictionary[q].referrable; });
 			var hasPrefInteraction = _.contains(referrableInteractions, prefInteraction);
 			if (hasPrefInteraction) {
@@ -147,10 +151,10 @@ define([
 		}, null);
 
 		if (maybeInteractionInfo !== null) {
-			var env = _.extend({}, self.localState, makeNpcVariables("Ref"));
+			var env = _.extend({}, self._localState, makeNpcVariables(self._npcDictionary[maybeInteractionInfo.npcName], "Ref"));
 			return this._dialogAndPauseWithEnv(refMsg, env);
 		} else {
-			return this._dialogAndPauseWithEnv(noRefMsg, self.localState);
+			return this._dialogAndPauseWithEnv(noRefMsg, self._localState);
 		}
 	}
 

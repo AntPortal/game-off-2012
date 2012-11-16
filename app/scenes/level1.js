@@ -30,7 +30,7 @@ define([
 					var vm = Crafty.e('ScriptRunner');
 					vm.ScriptRunner(_.flatten([
 						scriptUtils.dialogAndPause(
-							"Hi @heroName@! I've got nothing for you today. Why don't you look around to see if anyone else needs help?"
+							"@npcName@: Hi @heroName@! I've got nothing for you today. Why don't you look around to see if anyone else needs help?"
 						),
 						[{
 							action: 'arbitraryCode',
@@ -47,17 +47,19 @@ define([
 					var rightAnswerAction = {
 						label: "git clone https://github.com/AntPortal/game-off-2012.git",
 						result: _.flatten([
-							scriptUtils.dialogAndPause(
-								"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! "
-									+ "Maybe you could go help my neighbours? They don't live too far from here..."
-							),
-							scriptUtils.removeCurrentInteraction()
+							scriptUtils.removeCurrentInteraction(),
+							scriptUtils.makeReferral(
+								"@npcName@: Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! "
+									+ "Maybe you could go and help @npcNameRef@? @HeOrSheRef@ doesn't live too far from here...",
+								"Thanks @heroName@! It worked!", /* should never happen */
+								'villagerGitClone'
+							)
 						])
 					};
 					var jokeAnswerAction = {
 						label: "rm -rf ~",
 						result: scriptUtils.dialogAndPause(
-							"Really? That sounds dangerous... are you sure Linus said to use that? Maybe you should check with him again... "
+							"@npcName@: Really? That sounds dangerous... are you sure Linus said to use that? Maybe you should check with him again... "
 								+ "I wouldn’t want to set my whole bookshelf on fire!"
 						)
 					};
@@ -72,7 +74,7 @@ define([
 					var wrongAnswerAction = {
 						label: wrongAnswers[_.random(wrongAnswers.length - 1)],
 						result: scriptUtils.dialogAndPause(
-							"Hmm @heroName@! That didn’t work! Please go tell Linus my piece of mind about his git magic. "
+							"@npcName@: Hmm @heroName@! That didn’t work! Please go tell Linus my piece of mind about his git magic. "
 								+ "It doesn’t work!! Or maybe come talk to me again when you’ve listened more carefully to Linus’ lessons."
 						)
 					};
@@ -80,7 +82,7 @@ define([
 					var vm = Crafty.e('ScriptRunner');
 					vm.ScriptRunner(_.flatten([
 						scriptUtils.dialogAndPause(
-							"Hi @heroName@! I've been trying to clone that book from Linus. What are the magic words to get it?"
+							"@npcName@: Hi @heroName@! I've been trying to clone that book from Linus. What are the magic words to get it?"
 						),
 						scriptUtils.actionBranch(
 							_.shuffle([rightAnswerAction, jokeAnswerAction, wrongAnswerAction]),
