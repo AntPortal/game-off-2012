@@ -37,10 +37,11 @@ define(function(){return(
          "objects":[
                 {
                  "height":32,
-                 "name":"Colin",
+                 "name":"",
                  "properties":
                     {
                      "gender":"M",
+                     "name":"Colin",
                      "sprite":"oldman"
                     },
                  "type":"npc",
@@ -50,10 +51,11 @@ define(function(){return(
                 }, 
                 {
                  "height":32,
-                 "name":"Apache",
+                 "name":"",
                  "properties":
                     {
                      "gender":"F",
+                     "name":"Apache",
                      "sprite":"bunny"
                     },
                  "type":"npc",
@@ -63,10 +65,11 @@ define(function(){return(
                 }, 
                 {
                  "height":32,
-                 "name":"Disco",
+                 "name":"",
                  "properties":
                     {
                      "gender":"F",
+                     "name":"Disco",
                      "sprite":"dancerF"
                     },
                  "type":"npc",
@@ -76,10 +79,11 @@ define(function(){return(
                 }, 
                 {
                  "height":32,
-                 "name":"Linus",
+                 "name":"",
                  "properties":
                     {
                      "gender":"M",
+                     "name":"Linus",
                      "sprite":"childM"
                     },
                  "type":"npc",
@@ -134,10 +138,11 @@ define(function(){return(
          "objects":[
                 {
                  "height":32,
-                 "name":"Berkeley",
+                 "name":"",
                  "properties":
                     {
                      "gender":"F",
+                     "name":"Berkeley",
                      "sprite":"oldwoman"
                     },
                  "type":"npc",
@@ -147,10 +152,11 @@ define(function(){return(
                 }, 
                 {
                  "height":32,
-                 "name":"Conflictee",
+                 "name":"",
                  "properties":
                     {
                      "gender":"M",
+                     "name":"Conflictee",
                      "sprite":"townfolkM"
                     },
                  "type":"npc",
@@ -160,10 +166,11 @@ define(function(){return(
                 }, 
                 {
                  "height":32,
-                 "name":"Mergee",
+                 "name":"",
                  "properties":
                     {
                      "gender":"F",
+                     "name":"Mergee",
                      "sprite":"healerF"
                     },
                  "type":"npc",
