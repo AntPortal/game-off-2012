@@ -21,28 +21,82 @@ define([
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
 
-		var villagerDisplayNames = {
-			healer: 'Mergee',
-			townfolk: 'Conflictee',
-			oldwoman: 'Berkeley',
-			oldman: 'Colin',
-			dancerF: 'Disco',
-			bunny: 'Apache'
-		}
-		var villagerPronouns = {
-			healer: 'She',
-			townfolk: 'He',
-			oldwoman: 'She',
-			oldman: 'He',
-			dancerF: 'She',
-			bunny: 'She'
-		}
-		var remainingVillagers = ['healer', 'townfolk', 'oldwoman', 'oldman', 'dancerF', 'bunny'];
+		var gameState = config.getCurProgress();
+
+		/* Map from quest names to objects containing information about the quest. */
+		var questDictionary = {
+			villagerGitClone: {
+				doAction: function(gameState, scriptUtils) {
+					var villagerName = gameState.findVillagerWithReferrable;
+					var rightAnswerAction = {
+						label: "git clone https://github.com/AntPortal/game-off-2012.git",
+						result: _.flatten([
+							scriptUtils.dialogAndPause(
+								"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! "
+									+ "Maybe you could go help my neighbours? They don't live too far from here..."
+							),
+							{
+								action: 'arbitraryCode',
+								code: function(curState, callback) {
+									/* TODO: remove this action and add postGitClone action */
+									callback(curState + 1);
+								}
+							}
+						])
+					};
+					var jokeAnswerAction = {
+						label: "rm -rf ~",
+						result: scriptUtils.dialogAndPause(
+							"Really? That sounds dangerous... are you sure Linus said to use that? Maybe you should check with him again... "
+								+ "I wouldn’t want to set my whole bookshelf on fire!"
+						)
+					};
+					var wrongAnswers = [
+						"git init https://github.com/AntPortal/game-off-2012.git",
+						"git checkout https://github.com/AntPortal/game-off-2012.git",
+						"clone https://github.com/AntPortal/game-off-2012.git",
+						"clone git https://github.com/AntPortal/game-off-2012.git",
+						"git-clone https://github.com/AntPortal/game-off-2012.git",
+						"git clone AntPortal/game-off-2012.git"
+					];
+					var wrongAnswerAction = {
+						label: wrongAnswers[_.random(wrongAnswers.length - 1)],
+						result: scriptUtils.dialogAndPause(
+							"Hmm @heroName@! That didn’t work! Please go tell Linus my piece of mind about his git magic. "
+								+ "It doesn’t work!! Or maybe come talk to me again when you’ve listened more carefully to Linus’ lessons."
+						)
+					};
+
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner(_.flatten([
+						scriptUtils.dialogAndPause(
+							"Hi @heroName@! I've been trying to clone that book from Linus. What are the magic words to get it?"
+						),
+						scriptUtils.actionBranch(
+							_.shuffle([rightAnswerAction, jokeAnswerAction, wrongAnswerAction]),
+							function(menuActive) { actionMenuActive = menuActive; }
+						),
+						[{
+							action: 'arbitraryCode',
+							code: function(curState, callback) {
+								vm.destroy();
+							}
+						}]
+					]));
+					vm.run();
+				},
+				taskString: "Teach villagers about git clone (@num@ left)",
+				referrable: true,
+				icon: null /* TODO */
+			}
+		};
+		var npcDictionary = {};
+
 		function updateTaskList() {
 			taskListEntity.attr({
 				tasks: [{
-					label: "Clone Linus' book ("+(6-remainingVillagers.length)+"/6)",
-					done: remainingVillagers.length == 0
+					label: "Clone Linus' book",
+					done: false
 				}]
 			});
 		}
@@ -66,54 +120,18 @@ define([
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 
 				if (nearbyNPC != null) {
-					var scriptUtils = new ScriptUtils();
-					scriptUtils.x = clickedTileEntity.x - 300;
-					scriptUtils.y = clickedTileEntity.y - 125;
-					scriptUtils.env = {
-						heroName: config.getCurShortName()
-					};
-					if (remainingVillagers.length > 0) {
-						var villager = remainingVillagers[_.random(remainingVillagers.length - 1)];
-						scriptUtils.env.villagerName = villagerDisplayNames[villager];
-						scriptUtils.env.villagerPronoun = villagerPronouns[villager];
-					}
-
-					var rightAnswerAction = {
-						label: "git clone https://github.com/AntPortal/game-off-2012.git",
-						result: _.flatten([
-							scriptUtils.dialogAndPause(
-								"Thanks @heroName@! It worked! Please help other fellow Svenites learn about this new magic! Maybe you could go help @villagerName@? @villagerPronoun@ doesn't live too far from here..."
-							),
-							{
-								action: 'arbitraryCode',
-								code: function(curState, callback) {
-									remainingVillagers = _.without(remainingVillagers, nearbyNPC.name);
-									updateTaskList();
-									callback(curState + 1);
-								}
-							}
-						])
-					};
-					var jokeAnswerAction = {
-						label: "rm -rf ~",
-						result: scriptUtils.dialogAndPause(
-							"Really? That sounds dangerous... are you sure Linus said to use that? Maybe you should check with him again... I wouldn’t want to set my whole bookshelf on fire!"
-						)
-					};
-					var wrongAnswers = [
-						"git init https://github.com/AntPortal/game-off-2012.git",
-						"git checkout https://github.com/AntPortal/game-off-2012.git",
-						"clone https://github.com/AntPortal/game-off-2012.git",
-						"clone git https://github.com/AntPortal/game-off-2012.git",
-						"git-clone https://github.com/AntPortal/game-off-2012.git",
-						"git clone AntPortal/game-off-2012.git"
-					];
-					var wrongAnswerAction = {
-						label: wrongAnswers[_.random(wrongAnswers.length - 1)],
-						result: scriptUtils.dialogAndPause(
-							"Hmm @heroName@! That didn’t work! Please go tell Linus my piece of mind about his git magic. It doesn’t work!! Or maybe come talk to me again when you’ve listened more carefully to Linus’ lessons."
-						)
-					};
+					var scriptUtils = new ScriptUtils(
+						questDictionary,
+						npcDictionary,
+						gameState,
+						{
+							npc: npcDictionary[nearbyNPC.properties.name],
+							face: undefined,
+							x: clickedTileEntity.x - 300,
+							y: clickedTileEntity.y - 125,
+							heroName: config.getCurShortName()
+						}
+					);
 
 					//actionMenuActive = true;
 					/* The use of setTimeout here defers the enclosed until after the "click"
@@ -125,23 +143,9 @@ define([
 					 * capture that event, causing all the dialogs to close immediately before
 					 * they were displayed. */
 					setTimeout(function() {
-						var vm = Crafty.e('ScriptRunner');
-						vm.ScriptRunner(_.flatten([
-							scriptUtils.dialogAndPause(
-								"Hi @heroName@! I've been trying to clone that book from Linus. What are the magic words to get it?"
-							),
-							scriptUtils.actionBranch(
-								_.shuffle([rightAnswerAction, jokeAnswerAction, wrongAnswerAction]),
-								function(menuActive) { actionMenuActive = menuActive; }
-							),
-							[{
-								action: 'arbitraryCode',
-								code: function(curState, callback) {
-									vm.destroy();
-								}
-							}]
-						]));
-						vm.run();
+						var actionName = gameState[nearbyNPC.properties.name][0]; /* TODO: handle empty-list case */
+						var action = questDictionary[actionName];
+						action.doAction(gameState, scriptUtils);
 					}, 1);
 				}
 			}
@@ -151,13 +155,14 @@ define([
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
 			var pathFinder = utils.makePathFinder(parsedMapData);
 			hero = Crafty.e('2D, Canvas, Character').
-				Character(parsedMapData.heightMap, worldToPixel, pathFinder, HERO_START.x, HERO_START.y, 'hero');
+				Character(parsedMapData.heightMap, worldToPixel, pathFinder, HERO_START.x, HERO_START.y, {sprite: 'hero'});
 			var i = 0;
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
-					Crafty.e('2D, Canvas, Character').
-						Character(parsedMapData.heightMap, worldToPixel, pathFinder, object.tileX, object.tileY, object.properties.sprite);
+					var npcEnt = Crafty.e('2D, Canvas, Character').
+						Character(parsedMapData.heightMap, worldToPixel, pathFinder, object.tileX, object.tileY, object.properties);
+					npcDictionary[object.properties.name] = npcEnt;
 				} else {
 					console.warn('Unknown object type: ', object.type);
 				}
@@ -175,6 +180,10 @@ define([
 		mouselook.start();
 		utils.ensureMusicIsPlaying('music/town');
 		(function() { //Initial dialog from boy and girl to hero.
+			if (!_.isEmpty(gameState)) {
+				return;
+			}
+
 			var heroName = config.getCurShortName();
 			var vm = Crafty.e('ScriptRunner');
 			var chainSet = utils.chainSet;
@@ -215,6 +224,9 @@ define([
 				[{
 					action: 'arbitraryCode',
 					code: function(curState, callback) {
+						['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'].forEach(function(name) {
+							gameState[name] = ['villagerGitClone'];
+						});
 						updateTaskList();
 						vm.destroy();
 					}

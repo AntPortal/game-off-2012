@@ -10,6 +10,7 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 		_facing: 'S', //One of 'N', 'E', 'S' or 'W'.
 		_currentSprite: null,
 		_frameOffset: 0,
+		properties: null, //Must be set by caller!
 		heightMap: null, //Must be set by caller!
 		worldToPixel: null, //Must be set by caller!
 		pathFinder: null, //Must be set by caller
@@ -18,9 +19,10 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 			this.bind('EnterFrame', this._enterFrame);
 			this._frameOffset = Crafty.math.randomInt(0, 100); //So that not all characters are exactly in sync.
 		},
-		Character: function(heightMap, worldToPixel, pathFinder, initialX, initialY, spriteName) {
-			this._spriteName = spriteName;
-			this._currentSprite = 'sprite_' + spriteName + '_S0';
+		Character: function(heightMap, worldToPixel, pathFinder, initialX, initialY, properties) {
+			this.properties = properties;
+			this._spriteName = properties.sprite;
+			this._currentSprite = 'sprite_' + this._spriteName + '_S0';
 			this.addComponent(this._currentSprite);
 			this.heightMap = heightMap;
 			this.worldToPixel = worldToPixel;

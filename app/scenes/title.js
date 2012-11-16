@@ -227,9 +227,7 @@ define([
 			if (name.length > 0) {
 				config.setCurName(name);
 				config.setCurShortName(utils.getShortName(name));
-				config.setCurProgress({
-					gitClone: []
-				});
+				config.setCurProgress({});
 				Crafty.scene('level1');
 			}
 		}
