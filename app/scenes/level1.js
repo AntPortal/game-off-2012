@@ -41,6 +41,19 @@ define([
 					vm.run();
 				}
 			},
+			defaultLinus: {
+				doAction: function(scriptUtils) {
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner(_.flatten([
+						/* TODO: implement getting help with git */
+						scriptUtils.dialogAndPause(
+							"@npcName@: Hi @heroName@! I'd give you some help with git, but that feature hasn't been implemented yet..."
+						),
+						[{ action: 'destroyVM' }]
+					]));
+					vm.run();
+				}
+			},
 			villagerGitClone: {
 				doAction: function(scriptUtils) {
 					var rightAnswerAction = {
@@ -136,8 +149,9 @@ define([
 					 * capture that event, causing all the dialogs to close immediately before
 					 * they were displayed. */
 					setTimeout(function() {
-						var actionName = gameState[nearbyNPC.properties.name][0];
-						var action = actionName ? interactionDictionary[actionName] : interactionDictionary.defaultInteraction;
+						var npcName = nearbyNPC.properties.name;
+						var actionName = gameState[npcName][0];
+						var action = actionName ? interactionDictionary[actionName] : (npcName === "Linus" ? interactionDictionary.defaultLinus : interactionDictionary.defaultInteraction);
 						var scriptUtils = new ScriptUtils(
 							interactionDictionary,
 							npcDictionary,
@@ -233,6 +247,7 @@ define([
 						['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'].forEach(function(name) {
 							gameState[name] = ['villagerGitClone'];
 						});
+						gameState['Linus'] = [];
 						updateTaskList();
 						vm.destroy();
 					}
