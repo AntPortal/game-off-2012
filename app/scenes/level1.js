@@ -23,8 +23,8 @@ define([
 
 		var gameState = config.getCurProgress();
 
-		/* Map from quest names to objects containing information about the quest. */
-		var questDictionary = {
+		/* Map from interaction names to objects containing information about those interactions. */
+		var interactionDictionary = {
 			villagerGitClone: {
 				doAction: function(gameState, scriptUtils) {
 					var villagerName = gameState.findVillagerWithReferrable;
@@ -121,7 +121,7 @@ define([
 
 				if (nearbyNPC != null) {
 					var scriptUtils = new ScriptUtils(
-						questDictionary,
+						interactionDictionary,
 						npcDictionary,
 						gameState,
 						{
@@ -144,7 +144,7 @@ define([
 					 * they were displayed. */
 					setTimeout(function() {
 						var actionName = gameState[nearbyNPC.properties.name][0]; /* TODO: handle empty-list case */
-						var action = questDictionary[actionName];
+						var action = interactionDictionary[actionName];
 						action.doAction(gameState, scriptUtils);
 					}, 1);
 				}
