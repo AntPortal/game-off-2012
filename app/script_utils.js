@@ -71,8 +71,11 @@ define([
 		];
 	}
 
-	ScriptUtils.prototype.dialogAndPause = function(msg) {
-		return this._dialogAndPauseWithEnv(msg, this._localState);
+	ScriptUtils.prototype.dialogAndPause = function(msgs) {
+		var self = this;
+		return _.flatten(_.map(msgs, function(msg) {
+			return self._dialogAndPauseWithEnv(msg, self._localState);
+		}));
 	}
 
 	ScriptUtils.prototype.actionBranch = function(actions, menuCallback) {
