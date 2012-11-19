@@ -49,6 +49,10 @@ define([
 		this._localState = _.extend(makeNpcVariables(localState.npc), localState);
 	}
 
+	ScriptUtils.prototype.getGameState = function() {
+		return this._gameState;
+	};
+
 	ScriptUtils.prototype._dialogAndPauseWithEnv = function(msg, env) {
 		var interpolated = interpolate(msg, env);
 		return [
