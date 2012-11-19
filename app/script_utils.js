@@ -133,31 +133,12 @@ define([
 	 */
 	ScriptUtils.prototype.makeReferral = function(prefMsg, nonPrefMsg, noRefMsg, prefInteraction) {
 		var self = this;
+		utils.assert(self._localState, 'localState in ScriptUtils should be defined');
 
 		return [{
 			action: 'arbitraryCode',
 			code: function(curState, callback) {
-				var maybeInteractionInfo = _.reduce(self._gameState, function(foundInteraction, interactions, npcName) {
-					utils.assert(foundInteraction === null || typeof(foundInteraction) === 'object', 'Type of ' + foundInteraction + ' should be object or null');
-
-					if (npcName === self._localState.npc.properties.name) {
-						return foundInteraction;
-					}
-
-					var referrableInteractions = _.filter(interactions, function(q) { return self._interactionDictionary[q].referrable; });
-					var hasPrefInteraction = _.contains(referrableInteractions, prefInteraction);
-					if (hasPrefInteraction) {
-						return {npcName: npcName, interactionName: prefInteraction};
-					} else if (referrableInteractions.length === 0) {
-						return foundInteraction;
-					} else {
-						if (foundInteraction === null) {
-							return {npcName: npcName, interactionName: _.first(referrableInteractions)};
-						} else {
-							return foundInteraction;
-						}
-					}
-				}, null);
+				var maybeInteractionInfo = self._gameState.findReferrableInteraction(self._localState.npc.properties.name, prefInteraction);
 
 				var vm = Crafty.e('ScriptRunner');
 				var script;
@@ -194,7 +175,7 @@ define([
 				action: 'arbitraryCode',
 				code: function(curState, callback) {
 					var npcName = self._localState.npc.properties.name;
-					self._gameState[npcName] = _.without(self._gameState[npcName], self._localState.interaction);
+					self._gameState.removeInteraction(npcName, self._localState.interaction);
 					callback(curState + 1);
 				}
 		}];

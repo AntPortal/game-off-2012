@@ -10,6 +10,7 @@ define([
 		'components/ClickNoDrag',
 		'components/Character',
 		'components/Dialog',
+		'components/GameState',
 		'components/ActionMenu',
 		'scenes/level2-intro',
 		'components/TaskList',
@@ -24,8 +25,6 @@ define([
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
 		var actionMenuActive = false;
-
-		var gameState = config.getCurProgress();
 
 		/* Map from interaction names to objects containing information about those interactions. */
 		var interactionDictionary = {
@@ -64,12 +63,11 @@ define([
 							[{
 								action: 'arbitraryCode',
 								code: function(curState, callback) {
-									var numClonesLeft = _.reduce(gameState, function(acc, npcInteractions) {
-										return acc + (_.contains(npcInteractions, thisInteraction) ? 1 : 0);
-									}, 0);
+									var npcsWithClone = gameState.findInteraction(thisInteraction);
+									var numClonesLeft = npcsWithClone.length;
 									console.log('clones left:', numClonesLeft);
 									if (numClonesLeft === 0) {
-										gameState['Linus'].push('linusGitCloneComplete');
+										gameState.addInteraction(['Linus'], 'linusGitCloneComplete');
 									}
 									callback(curState+1);
 								}
@@ -137,7 +135,7 @@ define([
 								action: 'arbitraryCode',
 								code: function(curState, callback) {
 									config.setCurCoppers(config.getCurCoppers() + SILVER_VALUE);
-									gameState['Linus'].push('linusGitAdd');
+									gameState.addInteraction(['Linus'], 'linusGitAdd');
 									callback(curState + 1);
 								}
 							},
@@ -173,6 +171,7 @@ define([
 				}
 			}
 		};
+		var gameState = Crafty.e('GameState').GameState(interactionDictionary);
 		var npcDictionary = {};
 
 		function updateTaskList() {
@@ -214,7 +213,7 @@ define([
 					 * they were displayed. */
 					setTimeout(function() {
 						var npcName = nearbyNPC.properties.name;
-						var actionName = gameState[npcName][0];
+						var actionName = gameState.getOneInteraction(npcName);
 						var action = actionName ? interactionDictionary[actionName] : (npcName === "Linus" ? interactionDictionary.defaultLinus : interactionDictionary.defaultInteraction);
 						var scriptUtils = new ScriptUtils(
 							interactionDictionary,
@@ -264,7 +263,7 @@ define([
 		mouselook.start();
 		utils.ensureMusicIsPlaying('music/town');
 		(function() { //Initial dialog from boy and girl to hero.
-			if (!_.isEmpty(gameState)) {
+			if (!gameState.isEmpty()) {
 				return;
 			}
 
@@ -308,10 +307,7 @@ define([
 				[{
 					action: 'arbitraryCode',
 					code: function(curState, callback) {
-						['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'].forEach(function(name) {
-							gameState[name] = ['villagerGitClone'];
-						});
-						gameState['Linus'] = [];
+						gameState.addInteraction(['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'], 'villagerGitClone');
 						updateTaskList();
 						vm.destroy();
 					}
