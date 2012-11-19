@@ -1,10 +1,12 @@
 define([
 		'config',
 		'utils',
+		'components/GameState',
+		'scenes/level1',
 		'components/Dialog',
 		'components/TextButton',
 		'components/BetterText',
-], function(config, utils) {
+], function(config, utils, gameStates) {
 	Crafty.scene('title', function() {
 		var i;
 		var title = utils.createTitleEntity(Crafty);
@@ -12,7 +14,7 @@ define([
 		var slots = [0,1,2];
 		function getMsgForSaveGameData(i) {
 			return [
-				"Save Game Slot " + (i + 1) +": " + (config.saveGames[i].name || "[Empty]")
+				"Save Game Slot " + (i + 1) +": " + (gameStates.saveGames[i].getGithubName() || "[Empty]")
 			];
 		}
 		Crafty.viewport.x = 0;
@@ -35,7 +37,7 @@ define([
 			slots[i].addComponent('Mouse');
 			slots[i].bind('Click', function() {
 				config.curSaveSlot = this.saveIndex;
-				if (config.getCurProgress()) {
+				if (!gameStates.saveGames[config.curSaveSlot].isEmpty()) {
 					//TODO Load the level
 					Crafty.scene('level1');
 				} else {
@@ -43,7 +45,7 @@ define([
 					Crafty.scene('newGame');
 				}
 			});
-			if (config.saveGames[i].progress) {
+			if (!gameStates.saveGames[i].isEmpty()) {
 				var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
 				slotDelete.attr({
 					x: config.viewport.width - 16 - 8,
@@ -55,7 +57,7 @@ define([
 				});
 				slotDelete.bind('Click', function() {
 					console.log('delete clicked');
-					config.saveGames[this.saveIndex] = {};
+					gameStates.saveGames[this.saveIndex].clear();
 					slots[this.saveIndex].face = 'DefaultGithubAvatar';
 					slots[this.saveIndex].msg = getMsgForSaveGameData(this.saveIndex);
 					slots[this.saveIndex].trigger('Change');
@@ -225,9 +227,8 @@ define([
 		}
 		function fnDone() {
 			if (name.length > 0) {
-				config.setCurName(name);
-				config.setCurShortName(utils.getShortName(name));
-				config.setCurProgress({});
+				var gameState = gameStates.saveGames[config.curSaveSlot];
+				gameState.setGithubName(name).setShortName(utils.getShortName(name));
 				Crafty.scene('level1');
 			}
 		}

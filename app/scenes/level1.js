@@ -5,13 +5,13 @@ define([
 		'utils',
 		'script_utils',
 		'interaction_dictionary',
+		'components/GameState',
 		'Crafty',
 		'underscore',
 		'components/ViewportRelative',
 		'components/ClickNoDrag',
 		'components/Character',
 		'components/Dialog',
-		'components/GameState',
 		'components/ActionMenu',
 		'scenes/level2-intro',
 		'components/TaskList',
@@ -24,7 +24,7 @@ define([
 		var actionMenuActive = false;
 
 
-		var gameState = Crafty.e('GameState').GameState(interactionDictionary);
+		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
 		function updateTaskList() {
@@ -78,7 +78,7 @@ define([
 								face: undefined,
 								x: clickedTileEntity.x - 300,
 								y: clickedTileEntity.y - 125,
-								heroName: config.getCurShortName()
+								heroName: gameState.getShortName()
 							}
 						);
 						action.doAction(scriptUtils);
@@ -116,11 +116,11 @@ define([
 		mouselook.start();
 		utils.ensureMusicIsPlaying('music/town');
 		(function() { //Initial dialog from boy and girl to hero.
-			if (!gameState.isEmpty()) {
+			if (!gameState.hasNoInteractions()) {
 				return;
 			}
 
-			var heroName = config.getCurShortName();
+			var heroName = gameState.getShortName();
 			var vm = Crafty.e('ScriptRunner');
 			var chainSet = utils.chainSet;
 			var template = {

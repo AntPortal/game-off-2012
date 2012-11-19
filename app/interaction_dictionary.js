@@ -123,7 +123,7 @@ define([
 						{
 							action: 'arbitraryCode',
 							code: function(curState, callback) {
-								config.setCurCoppers(config.getCurCoppers() + SILVER_VALUE);
+								gameState.giveCopper(SILVER_VALUE);
 								gameState.addInteraction(['Linus'], 'linusGitAdd');
 								callback(curState + 1);
 							}

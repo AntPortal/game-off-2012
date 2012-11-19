@@ -1,12 +1,12 @@
 define([
 		'config',
 		'utils',
+		'components/GameState',
 		'Crafty',
 		'scenes/Title-intro',
-		'scenes/level1-intro',
 		'scenes/SpriteTest',
 		'components/BetterText',
-], function(config, utils) {
+], function(config, utils, gameStates) {
 	function loadAntifareaCharacterSprite(id, url) {
 		var NUM_FRAMES = 3;
 		var asset = Crafty.asset(url);
@@ -53,7 +53,12 @@ define([
 			};
 			return func;
 		}
-		var githubAccountNames = [config.saveGames[0].name, config.saveGames[1].name, config.saveGames[2].name];
+		var githubAccountNames = [
+			gameStates.saveGames[0].getGithubName(),
+			gameStates.saveGames[1].getGithubName(),
+			gameStates.saveGames[2].getGithubName()
+		];
+		console.log(githubAccountNames);
 		utils.withGitHubAvatarUrls(githubAccountNames, function(githubAvatarUrls) {
 			var i;
 			var assets = [ //Try to keep alphabetical

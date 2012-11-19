@@ -1,24 +1,78 @@
 define([
 	'config',
 	'utils',
+	'interaction_dictionary',
 	'Crafty',
 	'underscore',
-], function(config, utils) {
+], function(config, utils, interactionDictionary) {
 	Crafty.c('GameState', {
+		_githubName: undefined,
+		_shortName: "",
+		_slotId: 0,
 		_gameState: null,
-		_interactionDictionary: null,
-		init: function() {
-			this._gameState = config.getCurProgress();
-		},
-		GameState: function(interactionDictionary) {
-			this._interactionDictionary = interactionDictionary;
+		_coppers: 0,
+		GameState: function(slotId) {
+			/*
+			 * The save game object has the following structure:
+			 * {
+			 * 	githubName: "NebuPookins",
+			 * 	shortName: "Nebu"
+			 * 	progress: {
+			 * 		'Apache': ['villagerGitClone', 'villagerGitAdd', ...], // Interactions that this character can perform.
+			 *			...
+			 * 	},
+			 * 	coppers: 2
+			 * }
+			 * 
+			 * githubName is the github account name (alphanumeric and dash, less than 40 char, can't start with dash)
+			 * shortname is a shortened version of the github name.
+			 * 
+			 * Easiest way to detect that a save slot is empty is to read the progress field, and if it's "undefined", it means
+			 * the slot is empty.
+			 */
+			this._slotId = slotId;
+			this._load();
 			return this;
+		},
+		getGithubName: function() {
+			return this._githubName;
+		},
+		setGithubName: function(name) {
+			this._githubName = name;
+			this._save();
+			return this;
+		},
+		getShortName: function() {
+			return this._shortName;
+		},
+		setShortName: function(shortName) {
+			this._shortName = shortName;
+			this._save();
+			return this;
+		},
+		getCopper: function() {
+			return this._coppers;
+		},
+		giveCopper: function(num) {
+			this._coppers += num;
+			this._save();
+		},
+		/** Returns true if this GameState represents a blank save slot. */
+		isEmpty: function() {
+			return this._githubName === undefined;
 		},
 		/** Returns true if no NPCs have any interactions available,
 		 *  and no interactions have ever been completed; returns false
 		 *  otherwise. */
-		isEmpty: function() {
+		hasNoInteractions: function() {
 			return _.isEmpty(this._gameState);
+		},
+		clear: function() {
+			this._githubName = undefined;
+			this._shortName = "";
+			this._gameState = {};
+			this._coppers = 0;
+			this._save();
 		},
 		addInteraction: function(npcNames, interaction) {
 			var self = this;
@@ -27,10 +81,12 @@ define([
 				self._gameState[name].push(interaction);
 				/* TODO: avoid duplicates? */
 			});
+			this._save();
 		},
 		removeInteraction: function(npcName, interaction) {
 			utils.assert(this._gameState[npcName], 'removeInteraction was passed an npcName with no gameState entry');
 			this._gameState[npcName] = _.without(this._gameState[npcName], interaction);
+			this._save();
 		},
 		/** Returns the name of an interaction that the given NPC has available, or undefined if the NPC
 		 *  doesn't have any interactions. */
@@ -65,7 +121,7 @@ define([
 					return foundInteraction;
 				}
 
-				var referrableInteractions = _.filter(interactions, function(q) { return self._interactionDictionary[q].referrable; });
+				var referrableInteractions = _.filter(interactions, function(q) { return interactionDictionary[q].referrable; });
 				var hasPrefInteraction = _.contains(referrableInteractions, prefInteraction);
 				if (hasPrefInteraction) {
 					return {npcName: npcName, interactionName: prefInteraction};
@@ -80,8 +136,38 @@ define([
 				}
 			}, null);
 		},
+		_load: function() {
+			var loadedData = window.localStorage.getItem(this._localStorageKey());
+			if (loadedData) {
+				var parsedData = JSON.parse(loadedData);
+				this._githubName = parsedData.githubName;
+				this._shortName = parsedData.shortName;
+				this._gameState = parsedData.gameState;
+				this._coppers = parsedData.coppers;
+			} else {
+				this.clear();
+			}
+		},
 		_save: function() {
-			config.setCurProgress(this._gameState);
+			window.localStorage.setItem(this._localStorageKey(), JSON.stringify({
+				githubName: this._githubName,
+				shortName: this._shortName,
+				gameState: this._gameState,
+				coppers: this._coppers
+			}));
+		},
+		_localStorageKey: function() {
+			return 'saveGame' + this._slotId;
 		}
 	});
+
+	var gameStatesObj = {
+		saveGames: [{}, {}, {}],
+		curSaveSlot: 0 // must be between 0 and 2 inclusive
+	};
+	for (var i = 0; i < 3; i++) {
+		gameStatesObj.saveGames[i] = Crafty.e('GameState').GameState(i);
+	}
+
+	return gameStatesObj;
 });
