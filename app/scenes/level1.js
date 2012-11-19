@@ -131,11 +131,13 @@ define([
 							"@npcName@: @heroName@, I see in my scrying pool that you have succesfuly helped all "
 							+ "the Svenites obtain the latest copy of my book. Thank you! Here’s your silver coin."
 						),
+						scriptUtils.removeCurrentInteraction(),
 						[
 							{
 								action: 'arbitraryCode',
 								code: function(curState, callback) {
 									config.setCurCoppers(config.getCurCoppers() + SILVER_VALUE);
+									gameState['Linus'].push('linusGitAdd');
 									callback(curState + 1);
 								}
 							},
@@ -147,6 +149,28 @@ define([
 				taskString: "Report back to Linus",
 				referrable: true,
 				icon: null /* TODO */
+			},
+			linusGitAdd: {
+				doAction: function(scriptUtils) {
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner(_.flatten([
+						_.flatten([
+							"@npcName@: Ah, this is embarrassing... it seems there was a squashed bug in my book! He must have jumped in there when I wasn’t looking.",
+							"@npcName@: Let me see... Okay. I’ve rewritten the page and the bug is there no more!",
+							"@npcName@: Now I need to add that page into the book. For that I will use the magic words <span class='cmd'>git add page503</span>.",
+							"@npcName@: But the page won’t be bound to my book until I call the magic words <span class='cmd'>git commit</span>, and then add a note explaining that I’ve removed a bug.",
+							"@npcName@: <span class='cmd'>git add</span>, then <span class='cmd'>git commit</span>. You might want to remember that in case you ever need to commit something yourself...",
+						].map(_.bind(scriptUtils.dialogAndPause, scriptUtils))),
+						/* TODO: push the "git add" interaction onto some NPC's list of interactions */
+						scriptUtils.makeReferral(
+							"@npcName@: BTW, I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you. It might be a good opportunity for you to teach @himOrHerRef@ about the new magic words I just taught you.",
+							"@npcName@: BTW, I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you.",
+							"@npcName@: Come back and see me later in case I find another bug.",
+							"villagerGitAdd"
+						)
+					]));
+					vm.run();
+				}
 			}
 		};
 		var npcDictionary = {};
