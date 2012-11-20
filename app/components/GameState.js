@@ -5,6 +5,7 @@ define([
 	'Crafty',
 	'underscore',
 ], function(config, utils, interactionDictionary) {
+	var DEBUG_NO_SAVE = false;
 	Crafty.c('GameState', {
 		_githubName: undefined,
 		_shortName: "",
@@ -149,12 +150,14 @@ define([
 			}
 		},
 		_save: function() {
-			window.localStorage.setItem(this._localStorageKey(), JSON.stringify({
-				githubName: this._githubName,
-				shortName: this._shortName,
-				gameState: this._gameState,
-				coppers: this._coppers
-			}));
+			if (!DEBUG_NO_SAVE) {
+				window.localStorage.setItem(this._localStorageKey(), JSON.stringify({
+					githubName: this._githubName,
+					shortName: this._shortName,
+					gameState: this._gameState,
+					coppers: this._coppers
+				}));
+			}
 		},
 		_localStorageKey: function() {
 			return 'saveGame' + this._slotId;
