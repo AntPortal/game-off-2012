@@ -14,6 +14,7 @@ define([
 	var SILVER_VALUE = 4;
 	var GOLD_VALUE = 16;
 	var PLATINUM_VALUE = 64;
+	var sveniteNames = ['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'];
 	return {
 		defaultInteraction: {
 			doAction: function(scriptUtils) {
@@ -109,6 +110,7 @@ define([
 			referrable: true,
 			icon: null /* TODO */
 		},
+
 		linusGitCloneComplete: {
 			doAction: function(scriptUtils) {
 				var gameState = scriptUtils.getGameState();
@@ -137,8 +139,10 @@ define([
 			referrable: true,
 			icon: null /* TODO */
 		},
+
 		linusGitAdd: {
 			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
@@ -148,16 +152,71 @@ define([
 						"@npcName@: But the page won’t be bound to my book until I call the magic words <span class='cmd'>git commit</span>, and then add a note explaining that I’ve removed a bug.",
 						"@npcName@: <span class='cmd'>git add</span>, then <span class='cmd'>git commit</span>. You might want to remember that in case you ever need to commit something yourself...",
 					]),
-					/* TODO: push the "git add" interaction onto some NPC's list of interactions */
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							gameState.addInteraction([sveniteNames[0]], 'villagerGitAdd1');
+							callback(curState+1);
+						}
+					}],
 					scriptUtils.makeReferral(
 						"@npcName@: BTW, I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you. It might be a good opportunity for you to teach @himOrHerRef@ about the new magic words I just taught you.",
 						"@npcName@: BTW, I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you.",
 						"@npcName@: Come back and see me later in case I find another bug.",
-						"villagerGitAdd"
-					)
+						"villagerGitAdd1"
+					),
+					[{ action: 'destroyVM' }]
 				]));
 				vm.run();
-			}
+			},
+			referrable: true
+		},
+
+		villagerGitAdd1: {
+			doAction: function(scriptUtils) {
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						/* TODO: replace "alchemy" with randomized topics */
+						"@npcName@: Hey @heroName@, you came just in time. I’ve written a few pages on alchemy that I think would fit right into that book Linus is writing.",
+						"@npcName@: The only problem is, I don’t know what I need to do to get them in.",
+						"@npcName@: He said something about magically cloning his book, adding my new pages, and then binding those pages in.",
+						"@npcName@: It all sounds really complicated. He called that “committing” or something... maybe you can help me with this.",
+						"@npcName@: OK, let's start by getting a copy of the book. What's the incantation?"
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: 'git clone https://github.com/AntPortal/game-off-2012.git',
+							result: scriptUtils.dialogAndPause(["Okay, I think I got the right book. [...]"])
+						},
+						{ /* wrong answers */
+							texts: [
+								'git-clone https://github.com/AntPortal/game-off-2012.git',
+								'git clone AntPortal/game-off-2012.git'
+							],
+							result: scriptUtils.dialogAndPause(["I can’t seem to see Linus’ stuff. I think I’d rather we start again. Give me a second to clean this up. Let’s try again. What’s the incantation for getting Linus’ stuff?"]),
+							take: 1
+						},
+						{ /* joke answers */
+							/* TODO: jump to "generic wrong answer" after these */
+							choices: [
+								{
+									text: 'git init',
+									result: scriptUtils.dialogAndPause(["This doesn’t look like the right book... all it has is one page that says “This page intentionally left blank.” Are you sure that’s the right spell?"])
+								},
+								{
+									text: 'git clone https://github.com/ruby/ruby.git',
+									result: scriptUtils.dialogAndPause(["Woah!! That’s a lot of stuff! Though are you sure this is Linus’ book? There’s all these gems, and clever trinkets."])
+								}
+							],
+							take: 1
+						}
+					),
+					[{ action: 'destroyVM' }]
+				]));
+				vm.run();
+			},
+			referrable: true
 		}
 	};
 });
