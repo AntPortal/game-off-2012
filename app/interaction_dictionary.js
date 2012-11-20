@@ -7,6 +7,7 @@
  * - icon: TODO
  */
 define([
+	'underscore',
 	'Crafty',
 	'components/ScriptRunner',
 ], function() {
@@ -125,7 +126,7 @@ define([
 							action: 'arbitraryCode',
 							code: function(curState, callback) {
 								gameState.giveCopper(SILVER_VALUE);
-								gameState.addInteraction(['Linus'], 'linusGitAdd');
+								gameState.addInteraction(['Linus'], 'linusGitAdd1');
 								callback(curState + 1);
 							}
 						},
@@ -139,7 +140,7 @@ define([
 			icon: null /* TODO */
 		},
 
-		linusGitAdd: {
+		linusGitAdd1: {
 			doAction: function(scriptUtils) {
 				var gameState = scriptUtils.getGameState();
 				var vm = Crafty.e('ScriptRunner');
@@ -164,6 +165,7 @@ define([
 						"@npcName@: Come back and see me later in case I find another bug.",
 						"villagerGitAdd1"
 					),
+					scriptUtils.removeCurrentInteraction(),
 					[{ action: 'destroyVM' }]
 				]));
 				vm.run();
@@ -173,6 +175,7 @@ define([
 
 		villagerGitAdd1: {
 			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
@@ -297,7 +300,7 @@ define([
 								{
 									text: 'nmap 0.0.0.0/0',
 									result: scriptUtils.dialogAndPause([
-										"I don't know, I've heart people have gotten themselves into a lot of trouble with that 'nmap' spell..."
+										"I don't know, I've heard people have gotten themselves into a lot of trouble with that 'nmap' spell..."
 									])
 								}
 							],
@@ -312,8 +315,239 @@ define([
 						"Perfect, looks like the pages are securely fastened to the book. I guess I’ll continue writing my next chapter.",
 						"Thank you! Oh, please go say thank you to Linus on my behalf."
 					]),
-					[{ action: 'label', label: 'end' }],
-					[{ action: 'destroyVM' }]
+					scriptUtils.removeCurrentInteraction(),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							/* TODO: give a reward? */
+							gameState.addInteraction(['Linus'], 'linusGitAdd2');
+							callback(curState+1);
+						}
+					}],
+					[
+						{ action: 'label', label: 'end' },
+						{ action: 'destroyVM' }
+					]
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		linusGitAdd2: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: It sounds like you’ve now mastered the art of adding pages to the book.",
+						"@npcName@: Could you please go back to the Svenites and teach them what you just taught Scott?", /* TODO: put actual name here */
+						"@npcName@: This time, I think you can just teach 3 of them, and they’ll spread the word themselves from there.",
+						"@npcName@: While you're at it, could you could pass by Ceeveeus’ house? He lives alone in a shack in the forest far North of Sveni.",
+						"@npcName@: He never really wanted to join the village of Sveni. Maybe it was for tax purposes. Who knows."
+					]),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							gameState.addInteraction(sveniteNames, 'villagerGitAdd2');
+							gameState.addInteraction(['Ceeveeus'], 'ceeveeus1');
+							callback(curState+1);
+						}
+					}],
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		villagerGitAdd2: {
+			doAction: function(scriptUtils) {
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@, I’m so glad to see you. After we started reading Linus’ book, we realized how much we’d love to start writing ourselves too.",
+						"@npcName@: I heard the that writing magical books is the new literacy! Could you please show me how to add my new chapter?"
+					])
+					/* TODO: write the rest of this */
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		ceeveeus1: {
+			doAction: function(scriptUtils) {
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: What do you want? Can’t you see I’m busy chopping down trees? There are branches all over the property!!",
+						"@npcName@: Unless you’re here to help me clean up the mess, please go away!"
+					]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Ceeveeus'], 'ceeveeus2')
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		ceeveeus2: {
+			doAction: function(scriptUtils) {
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: You again? Don’t tell me Linus sent you. I already said I didn’t want to join Sveni.",
+						"@npcName@: They are a bunch of high tax payers and their central government is slow.",
+					]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Ceeveeus'], 'ceeveeus3')
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		ceeveeus3: {
+			doAction: function(scriptUtils) {
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause(["@npcName@: Hey, git out of my face!"]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Ceeveeus'], 'ceeveeus4')
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		ceeveeus4: {
+			doAction: function(scriptUtils) {
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Well, I respect stubbornness.",
+						"@npcName@: You know I was stubborn too when I was young.",
+						"@npcName@: I used to fight for righteous causes. Like this one time when I wrote a book on how to make chips and wafers."
+					]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Ceeveeus'], 'ceeveeusClone')
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
+
+		ceeveeusClone: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: I give in. Maybe I’ll read just <em>one</em> page.",
+						"@npcName@: So let’s get that book. Just tell me the magic words... "
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git clone https://github.com/AntPortal/game-off-2012.git",
+							result: [{ action: 'jumpToLabel', label: 'beginAdd' }],
+						},
+						{ /* wrong answers */
+							texts: [
+								"git checkout https://github.com/AntPortal/game-off-2012.git",
+								"cvs checkout https://github.com/AntPortal/game-off-2012.git",
+								"cvs clone https://github.com/AntPortal/game-off-2012.git"
+							],
+							result: scriptUtils.dialogAndPause([
+								"@npcName@:  Hrm, didn’t work. You know, back in my day, we made spells that actually did things..."
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [],
+							take: 0
+						}
+					),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'beginAdd' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: Okay, I have the book now. Le’ssee here... Geez, I can tell that this was written by a bunch of youngins’ who think they know everything.",
+						"@npcName@: Why, I have half a mind to show this “Linus” what for. Tell me, son, how do I add my own pages to this book?"
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git add page504",
+							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ["git-add page504", "cvs add page504"],
+							result: scriptUtils.dialogAndPause(["@npcName@: No, that didn’t seem to do anything. Are you sure this “Linus magic” is any good?"]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [],
+							take: 0
+						}
+					),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'beginCommit' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: Huh, that pretty much looks like the way <em>I’ve</em> been doing things all along. Reinventing the wheel is all you kids have done.",
+						"@npcName@: Anyway, what do I do to permanently bind the page to the book?"
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git commit",
+							result: [{ action: 'jumpToLabel', label: 'endCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ["cvs commit"], /* TODO: add more */
+							result: scriptUtils.dialogAndPause(["@npcName@: Nope, the pages aren’t bound to the book. If you whippersnappers are gonna reinvent the wheel, and least invent a wheel that works!"]),
+							take: 1
+						},
+						{ /* joke answers; none for now */
+							choices: [],
+							take: 0
+						}
+					),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'endCommit' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: `git commit`? Sounds like this “Linus” kid just took my ideas, changed a few keywords around, and called it his own.",
+						"@npcName@: Still, at least the book is bound now. Give it a look... or don’t, I don’t care! I got work to do here.",
+						"@npcName@: But I sure hope Linus will invent a spell to put all my branches in order... You wouldn’t happen to know how to do that, would you?"
+					]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.actionBranch(_.shuffle([
+						{
+							label: "I’ve heard of the spells “csv2svn” and “git svn”. Maybe you can do something with those...",
+							result: _.flatten(
+								scriptUtils.dialogAndPause(["@npcName@: Hmm, really? That sounds like it just might work... here’s something for your trouble."]),
+								[{
+									action: 'arbitraryCode',
+									code: function(curState, callback) {
+										gameState.giveCopper(GOLD_VALUE);
+										callback(curState + 1);
+									}
+								}]
+							)
+						},
+						{
+							label: "I don't know",
+							result: scriptUtils.dialogAndPause(["@npcName@: Figures. Well, back to the old way... at least I know it works..."])
+						},
+						{
+							label: "Just use “git cvs”",
+							result: scriptUtils.dialogAndPause(["@npcName@: Son, I don’t want to be rude, but you have no idea what you’re talking about, do you?"])
+						}
+					])),
+
+					[
+						{ action: 'label', label: 'end' },
+						{ action: 'destroyVM' }
+					]
 				]));
 				vm.run();
 			},

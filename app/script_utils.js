@@ -78,7 +78,7 @@ define([
 		}));
 	}
 
-	ScriptUtils.prototype.actionBranch = function(actions, menuCallback) {
+	ScriptUtils.prototype.actionBranch = function(actions) {
 		var self = this;
 		var chosenAction = null;
 		var actionCallback = null;
@@ -106,8 +106,7 @@ define([
 			{
 				action: 'arbitraryCode',
 				code: function(curState, callback) {
-					menuCallback(true);
-					actionCallback = function(jump) { menuCallback(false); callback(curState+jump); };
+					actionCallback = function(jump) { callback(curState+jump); };
 				}
 			}
 		];
@@ -170,7 +169,7 @@ define([
 		actionBranches = _.shuffle(actionBranches);
 
 		return _.flatten([
-			this.actionBranch(actionBranches, function() {}),
+			this.actionBranch(actionBranches),
 			[{ 'action': 'label', 'label': wrongLabel }],
 			wrongAnswers.result,
 			[{ 'action': 'label', 'label': endLabel }]
@@ -216,6 +215,17 @@ define([
 					}
 				});
 				vm.ScriptRunner(script).run();
+			}
+		}];
+	}
+
+	ScriptUtils.prototype.addInteraction = function(npcNames, interaction) {
+		var self = this;
+		return [{
+			action: 'arbitraryCode',
+			code: function(curState, callback) {
+				self._gameState.addInteraction(npcNames, interaction);
+				callback(curState + 1);
 			}
 		}];
 	}

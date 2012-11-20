@@ -77,6 +77,7 @@ define([
 		},
 		addInteraction: function(npcNames, interaction) {
 			var self = this;
+			utils.assert(Array.isArray(npcNames), 'npcNames must be an array');
 			_.each(npcNames, function(name) {
 				self._gameState[name] = self._gameState[name] || [];
 				self._gameState[name].push(interaction);

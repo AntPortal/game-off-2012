@@ -64,6 +64,7 @@ define([
 				'assets/faces/48x48_Faces_4th_Sheet_Update_CharlesGabriel_OGA_0.png',
 				'assets/faces/faces1.png',
 				'assets/sprites/bunny.png',
+				'assets/sprites/ceeveeus.png',
 				'assets/sprites/charsets_warrior.png',
 				'assets/sprites/childF.png',
 				'assets/sprites/childM.png',
@@ -103,6 +104,7 @@ define([
 					loadAntifareaCharacterSprite('dog', 'assets/sprites/dog.png');
 					loadAntifareaCharacterSprite('dog2', 'assets/sprites/dog2.png');
 					loadAntifareaCharacterSprite('oldman', 'assets/sprites/oldman.png');
+					loadAntifareaCharacterSprite('ceeveeus', 'assets/sprites/ceeveeus.png');
 					loadAntifareaCharacterSprite('childF', 'assets/sprites/childF.png');
 					loadAntifareaCharacterSprite('childM', 'assets/sprites/childM.png');
 					loadAntifareaCharacterSprite('bunny', 'assets/sprites/bunny.png');

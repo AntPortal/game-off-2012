@@ -92,6 +92,13 @@
     <property name="sprite" value="healerF"/>
    </properties>
   </object>
+  <object type="npc" x="192" y="0" width="32" height="32">
+   <properties>
+    <property name="gender" value="M"/>
+    <property name="name" value="Ceeveeus"/>
+    <property name="sprite" value="ceeveeus"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="2 floor" width="15" height="27">
   <properties>

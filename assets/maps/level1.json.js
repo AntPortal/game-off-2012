@@ -177,6 +177,20 @@ define(function(){return(
                  "width":32,
                  "x":192,
                  "y":160
+                }, 
+                {
+                 "height":32,
+                 "name":"",
+                 "properties":
+                    {
+                     "gender":"M",
+                     "name":"Ceeveeus",
+                     "sprite":"ceeveeus"
+                    },
+                 "type":"npc",
+                 "width":32,
+                 "x":192,
+                 "y":0
                 }],
          "opacity":1,
          "properties":
