@@ -127,7 +127,7 @@ define([
 				}
 			}
 
-			utils.assert(targetState, 'Invalid jump label');
+			utils.assert(targetState !== -1, 'Invalid jump label');
 			this._curState = targetState;
 			this.run();
 		},
