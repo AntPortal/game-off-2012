@@ -4,148 +4,280 @@ define([
 	'Crafty',
 	'components/ViewportRelative',
 ], function(config, utils) {
-	Crafty.c('ScriptRunner', {
-		_curState: 0,
-		init: function() {
-			//Does nothing
-			return this;
-		},
-		ScriptRunner: function(script) {
-			this.script = script;
-			return this;
-		},
-		run: function() {
-			if (this._curState >= this.script.length) {
-				return; //Done
+	/**
+	 * Dictionary which defines every instruction this VM is aware of. The keys
+	 * are the names of the instructions, and the values are functions which allow
+	 * you to extract information about that instruction. There are 3 functions
+	 * for each instruction:
+	 *
+	 * validate is a function which "does nothing" if the instruction is valid,
+	 * and throws an exception if the instruction is invalid. It is used when the
+	 * ScriptRunner initializes itself to perform a "compile-time" check of the
+	 * script.
+	 *
+	 * behaviour is the function which actually "does the work" of the
+	 * instruction. It is invoked by the VM when the script is run, and the
+	 * instruction pointer points to the relevant instruction.
+	 *
+	 * toString is a function which returns a string representation of the
+	 * instruction. This is to aid debugging failing scripts.
+	 */
+	var instructions = {};
+
+	/**
+	 * A label instruction, which a "jumpToLabel" instruction can jump to.
+	 * Otherwise, acts as a NOOP. Label instructions are scoped to their owning
+	 * VM, and must be unique within a VM or else undefined behaviour may occur.
+	 */
+	instructions['label'] = {
+		validate: function(vm, inst) {
+			if (! inst.label) {
+				throw 'label instruction needs to have a field "label"';
 			}
-			var instruction = this.script[this._curState];
-			var method = this['_' + instruction.action];
-			if (!method) {
-				throw 'Unsupported scripting action: ' + instruction.action;
-			} else {
-				method.call(this, instruction);
-			}
-			return this;
 		},
-		_label: function(labelInst) {
-			if (labelInst.action != 'label') {
-				throw labelInst;
-			}
-			this._curState++;
-			this.run();
+		behaviour: function(vm, inst) {
+			vm._curState++;
+			vm.run();
 		},
-		_dialog: function(dialogInst) {
-			if (dialogInst.action != 'dialog') {
-				throw dialogInst;
+		toString: function(vm, inst) {
+			return 'LABEL ' + inst.label;
+		}
+	};
+
+	instructions['dialog'] = {
+		validate: function(vm, inst) {
+			if (!inst.params) {
+				throw 'dialog instruction needs parameters';
 			}
-			Crafty.e('2D, Canvas, Dialog').attr(dialogInst.params);
-			this._curState++;
-			this.run();
+			if (! inst.params.msg) {
+				throw 'dialog instruction must have some text';
+			}
+			//TODO: We can do more validation here if we want.
 		},
-		_menu: function(menuInst) {
-			if (menuInst.action != 'menu') {
-				throw dialogInst;
-			}
-			Crafty.e('2D, Canvas, ActionMenu').attr(menuInst.params);
-			this._curState++;
-			this.run();
+		behaviour: function(vm, inst) {
+			Crafty.e('2D, Canvas, Dialog').attr(inst.params);
+			vm._curState++;
+			vm.run();
 		},
-		_PACADOC: function(pacadocInst) {
-			if (pacadocInst.action != 'PACADOC') {
-				throw pacadocInst;
+		toString: function(vm, inst) {
+			return 'DIALOG: ' + inst.msg;
+		},
+	};
+
+	instructions['menu'] = {
+		validate: function(vm, inst) {
+			if (!inst.params) {
+				throw 'menu instruction needs parameters';
 			}
-			var me = this;
+			//TODO: We can do more validation here if we want.
+		},
+		behaviour: function(vm, inst) {
+			Crafty.e('2D, Canvas, ActionMenu').attr(inst.params);
+			vm._curState++;
+			vm.run();
+		},
+		toString: function(vm, inst) {
+			return 'MENU: TODO'; //TODO
+		},
+	}
+
+	instructions['PACADOC'] = {
+		validate: function(vm, inst) {
+			//TODO: We can do more validation here if we want.
+		},
+		behaviour: function(vm, inst) {
 			Crafty.e('2D, Mouse, ViewportRelative').attr({
 				x: 0,
 				y: 0,
 				z: config.zOffset.meta,
 				w: config.viewport.width,
 				h: config.viewport.height,
-				clicked: false,
 			}).bind('Click', function() {
 				Crafty('Dialog').destroy(); //Destroy all dialogs
 				this.destroy(); //Destroy this mouse listener
-				me._curState++;
-				me.run();
+				vm._curState++;
+				vm.run();
 			});
 		},
-		_loadScene: function(inst) {
-			if (inst.action != 'loadScene') {
-				throw inst;
-			}
-			Crafty.scene(inst.scene);
-			this._curState++;
-			this.run();
+		toString: function(vm, inst) {
+			return 'PACADOC';
 		},
-		_playMusic: function(inst) {
-			if (inst.action != 'playMusic') {
-				throw inst;
+	};
+
+	instructions['loadScene'] = {
+		validate: function(vm, inst) {
+			if (! inst.scene) {
+				throw 'loadScene instruction must specify a scene to load.';
 			}
+		},
+		behaviour: function(vm, inst) {
+			Crafty.scene(inst.scene);
+			vm._curState++;
+			vm.run();
+		},
+		toString: function(vm, isnt) {
+			return 'LOAD_SCENE ' + inst.scene;
+		}
+	};
+
+	instructions['playMusic'] = {
+		validate: function(vm, inst) {
+			if (! inst.song) {
+				throw 'playMusic must specify a song to play.';
+			}
+		},
+		behaviour: function(vm, inst) {
 			utils.stopAllMusic();
 			Crafty.audio.play(inst.song, -1, utils.effectiveVolume(inst.song));
-			this._curState++;
-			this.run();
+			vm._curState++;
+			vm.run();
 		},
-		_fade: function(inst) {
-			if (inst.action != 'fade') {
-				throw inst;
+		toString: function(vm, isnt) {
+			return 'PLAY_MUSIC ' + inst.song;
+		}
+	};
+
+	instructions['fade'] = {
+		validate: function(vm, inst) {
+			if (! inst.params) {
+				throw 'TODO: document validation error';
 			}
-			var me = this;
-			if (!this.fader) {
-				this.fader = Crafty.e('2D, Canvas, Color, Tween, ViewportRelative').attr({
-					x: 0, y: 0, z: 999, w: config.viewport.width, h: config.viewport.height, alpha: 0, color: '#000000'
+			if (! inst.duration) {
+				throw 'fade must speicfy a duration';
+			}
+			//TODO: We can do more validation here if we want.
+		},
+		behaviour: function(vm, inst) {
+			if (!vm.fader) {
+				vm.fader = Crafty.e('2D, Canvas, Color, Tween, ViewportRelative').attr({
+					x: 0, y: 0, z: 999, w: config.viewport.width, h: config.viewport.height, alpha: 0, color: '#000000' //TODO: Replace z with a named constant from config
 				});
 			}
-			var curState = this._curState;
-			this.fader.bind('TweenEnd', function() {
+			var curState = vm._curState;
+			vm.fader.bind('TweenEnd', function() {
 				this.unbind('TweenEnd');
-				me._curState = curState + 1;
-				me.run();
+				vm._curState++;
+				vm.run();
 			});
-			this.fader.tween(inst.params, inst.duration);
+			vm.fader.tween(inst.params, inst.duration);
 		},
-		_jump: function(inst) {
-			if (inst.action != 'jump') {
-				throw inst;
-			}
-			utils.assert(inst.offset != 0, 'jump offset cannot be 0');
+		toString: function(vm, isnt) {
+			return 'FADE ' + inst.duration;
+		}
+	};
 
-			this._curState += inst.offset;
-			this.run();
+	instructions['jump'] = {
+		validate: function(vm, inst) {
+			if (inst.offset == 0) {
+				throw 'jump offset cannot be 0';
+			}
 		},
-		_jumpToLabel: function(inst) {
-			if (inst.action != 'jumpToLabel') {
-				throw inst;
+		behaviour: function(vm, inst) {
+			vm._curState += inst.offset;
+			vm.run();
+		},
+		toString: function(vm, isnt) {
+			return 'JUMP ' + inst.offset + ' (relative)';
+		}
+	};
+
+	instructions['jumpToLabel'] = {
+		validate: function(vm, inst) {
+			if (! inst.label) {
+				throw 'jumpToLabel must have a label';
 			}
 
 			var targetState = -1;
-			for (var i = 0, n = this.script.length; i < n; i++) {
-				var maybeLabel = this.script[i];
+			for (var i = 0, n = vm.script.length; i < n; i++) {
+				var maybeLabel = vm.script[i];
 				if (maybeLabel.action === 'label' && maybeLabel.label === inst.label) {
 					targetState = i;
 					break;
 				}
 			}
-
-			utils.assert(targetState, 'Invalid jump label');
-			this._curState = targetState;
-			this.run();
-		},
-		_arbitraryCode: function(inst) {
-			if (inst.action != 'arbitraryCode') {
-				throw inst;
+			if (targetState == -1) {
+				throw 'Invalid jump label ' + inst.label;
 			}
-			var me = this;
-			inst.code(this._curState, function(newState) {
-				me._curState = newState;
-				me.run();
+		},
+		behaviour: function(vm, inst) {
+			var targetState = -1;
+			for (var i = 0, n = vm.script.length; i < n; i++) {
+				var maybeLabel = vm.script[i];
+				if (maybeLabel.action === 'label' && maybeLabel.label === inst.label) {
+					targetState = i;
+					break;
+				}
+			}
+			vm._curState = targetState;
+			vm.run();
+		},
+		toString: function(vm, isnt) {
+			return 'JUMP_TO_LABEL ' + inst.label;
+		}
+	};
+
+	instructions['arbitraryCode'] = {
+		validate: function(vm, inst) {
+			if (! inst.code) {
+				throw 'arbitraryCode must have a code attribute';
+			}
+			//TODO: We can do more validation here if we want.
+		},
+		behaviour: function(vm, inst) {
+			inst.code(vm._curState, function(newState) {
+				vm._curState = newState;
+				vm.run();
 			});
 		},
-		_destroyVM: function(inst) {
-			if (inst.action != 'destroyVM') {
-				throw inst;
+		toString: function(vm, isnt) {
+			return 'ARBITRARY_CODE'; //TODO more info here?
+		}
+	};
+
+	instructions['destroyVM'] = {
+		validate: function(vm, inst) {
+			//Does nothing
+		},
+		behaviour: function(vm, inst) {
+			vm.destroy();
+		},
+		toString: function(vm, isnt) {
+			return 'DESTROY_VM';
+		}
+	};
+
+	Crafty.c('ScriptRunner', {
+		_curState: 0,
+		init: function() {
+			//Does nothing
+			return this;
+		},
+		/**
+		 * Initializes the ScriptRunner with a script. A script is an array of
+		 * objects, with each object representing an instruction. These objects
+		 * always have a field "action" which specifies which instruction the object
+		 * represents. From there, the object may have other fields, the specifics
+		 * of which depend on the instruction used.
+		 */
+		ScriptRunner: function(script) {
+			this.script = script;
+			for (var i = 0; i < script.length; i++) {
+				var instObj = script[i];
+				var instName = instObj.action;
+				var instEntry = instructions[instName];
+				instEntry.validate(this, instObj);
 			}
-			this.destroy();
+			return this;
+		},
+		run: function() {
+			if (this._curState >= this.script.length) {
+				return; //Done
+			}
+			var instObj = this.script[this._curState];
+			var instName = instObj.action;
+			var instEntry = instructions[instName];
+			instructions[instName].behaviour(this, instObj);
+			return this;
 		}
 	});
 });
