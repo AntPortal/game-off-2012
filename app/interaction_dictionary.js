@@ -362,13 +362,62 @@ define([
 
 		villagerGitAdd2: {
 			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hi @heroName@, I’m so glad to see you. After we started reading Linus’ book, we realized how much we’d love to start writing ourselves too.",
 						"@npcName@: I heard the that writing magical books is the new literacy! Could you please show me how to add my new chapter?"
-					])
-					/* TODO: write the rest of this */
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git add chapter75",
+							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ['git fetch', 'git-add chapter75', 'git insert chapter75', 'mv chapter75 git'],
+							result: scriptUtils.dialogAndPause(["@npcName@: Aaah, no, that didn’t work. You didn’t lose my changes, did you? I hope I don’t have to rewrite that chapter all over again... "]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'beginCommit' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: The pages don’t seem to be glued to the book, though. There's another spell to actually attach them, right? What is it?"
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git commit",
+							result: [{ action: 'jumpToLabel', label: 'endCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ['svn commit', 'git commit chapter75'],
+							result: scriptUtils.dialogAndPause([
+								"Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
+								"I hope I don’t have to rewrite that chapter all over again..."
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'endCommit' }],
+					scriptUtils.tryRemoveInteraction(
+						"@npcName@: Thanks! As a token of gratitude, I’m going to go teach it to @npcNameRef@ on your behalf. My mother always told me that teaching is the best way to learn.",
+						"@npcName@: Thanks!"
+					),
+
+					[
+						{ action: 'label', label: 'end' },
+						{ action: 'destroyVM' }
+					]
 				]));
 				vm.run();
 			},

@@ -177,6 +177,50 @@ define([
 	}
 
 	/**
+	 * Returns a script fragment that searches the game state for another NPC
+	 * with the current interaction, removes the interaction from that NPC's
+	 * interaction list, and presents a dialog containing either msgIfFound or
+	 * msgIfNotFound, depending on if the interaction was found or not.
+	 */
+	ScriptUtils.prototype.tryRemoveInteraction = function(msgIfFound, msgIfNotFound) {
+		var self = this;
+		var curNpcName = self._localState.npc.properties.name;
+		var curInteraction = self._localState.interaction;
+		return [{
+			action: 'arbitraryCode',
+			code: function(curState, callback) {
+				var maybeInteraction = self._gameState.findReferrableInteraction(curNpcName, curInteraction);
+				var vm = Crafty.e('ScriptRunner');
+
+				var script = [];
+				if (maybeInteraction && maybeInteraction.interactionName === curInteraction) {
+					var npc = self._npcDictionary[maybeInteraction.npcName];
+					var env = _.extend({}, self._localState, makeNpcVariables(npc, "Ref"));
+					script = script.concat(self._dialogAndPauseWithEnv(msgIfFound, env));
+					script.push({
+						action: 'arbitraryCode',
+						code: function(nestState, nestCallback) {
+							self._gameState.removeInteraction(maybeInteraction.npcName, maybeInteraction.interactionName);
+							nestCallback(nestState+1);
+						}
+					});
+				} else {
+					script.push(self._dialogAndPauseWithEnv(msgIfNotFound, self._localState));
+				}
+				script.push({
+					action: 'arbitraryCode',
+					code: function() {
+						vm.destroy();
+						callback(curState+1);
+					}
+				});
+
+				vm.ScriptRunner(script).run();
+			}
+		}]
+	}
+
+	/**
 	 * Returns a script fragment that displays a dialog telling the player to visit
 	 * another NPC.
 	 *
