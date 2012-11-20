@@ -17,6 +17,7 @@ define([
 		dialogBg: 'speech',
 		visible: true,
 		init: function() {
+			this.requires('WalkBlocker');
 			this._d = [1,2,3,4,5,6,7,8,9];
 			this._d[7] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.7');
 			this._d[8] = Crafty.e('2D, Canvas, dialog.'+this.dialogBg+'.8');

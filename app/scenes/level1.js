@@ -21,8 +21,6 @@ define([
 	function init() {
 		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
-		var actionMenuActive = false;
-
 
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
@@ -36,7 +34,8 @@ define([
 			});
 		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
-			if (hero && !actionMenuActive) {
+			var walkBlockerExists = Crafty('WalkBlocker').length > 0;
+			if (hero && !walkBlockerExists) {
 				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
 				var i = 0;
 				var nearbyNPC = null;
@@ -55,7 +54,6 @@ define([
 				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 
 				if (nearbyNPC != null) {
-					//actionMenuActive = true;
 					/* The use of setTimeout here defers the enclosed until after the "click"
 					 * event for this tile click tile has already passed. Note that this code
 					 * is actually running in a "mouseup" handler, not a "click" handler, and
