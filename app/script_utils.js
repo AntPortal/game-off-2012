@@ -130,6 +130,54 @@ define([
 	}
 
 	/**
+	 * @param rightAnswer  an object with the following keys:
+	 *                     - text: the text of the right answer.
+	 *                     - result: a script fragment to run when the right answer is chosen.
+	 * @param wrongAnswer  an object with the following keys:
+	 *                     - texts: an array containing the text of all the possible wrong answers.
+	 *                     - result: a script fragment to run when any wrong answer is chosen.
+	 *                     - take: the number of wrong answers to present.
+	 * @param jokeAnswers  an object with the following keys:
+	 *                     - choices: an array of objects, each with the same form as the `rightAnswer` field.
+	 *                     - take: the number of joke answers to present.
+	 */
+	ScriptUtils.prototype.quizBranch = function(
+		rightAnswer,
+		wrongAnswers,
+		jokeAnswers
+	) {
+		var wrongLabel = utils.newUUID();
+		var endLabel = utils.newUUID();
+
+		var actionBranches = [
+			{
+				label: rightAnswer.text,
+				result: rightAnswer.result.concat([{ 'action': 'jumpToLabel', 'label': endLabel }])
+			}
+		];
+		_.chain(wrongAnswers.texts).shuffle().first(wrongAnswers.take).each(function(wrongAns) {
+			actionBranches.push({
+				label: wrongAns,
+				result: [{ 'action': 'jumpToLabel', 'label': wrongLabel }]
+			});
+		});
+		_.chain(jokeAnswers.choices).shuffle().first(jokeAnswers.take).each(function(jokeChoice, i) {
+			actionBranches.push({
+				label: jokeChoice.text,
+				result: jokeChoice.result.concat([{ 'action': 'jumpToLabel', 'label': endLabel }])
+			});
+		});
+		actionBranches = _.shuffle(actionBranches);
+
+		return _.flatten([
+			this.actionBranch(actionBranches, function() {}),
+			[{ 'action': 'label', 'label': wrongLabel }],
+			wrongAnswers.result,
+			[{ 'action': 'label', 'label': endLabel }]
+		]);
+	}
+
+	/**
 	 * Returns a script fragment that displays a dialog telling the player to visit
 	 * another NPC.
 	 *
