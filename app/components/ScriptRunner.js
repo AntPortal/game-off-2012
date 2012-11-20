@@ -27,6 +27,13 @@ define([
 			}
 			return this;
 		},
+		_label: function(labelInst) {
+			if (labelInst.action != 'label') {
+				throw labelInst;
+			}
+			this._curState++;
+			this.run();
+		},
 		_dialog: function(dialogInst) {
 			if (dialogInst.action != 'dialog') {
 				throw dialogInst;
@@ -104,6 +111,24 @@ define([
 			utils.assert(inst.offset != 0, 'jump offset cannot be 0');
 
 			this._curState += inst.offset;
+			this.run();
+		},
+		_jumpToLabel: function(inst) {
+			if (inst.action != 'jumpToLabel') {
+				throw inst;
+			}
+
+			var targetState = -1;
+			for (var i = 0, n = this.script.length; i < n; i++) {
+				var maybeLabel = this.script[i];
+				if (maybeLabel.action === 'label' && maybeLabel.label === inst.label) {
+					targetState = i;
+					break;
+				}
+			}
+
+			utils.assert(targetState, 'Invalid jump label');
+			this._curState = targetState;
 			this.run();
 		},
 		_arbitraryCode: function(inst) {
