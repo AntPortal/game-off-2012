@@ -256,6 +256,7 @@ define([
 				var instObj = script[i];
 				var instName = instObj.action;
 				var instEntry = instructions[instName];
+				utils.assert(instEntry, 'Invalid instruction found');
 				instEntry.validate(this, instObj);
 			}
 			return this;
