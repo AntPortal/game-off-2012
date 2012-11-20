@@ -54,7 +54,6 @@ define([
 							code: function(curState, callback) {
 								var npcsWithClone = gameState.findInteraction(thisInteraction);
 								var numClonesLeft = npcsWithClone.length;
-								console.log('clones left:', numClonesLeft);
 								if (numClonesLeft === 0) {
 									gameState.addInteraction(['Linus'], 'linusGitCloneComplete');
 								}

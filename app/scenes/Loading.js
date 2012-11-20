@@ -58,7 +58,6 @@ define([
 			gameStates.saveGames[1].getGithubName(),
 			gameStates.saveGames[2].getGithubName()
 		];
-		console.log(githubAccountNames);
 		utils.withGitHubAvatarUrls(githubAccountNames, function(githubAvatarUrls) {
 			var i;
 			var assets = [ //Try to keep alphabetical
