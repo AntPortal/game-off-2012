@@ -12,6 +12,13 @@ function(config, PathFinder, Set) {
 		}
 	}
 
+	var newUUID = (function() {
+		var nextId = 0;
+		return function() {
+			return (nextId++);
+		}
+	})();
+
 	function makeWorldToPixelConverter(mapTileWidth, mapTileHeight) {
 		return function(worldX, worldY, worldZ) {
 			return {
@@ -627,6 +634,7 @@ function(config, PathFinder, Set) {
 	}
 	return {
 		assert : assert,
+		newUUID : newUUID,
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		pointInRect : pointInRect,
 		loadTileset : loadTileset,
