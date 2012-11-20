@@ -4,6 +4,21 @@ define([
 	'Crafty',
 	'components/ViewportRelative',
 ], function(config, utils) {
+
+	function assert(cond, msg, vm) {
+		if (!cond) {
+			console.error(msg);
+			try {
+				console.error(vm.toString());
+				//Allows the debugger keyword to get hit, even if toString throws an exception.
+			} catch (e) {
+				console.error(e);
+			}
+			debugger;
+			throw new msg;
+		}
+	}
+
 	/**
 	 * Dictionary which defines every instruction this VM is aware of. The keys
 	 * are the names of the instructions, and the values are functions which allow
@@ -31,9 +46,7 @@ define([
 	 */
 	instructions['label'] = {
 		validate: function(vm, inst) {
-			if (! inst.label) {
-				throw 'label instruction needs to have a field "label"';
-			}
+			assert(inst.label !== undefined && inst.label !== null, 'label instruction needs to have a field "label"', vm);
 		},
 		behaviour: function(vm, inst) {
 			vm._curState++;
@@ -46,12 +59,8 @@ define([
 
 	instructions['dialog'] = {
 		validate: function(vm, inst) {
-			if (!inst.params) {
-				throw 'dialog instruction needs parameters';
-			}
-			if (! inst.params.msg) {
-				throw 'dialog instruction must have some text';
-			}
+			assert(inst.params, 'dialog instruction needs parameters', vm);
+			assert(inst.params.msg, 'dialog instruction must have some text', vm);
 			//TODO: We can do more validation here if we want.
 		},
 		behaviour: function(vm, inst) {
@@ -60,15 +69,13 @@ define([
 			vm.run();
 		},
 		toString: function(vm, inst) {
-			return 'DIALOG: ' + inst.msg;
+			return 'DIALOG: ' + inst.params.msg;
 		},
 	};
 
 	instructions['menu'] = {
 		validate: function(vm, inst) {
-			if (!inst.params) {
-				throw 'menu instruction needs parameters';
-			}
+			assert(inst.params, 'menu instruction needs parameters', vm);
 			//TODO: We can do more validation here if we want.
 		},
 		behaviour: function(vm, inst) {
@@ -83,7 +90,7 @@ define([
 
 	instructions['PACADOC'] = {
 		validate: function(vm, inst) {
-			//TODO: We can do more validation here if we want.
+			//Does nothing
 		},
 		behaviour: function(vm, inst) {
 			Crafty.e('2D, Mouse, ViewportRelative').attr({
@@ -106,9 +113,7 @@ define([
 
 	instructions['loadScene'] = {
 		validate: function(vm, inst) {
-			if (! inst.scene) {
-				throw 'loadScene instruction must specify a scene to load.';
-			}
+			assert(inst.scene, 'loadScene instruction must speicyf a scene to load', vm);
 		},
 		behaviour: function(vm, inst) {
 			Crafty.scene(inst.scene);
@@ -122,9 +127,7 @@ define([
 
 	instructions['playMusic'] = {
 		validate: function(vm, inst) {
-			if (! inst.song) {
-				throw 'playMusic must specify a song to play.';
-			}
+			assert(inst.song, 'playMusic must specify a song to play', vm);
 		},
 		behaviour: function(vm, inst) {
 			utils.stopAllMusic();
@@ -139,12 +142,8 @@ define([
 
 	instructions['fade'] = {
 		validate: function(vm, inst) {
-			if (! inst.params) {
-				throw 'TODO: document validation error';
-			}
-			if (! inst.duration) {
-				throw 'fade must speicfy a duration';
-			}
+			assert(inst.params, 'TODO: document validation error', vm);
+			assert(inst.duration, 'fade must speicfy a duration', vm);
 			//TODO: We can do more validation here if we want.
 		},
 		behaviour: function(vm, inst) {
@@ -168,9 +167,7 @@ define([
 
 	instructions['jump'] = {
 		validate: function(vm, inst) {
-			if (inst.offset == 0) {
-				throw 'jump offset cannot be 0';
-			}
+			assert(inst.offset != 0, 'jump offset cannot be 0', vm);
 		},
 		behaviour: function(vm, inst) {
 			vm._curState += inst.offset;
@@ -183,9 +180,7 @@ define([
 
 	instructions['jumpToLabel'] = {
 		validate: function(vm, inst) {
-			if (! inst.label) {
-				throw 'jumpToLabel must have a label';
-			}
+			assert(inst.label !== undefined && inst.label !== null, 'jumpToLabel must have a label', vm);
 
 			var targetState = -1;
 			for (var i = 0, n = vm.script.length; i < n; i++) {
@@ -195,9 +190,7 @@ define([
 					break;
 				}
 			}
-			if (targetState == -1) {
-				throw 'Invalid jump label ' + inst.label;
-			}
+			assert(targetState != -1, 'Invalid jump label', vm);
 		},
 		behaviour: function(vm, inst) {
 			var targetState = -1;
@@ -218,9 +211,7 @@ define([
 
 	instructions['arbitraryCode'] = {
 		validate: function(vm, inst) {
-			if (! inst.code) {
-				throw 'arbitraryCode must have a code attribute';
-			}
+			assert(inst.code, 'arbitraryCode must have a code attribute', vm);
 			//TODO: We can do more validation here if we want.
 		},
 		behaviour: function(vm, inst) {
@@ -278,6 +269,15 @@ define([
 			var instEntry = instructions[instName];
 			instructions[instName].behaviour(this, instObj);
 			return this;
+		},
+		toString: function() {
+			retVal = '';
+			for (var i = 0; i < this.script.length; i++) {
+				var instObj = this.script[i];
+				var instEntry = instructions[instObj.action];
+				retVal += i + '\t' + instEntry.toString(this, instObj) + '\n';
+			}
+			return retVal;
 		}
 	});
 });
