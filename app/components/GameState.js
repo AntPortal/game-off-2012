@@ -74,6 +74,7 @@ define([
 			this._gameState = {};
 			this._coppers = 0;
 			this._save();
+			this.trigger('InteractionsUpdated', this);
 		},
 		addInteraction: function(npcNames, interaction) {
 			var self = this;
@@ -83,11 +84,13 @@ define([
 				self._gameState[name].push(interaction);
 				/* TODO: avoid duplicates? */
 			});
+			this.trigger('InteractionsUpdated', this);
 			this._save();
 		},
 		removeInteraction: function(npcName, interaction) {
 			utils.assert(this._gameState[npcName], 'removeInteraction was passed an npcName with no gameState entry');
 			this._gameState[npcName] = _.without(this._gameState[npcName], interaction);
+			this.trigger('InteractionsUpdated', this);
 			this._save();
 		},
 		/** Returns the name of an interaction that the given NPC has available, or undefined if the NPC
@@ -149,6 +152,7 @@ define([
 			} else {
 				this.clear();
 			}
+			this.trigger('InteractionsUpdated', this);
 		},
 		_save: function() {
 			if (!DEBUG_NO_SAVE) {
@@ -162,6 +166,24 @@ define([
 		},
 		_localStorageKey: function() {
 			return 'saveGame' + this._slotId;
+		},
+		/**
+		 * Returns a dictionary where the keys are the interaction names and the
+		 * values is a count of how many villagers have this interaction open. May
+		 * or may not return interactions with a count of zero.
+		 */
+		getInteractionCounts: function() {
+			var retVal = {};
+			_.each(this._gameState, function(interactions, villagerName) {
+				_.each(interactions, function(interaction) {
+					if (this[interaction]) {
+						this[interaction]++;
+					} else {
+						this[interaction] = 1;
+					}
+				}, this);
+			}, retVal);
+			return retVal;
 		}
 	});
 

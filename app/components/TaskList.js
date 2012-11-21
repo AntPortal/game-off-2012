@@ -1,11 +1,12 @@
 define([
 	'config',
 	'utils',
+	'interaction_dictionary',
 	'Crafty',
 	'components/ViewportRelative',
 	'components/IndependentCanvas',
 	'components/IndependentCanvasDialog',
-], function(config, utils) {
+], function(config, utils, interactionDictionary) {
 	var FONT_SIZE = 20;
 	Crafty.c('TaskList', {
 		_canvasContext: null,
@@ -24,7 +25,7 @@ define([
 		init: function() {
 			this.tasks = [];
 		},
-		TaskList: function(baseElemId, x, y, cssZ, w, h) {
+		TaskList: function(baseElemId, x, y, cssZ, w, h, gameState) {
 			this.requires('IndependentCanvas');
 			this.IndependentCanvas(baseElemId);
 			this.requires('IndependentCanvasDialog');
@@ -33,8 +34,9 @@ define([
 			this._w = w;
 			this._h = h;
 			this._dialogAsset = Crafty.asset('assets/ui/dialog.olive.png');
+			gameState.bind('InteractionsUpdated', _.bind(this._interactionsUpdated, this));
 			this.bind('Change', this._redraw);
-			this._redraw();
+			this._interactionsUpdated(gameState);
 		},
 		_redraw: function() {
 			var i;
@@ -59,6 +61,22 @@ define([
 				}
 				ctx.restore();
 			}
+		},
+		_interactionsUpdated: function(gameState) {
+			var interactionCounts = gameState.getInteractionCounts();
+			this.tasks = [];
+			_.each(interactionCounts, function(num, interactionId) {
+				var humanString = utils.interpolate(
+					interactionDictionary[interactionId].taskString,
+					{ num: num }
+				);
+				this.push({
+					label: humanString ,
+					done: false
+				})
+			}, this.tasks);
+			console.log('Updated task list to be ', this.tasks);
+			this.trigger('Change');
 		}
 	});
 	return undefined;
