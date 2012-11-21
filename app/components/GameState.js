@@ -151,13 +151,16 @@ define([
 			}
 		},
 		_save: function() {
+			var toSave = {
+				githubName: this._githubName,
+				shortName: this._shortName,
+				gameState: this._gameState,
+				coppers: this._coppers
+			};
 			if (!DEBUG_NO_SAVE) {
-				window.localStorage.setItem(this._localStorageKey(), JSON.stringify({
-					githubName: this._githubName,
-					shortName: this._shortName,
-					gameState: this._gameState,
-					coppers: this._coppers
-				}));
+				window.localStorage.setItem(this._localStorageKey(), JSON.stringify(toSave));
+			} else {
+				console.log("Would save:", toSave);
 			}
 		},
 		_localStorageKey: function() {
