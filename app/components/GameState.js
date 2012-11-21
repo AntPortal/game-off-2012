@@ -112,7 +112,7 @@ define([
 		 * Looks for a referrable interaction.
 		 *
 		 * @param excludeNpc  an NPC to exclude from the search; usually the NPC the player is currently speaking to.
-		 * @param prefInteraction  an interaction to prefer over others.
+		 * @param prefInteraction  an interaction to prefer over others, or undefined to mean no preference.
 		 * @return  an object with an `npcName` field containing the name of the NPC who has the found interaction,
 		 *          and an `interactionName` field containing the name of the found interaction. Returns null if
 		 *          no referrable interaction could be found.
@@ -127,7 +127,7 @@ define([
 				}
 
 				var referrableInteractions = _.filter(interactions, function(q) { return interactionDictionary[q].referrable; });
-				var hasPrefInteraction = _.contains(referrableInteractions, prefInteraction);
+				var hasPrefInteraction = prefInteraction && _.contains(referrableInteractions, prefInteraction);
 				if (hasPrefInteraction) {
 					return {npcName: npcName, interactionName: prefInteraction};
 				} else if (referrableInteractions.length === 0) {

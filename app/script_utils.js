@@ -237,7 +237,7 @@ define([
 	 * @param  prefMsg  message to display if an NPC with the preferred interation is found.
 	 * @param  nonPrefMsg  message to display if the only interactions available are non-preferred ones.
 	 @ @param  noRefMsg message to display if no NPC with a referrable interaction is found.
-	 * @param  prefInteraction  name of the interaction to refer to if any NPC has it.
+	 * @param  prefInteraction  name of the interaction to refer to if any NPC has it, or undefined to indicate that any interaction is okay.
 	 */
 	ScriptUtils.prototype.makeReferral = function(prefMsg, nonPrefMsg, noRefMsg, prefInteraction) {
 		var self = this;
@@ -255,7 +255,7 @@ define([
 					utils.assert(npc, 'Entity for ' + maybeInteractionInfo.npcName + ' not found');
 					var env = _.extend({}, self._localState, makeNpcVariables(npc, "Ref"));
 					script = self._dialogAndPauseWithEnv(
-						maybeInteractionInfo.interactionName === prefInteraction ? prefMsg : nonPrefMsg,
+						(prefInteraction && maybeInteractionInfo.interactionName === prefInteraction) ? prefMsg : nonPrefMsg,
 						env
 					);
 				} else {
