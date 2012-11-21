@@ -58,7 +58,10 @@ define([
 					setTimeout(function() {
 						var npcName = nearbyNPC.properties.name;
 						var actionName = gameState.getOneInteraction(npcName);
-						var action = actionName ? interactionDictionary[actionName] : (npcName === "Linus" ? interactionDictionary.defaultLinus : interactionDictionary.defaultInteraction);
+						if (! actionName) {
+							actionName = npcName === "Linus" ? 'defaultLinus' : 'defaultInteraction';
+						}
+						var action = interactionDictionary[actionName];
 						utils.assert(action, 'action should not be undefined');
 
 						var scriptUtils = new ScriptUtils(
