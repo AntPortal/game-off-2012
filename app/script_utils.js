@@ -6,9 +6,6 @@ define([
 	'underscore',
 	'Crafty'
 ], function(utils) {
-	function interpolate(msg, env) {
-		return msg.replace(/@(\w+)@/g, function(_, name) { return env[name]; });
-	}
 	function makeNpcVariables(npcEnt, suffix) {
 		var result = {};
 		suffix = suffix || '';
@@ -54,7 +51,7 @@ define([
 	};
 
 	ScriptUtils.prototype._dialogAndPauseWithEnv = function(msg, env) {
-		var interpolated = interpolate(msg, env);
+		var interpolated = utils.interpolate(msg, env);
 		return [
 			{
 				action: 'dialog',

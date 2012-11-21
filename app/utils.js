@@ -632,6 +632,9 @@ function(config, PathFinder, Set) {
 		Crafty.viewport.pan('x', screenTargetCenter.x - screenCenter.x, time);
 		Crafty.viewport.pan('y', screenTargetCenter.y - screenCenter.y, time);
 	}
+	function interpolate(msg, env) {
+		return msg.replace(/@(\w+)@/g, function(_, name) { return env[name]; });
+	}
 	return {
 		assert : assert,
 		newUUID : newUUID,
@@ -654,5 +657,6 @@ function(config, PathFinder, Set) {
 		centerViewportOn: centerViewportOn,
 		ensureMusicIsPlaying: ensureMusicIsPlaying,
 		chainSet: chainSet,
+		interpolate: interpolate,
 	};
 });
