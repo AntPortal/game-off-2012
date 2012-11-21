@@ -409,6 +409,7 @@ define([
 					[{ action: 'jumpToLabel', label: 'end' }],
 
 					[{ action: 'label', label: 'endCommit' }],
+					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.tryRemoveInteraction(
 						"@npcName@: Thanks! As a token of gratitude, I’m going to go teach it to @npcNameRef@ on your behalf. My mother always told me that teaching is the best way to learn.",
 						"@npcName@: Thanks!"
