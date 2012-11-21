@@ -654,16 +654,62 @@ define([
 						}
 					}],
 					scriptUtils.dialogAndPause([
-						"@npcName@: By the way, Junio came by earlier.",
-						"@npcName@: He was telling me about that squashed bug I found in chapter 10 of the book. I told him that I’d fixed it, and that he could use the “git pull” spell to get my changes into his copy of the book.",
+						"@npcName@: By the way, Junio came by earlier. He was telling me about that squashed bug I found in chapter 10 of the book.",
+						"@npcName@: I told him that I’d fixed it, and that he could use the “git pull” spell to get my changes into his copy of the book.",
 						"@npcName@: I’m not sure he understood, though... I’m afraid he might’ve taken “pull” to mean “pull the page out of the book.”",
 						"@npcName@: Maybe you should go visit him to explain it in more depth. He lives south of here, by the lake. Don’t forget the spell: “git pull.”"
-					])
+					]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Junio'], 'junioGitPull')
 				]));
 				vm.run();
 			},
 			taskString: "Talk to Linus",
 			referrable: true
 		},
+
+		junioGitPull: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@; I saw a squashed bug between the pages of the book, and I spoke to Linus about it, but he said he had already gotten rid of it in his copy.",
+						"@npcName@: I thought I could try and fix the affected pages myself, but then I’d have to guess at all the words that were under the bug.",
+						"@npcName@: He said there’s a way to use git magic to get his changes into my copy ... I think he called it “pulling.” You know how to do that?"
+
+					]),
+					[{ action: 'label', label: 'askPull' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git pull",
+							result: [{ action: 'jumpToLabel', label: 'endPull' }]
+						},
+						{ /* wrong answers */
+							texts: ["git fetch", "git receive"],
+							result: [], /* fall through */
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+					scriptUtils.dialogAndPause([
+						"@npcName@: Doesn't look like that worked. The bug is still here between the pages. Should we try again?"
+					]),
+					[{ action: 'jumpToLabel', label: 'askPull' }],
+
+					[{ action: 'label', label: 'endPull' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hey, great. The bug is gone. Thanks!",
+						"@npcName@: I’m sure all the villagers in Sveni will want their books “de-bugged” as well. Why don’t you go and teach them how?"
+					]),
+
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git pull' to Junio",
+			referrable: true
+		}
 	};
 });
