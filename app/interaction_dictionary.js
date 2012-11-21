@@ -354,6 +354,7 @@ define([
 							callback(curState+1);
 						}
 					}],
+					scriptUtils.removeCurrentInteraction()
 				]));
 				vm.run();
 			},
