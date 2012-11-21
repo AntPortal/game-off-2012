@@ -187,6 +187,20 @@ define([
 	}
 
 	/**
+	 * Returns a script fragment that awards the player the given number of copper.
+	 */
+	ScriptUtils.prototype.giveCopper = function(numCopper) {
+		var self = this;
+		return [{
+			action: 'arbitraryCode',
+			code: function(curState, callback) {
+				self._gameState.giveCopper(numCopper);
+				callback(curState+1);
+			}
+		}];
+	}
+
+	/**
 	 * Returns a script fragment that searches the game state for another NPC
 	 * with the current interaction, removes the interaction from that NPC's
 	 * interaction list, and presents a dialog containing either msgIfFound or

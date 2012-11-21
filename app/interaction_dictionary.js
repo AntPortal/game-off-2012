@@ -121,17 +121,9 @@ define([
 							+ "the Svenites obtain the latest copy of my book. Thank you! Here’s your silver coin."]
 					),
 					scriptUtils.removeCurrentInteraction(),
-					[
-						{
-							action: 'arbitraryCode',
-							code: function(curState, callback) {
-								gameState.giveCopper(SILVER_VALUE);
-								gameState.addInteraction(['Linus'], 'linusGitAdd1');
-								callback(curState + 1);
-							}
-						},
-						{ action: 'destroyVM' }
-					]
+					scriptUtils.giveCopper(SILVER_VALUE),
+					scriptUtils.addInteraction(['Linus'], 'linusGitAdd1'),
+					[{ action: 'destroyVM' }]
 				]));
 				vm.run();
 			},
@@ -597,13 +589,7 @@ define([
 							label: "I’ve heard of the spells “csv2svn” and “git svn”. Maybe you can do something with those...",
 							result: _.flatten(
 								scriptUtils.dialogAndPause(["@npcName@: Hmm, really? That sounds like it just might work... here’s something for your trouble."]),
-								[{
-									action: 'arbitraryCode',
-									code: function(curState, callback) {
-										gameState.giveCopper(GOLD_VALUE);
-										callback(curState + 1);
-									}
-								}]
+								scriptUtils.giveCopper(GOLD_VALUE)
 							)
 						},
 						{
@@ -646,13 +632,7 @@ define([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Well done. I could never get Ceeveeus to even take one look at git magic... Here’s two silver coins for doing such a good job."
 					]),
-					[{
-						action: 'arbitraryCode',
-						code: function(curState, callback) {
-							gameState.giveCopper(2*SILVER_VALUE);
-							callback(curState+1);
-						}
-					}],
+					scriptUtils.giveCopper(2*SILVER_VALUE),
 					scriptUtils.dialogAndPause([
 						"@npcName@: By the way, Junio came by earlier. He was telling me about that squashed bug I found in chapter 10 of the book.",
 						"@npcName@: I told him that I’d fixed it, and that he could use the “git pull” spell to get my changes into his copy of the book.",
