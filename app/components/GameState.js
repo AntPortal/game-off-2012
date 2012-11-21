@@ -187,6 +187,14 @@ define([
 				}, this);
 			}, retVal);
 			return retVal;
+		},
+		/**
+		 * Returns an array of interaction IDs associated with the specified NPC.
+		 * Callers should not modify the array that is returned. Instead, use the
+		 * addInteraction() and removeInteraction() methods.
+		 */
+		getInteractionsByNpc: function(npcName) {
+			return this._gameState[npcName];
 		}
 	});
 

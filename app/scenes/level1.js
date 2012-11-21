@@ -93,7 +93,15 @@ define([
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
 					var npcEnt = Crafty.e('2D, Canvas, NPC').
-						NPC(parsedMapData.heightMap, worldToPixel, pathFinder, object.tileX, object.tileY, object.properties);
+						NPC(
+							parsedMapData.heightMap,
+							worldToPixel,
+							pathFinder,
+							object.tileX,
+							object.tileY,
+							object.properties,
+							gameState
+						);
 					npcDictionary[object.properties.name] = npcEnt;
 				} else {
 					console.warn('Unknown object type: ', object.type);
