@@ -76,6 +76,7 @@ define([
 				'assets/sprites/mom.png',
 				'assets/sprites/oldman.png',
 				'assets/sprites/oldwoman.png',
+				'assets/sprites/scott.png',
 				'assets/sprites/townfolkM.png',
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
@@ -109,6 +110,7 @@ define([
 					loadAntifareaCharacterSprite('childF', 'assets/sprites/childF.png');
 					loadAntifareaCharacterSprite('childM', 'assets/sprites/childM.png');
 					loadAntifareaCharacterSprite('junio', 'assets/sprites/junio.png');
+					loadAntifareaCharacterSprite('scott', 'assets/sprites/scott.png');
 					loadAntifareaCharacterSprite('bunny', 'assets/sprites/bunny.png');
 					loadAntifareaCharacterSprite('dancerF', 'assets/sprites/dancerF.png');
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
