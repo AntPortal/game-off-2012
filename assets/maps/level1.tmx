@@ -7,7 +7,7 @@
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztlMFugzAQRO0YyAEISSRsjlVy7V+n/ab+TrH0Rkw4VO2thxxGCHtmvLseuIcQ7i+88I/wtsP7H7QTGFfkFTc8vn7hVXVXtNIPK868337wOKKPeLQruhXzioT+bB6OyilwLvDO+FTfk/V14Fk1C3vitawf2Ktrve0V+pnYb+ixB/KL+Kj2gn6ivh6fgf2Mtke7sHfkXTVn/E+sjXCjaUfOjegLs0joVKs8ImdV3oP3AhLaFr5mrLojzwWtfMU5cocTvINxktX8YK1D1zIn8Rv2B6tbc3iw3hlHtav/2XTF8Im/+mpBRqPcKlcd9VbOh9V9DVseLnYH6l25auEtnK1e/Z5U57KbdcJ/NAx21+I3Ni9leaDPzDnR1srO1zPdhOeszKxF8xvClkWdrcyrbnE9fyls32AOW3b1bei5WI+eN2Vf54ubjKPM6RubrQ71M6PVnfWmV+b1jam3aL66n4J3s9tXT9nO0kz0D1A+T+g1Z/WmvKtmn93+m/D/h3Kk878BX1Ix3Q==
+   eJztlLFugzAYhO0YyACEJBI2Y5Wsfeu0z9TXKZa+ExeGqt06ZDhZ2Hfn/7fP3EMI9xde+Ed42+H9D9oJjCvyihseX7/wqrorWumHFWe+bz94HNFHPNoV3Yp5RUJ/Ng9H5RQ4F3hnfKrvyfo6MFbNwpp4LfMH1upcb2uFfibWG3rsgfwiPqq9oJ+or8dnYD2j7dEurB35Vs0Z/xNzI9xo2pF9I/rCWSR0qlUekb0q78F3AQltC19nrLoj44JWvuIcucMJ3sE4yWp+MNehazkn8RvWB6tb5/BgvjOOalf/s+mK4RN/9dWCjEa5Va466q2cD6vhGrY8XOwO1Lty1cJTTtSr35PqXHZnnfAfDYPdtfiNnZeyPNBntl5H6919PdNNeM7KDCeZ3xC2LGpvZT7tuH7vKWxvMIctu3obGhfr0fOm7Gt/cZNxlDm9sdnqUD8zWt1Zb3plXm9MvUXz1f0UvJvdunrKtpfOQP8A5fOEfmZUb8q7avaz278J/38oR9r/G30JMME=
   </data>
  </layer>
  <layer name="0 decoration" width="15" height="37">
@@ -15,7 +15,7 @@
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztlEEKwjAQRXPHmoq6E9RbiD2FdOWi6RVcqAcStJ6hE5yhw5BMkyK46YdP0jQvP1OaGDNr1ixNbeK8K7hjzw7cZLDeJ8HtE9lXZl7N+hW2qXVyrcFLxlIdT7E/77vgduDCDHv+gN/Ykh7gG/KkBfiArGPjodr9+0qMeX4j2FDtLjDGsxrkWpzL+yH2qKyn6TyRy1E9PsVcfpSlfdd/sSvz/Y+nsBa8VXiNLdExXjvTFlktP8ZSrhV8Z4Y7TMulbFqjQG7sHrLCJWO7CEPqARyIPe0=
+   eJztkl8KwjAMh3PHWUV9E9RbiDuF7MmHbVcY6DyQ4J8zmGLCQui6dM/94Ee3rl/TsAJkMpkYrXFdh/mI9wZTJ7g+Z+UdjO4rsV4lnksarX1KNpiVcLmPpzqfT6+8PaaA4cxfzJtG5oG5k88sMEdyGzEf6t1/L9Wc97fKDfXeBOZkrZq8ltbK55B7iuwX4zLTS6GaXgJXGq13LITV9fenV3Mp7g2Gf8RhOhFmDf97PFXXO/o+OsyOfI0+g+5hSRnzYzhyY/XH4Lpuhs+O3KNIdOUeVvcHeQ1Czw==
   </data>
  </layer>
  <objectgroup name="0 NPCs" width="15" height="37">
@@ -43,18 +43,25 @@
     <property name="sprite" value="dancerF"/>
    </properties>
   </object>
-  <object type="npc" x="288" y="832" width="32" height="32">
+  <object type="npc" x="256" y="800" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Linus"/>
     <property name="sprite" value="childM"/>
    </properties>
   </object>
-  <object type="npc" x="256" y="1120" width="32" height="32">
+  <object type="npc" x="128" y="928" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Junio"/>
     <property name="sprite" value="junio"/>
+   </properties>
+  </object>
+  <object type="npc" x="352" y="992" width="32" height="32">
+   <properties>
+    <property name="gender" value="M"/>
+    <property name="name" value="Scott"/>
+    <property name="sprite" value="scott"/>
    </properties>
   </object>
  </objectgroup>
@@ -63,7 +70,7 @@
    <property name="baseheight" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYEAFMxkGF5iORw7m1oVYMLEApv4EFr3o5uFyy2I85mIzj1y9x9HUL4XSd6D0TAaEX/ZiMW8JVP9SKI3NP0uwiCEDmF6YWciYkF5sfoXZiUuOnmADEK8dYnqpDTYhYWxiy/HoXYOE8YmNglEwCmgDHgLxPQr0rydT310g3keBvcQAAOOuNFs=
+   eJxjYEAFMxkGF5iORw7m1oVYMLEApv4EFr3o5uFyy2I85mIzj1y9x9HUL4XSd6D0TAaEX/ZiMW8JVP9SKI3NP0uwiCEDmF6YWciYkF5sfoXZiUuOnmADEK8dYnqpDTYhYWxiy/HoXYOE8YmNgpEBHlCgl5j8sAmL2H0g3odHz2h6HLoAAJmJNjI=
   </data>
  </layer>
  <layer name="1 decoration" width="15" height="37">
