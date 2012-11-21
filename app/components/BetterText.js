@@ -17,7 +17,7 @@ define([ 'Crafty', ], function() {
 		h: 0, //width in pixels; nescessary for correct "dirty region" marking.
 		baseline: null, // The y coordinate of the baseline for the text. If null, it's set to this.y + this.h Only meaningful for Canvas (not DOM)
 		ready : true,
-
+		visible: true,
 		init : function() {
 			this.requires('2D');
 			this.bind('Draw', this._draw);
@@ -39,20 +39,22 @@ define([ 'Crafty', ], function() {
 				style.color = this.fillStyle;
 				style.font = font;
 				el.innerHTML = this._textStr;
+				style.display = this.visible ? 'block' : 'none';
 			} else if (e.type === "canvas") {
-				var context = e.ctx;
-				context.save();
-				context.font = font;
-				context.translate(this.x, this.baseline == null ? this.y + this.h : this.baseline);
-				if (this.strokeStyle) {
-					context.strokeStyle = this.strokeStyle;
-					context.strokeText(this._textStr, 0, 0);
-				}
-				if (this.fillStyle) {
-					context.fillStyle = this.fillStyle;
-					context.fillText(this._textStr, 0, 0);
-				}
-				//This metrics code doesn't seem to yield the right result. Bug in Chrome?
+				if (this.visible) {
+					var context = e.ctx;
+					context.save();
+					context.font = font;
+					context.translate(this.x, this.baseline == null ? this.y + this.h : this.baseline);
+					if (this.strokeStyle) {
+						context.strokeStyle = this.strokeStyle;
+						context.strokeText(this._textStr, 0, 0);
+					}
+					if (this.fillStyle) {
+						context.fillStyle = this.fillStyle;
+						context.fillText(this._textStr, 0, 0);
+					}
+					//This metrics code doesn't seem to yield the right result. Bug in Chrome?
 //				var metrics = context.measureText(this._text);
 //				if (metrics.width) {
 //					this.w = metrics.width;
@@ -60,7 +62,8 @@ define([ 'Crafty', ], function() {
 //				if (metrics.height) {
 //					this.h = metrics.height;
 //				}
-				context.restore();
+					context.restore();
+				}
 			}
 		}
 	});
