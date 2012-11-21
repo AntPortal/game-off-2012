@@ -364,6 +364,7 @@ define([
 		villagerGitAdd2: {
 			doAction: function(scriptUtils) {
 				var gameState = scriptUtils.getGameState();
+				var thisInteraction = 'villagerGitAdd2';
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
@@ -415,6 +416,18 @@ define([
 						"@npcName@: Thanks! As a token of gratitude, I’m going to go teach it to @npcNameRef@ on your behalf. My mother always told me that teaching is the best way to learn.",
 						"@npcName@: Thanks!"
 					),
+					scriptUtils.removeCurrentInteraction(),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							var villagersWithGitAdd = gameState.findInteraction(thisInteraction);
+							var ceeveeusInteraction = gameState.getOneInteraction('Ceeveeus');
+							if (villagersWithGitAdd.length === 0 && !ceeveeusInteraction) {
+								gameState.addInteraction(['Linus'], 'linusGitPull');
+							}
+							callback(curState+1);
+						}
+					}],
 
 					[
 						{ action: 'label', label: 'end' },
@@ -594,6 +607,17 @@ define([
 							result: scriptUtils.dialogAndPause(["@npcName@: Son, I don’t want to be rude, but you have no idea what you’re talking about, do you?"])
 						}
 					])),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							var villagersWithGitAdd = gameState.findInteraction('villagerGitAdd2');
+							var ceeveeusInteraction = gameState.getOneInteraction('Ceeveeus');
+							if (villagersWithGitAdd.length === 0 && !ceeveeusInteraction) {
+								gameState.addInteraction(['Linus'], 'linusGitPull');
+							}
+							callback(curState+1);
+						}
+					}],
 
 					[
 						{ action: 'label', label: 'end' },
@@ -603,6 +627,33 @@ define([
 				vm.run();
 			},
 			referrable: true
-		}
+		},
+
+		linusGitPull: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Well done. I could never get Ceeveeus to even take one look at git magic... Here’s two silver coins for doing such a good job."
+					]),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							gameState.giveCopper(2*SILVER_VALUE);
+							callback(curState+1);
+						}
+					}],
+					scriptUtils.dialogAndPause([
+						"@npcName@: By the way, Junio came by earlier.",
+						"@npcName@: He was telling me about that squashed bug I found in chapter 10 of the book. I told him that I’d fixed it, and that he could use the “git pull” spell to get my changes into his copy of the book.",
+						"@npcName@: I’m not sure he understood, though... I’m afraid he might’ve taken “pull” to mean “pull the page out of the book.”",
+						"@npcName@: Maybe you should go visit him to explain it in more depth. He lives south of here, by the lake. Don’t forget the spell: “git pull.”"
+					])
+				]));
+				vm.run();
+			},
+			referrable: true
+		},
 	};
 });
