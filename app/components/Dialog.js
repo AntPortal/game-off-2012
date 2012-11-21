@@ -78,7 +78,7 @@ define([
 			var paddedFaceWidth = this.face ? this._faceEntity.w + 2 : 0;
 			this._msgEntity.attr({
 				text: this.msg.join(" "),
-				textColor: this.msgColor,
+				fillStyle: this.msgColor,
 				fontFamily: 'Patrick Hand',
 				fontSize: '16px',
 				x : this.x + this.TILE_SIZE + paddedFaceWidth,
@@ -86,7 +86,6 @@ define([
 				z : this.z,
 				w : this.w - (this.TILE_SIZE * 2) - paddedFaceWidth,
 				h : 16,
-				baseline: null,
 				visible: this.visible,
 			});
 			this._msgEntity.trigger('Change');

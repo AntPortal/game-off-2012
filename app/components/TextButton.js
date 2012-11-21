@@ -21,7 +21,8 @@ define([
 			this._label = Crafty.e('2D, Canvas, BetterText');
 			this._label.attr({
 				text: label,
-				textColor: '#FFFFFF',
+				fillStyle: 'white',
+				strokeStyle: undefined,
 				fontFamily: 'Patrick Hand',
 				fontSize: params.size,
 			});
