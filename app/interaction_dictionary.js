@@ -170,6 +170,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Linus",
 			referrable: true
 		},
 
@@ -331,6 +332,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Apache", /* TODO: fix name? */
 			referrable: true
 		},
 
@@ -358,6 +360,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Linus",
 			referrable: true
 		},
 
@@ -436,6 +439,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Teach villagers about git add",
 			referrable: true
 		},
 
@@ -452,6 +456,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Ceeveeus",
 			referrable: true
 		},
 
@@ -468,6 +473,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Ceeveeus",
 			referrable: true
 		},
 
@@ -481,6 +487,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Ceeveeus",
 			referrable: true
 		},
 
@@ -498,6 +505,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Ceeveeus",
 			referrable: true
 		},
 
@@ -626,6 +634,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Ceeveeus",
 			referrable: true
 		},
 
@@ -653,6 +662,7 @@ define([
 				]));
 				vm.run();
 			},
+			taskString: "Talk to Linus",
 			referrable: true
 		},
 	};
