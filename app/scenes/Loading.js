@@ -72,6 +72,7 @@ define([
 				'assets/sprites/dog.png',
 				'assets/sprites/dog2.png',
 				'assets/sprites/healerF.png',
+				'assets/sprites/junio.png',
 				'assets/sprites/mom.png',
 				'assets/sprites/oldman.png',
 				'assets/sprites/oldwoman.png',
@@ -107,6 +108,7 @@ define([
 					loadAntifareaCharacterSprite('ceeveeus', 'assets/sprites/ceeveeus.png');
 					loadAntifareaCharacterSprite('childF', 'assets/sprites/childF.png');
 					loadAntifareaCharacterSprite('childM', 'assets/sprites/childM.png');
+					loadAntifareaCharacterSprite('junio', 'assets/sprites/junio.png');
 					loadAntifareaCharacterSprite('bunny', 'assets/sprites/bunny.png');
 					loadAntifareaCharacterSprite('dancerF', 'assets/sprites/dancerF.png');
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
