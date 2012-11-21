@@ -25,14 +25,6 @@ define([
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
-		function updateTaskList() {
-			taskListEntity.attr({
-				tasks: [{
-					label: "Clone Linus' book",
-					done: false
-				}]
-			});
-		}
 		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
 			var walkBlockerExists = Crafty('WalkBlocker').length > 0;
 			if (hero && !walkBlockerExists) {
@@ -108,7 +100,7 @@ define([
 			//Handle HUD
 			utils.addMusicControlEntity(Crafty);
 			taskListEntity = Crafty.e('TaskList');
-			taskListEntity.TaskList('cr-stage', config.viewport.width - 220, 0, config.zOffset.gitk, 220, 100)
+			taskListEntity.TaskList('cr-stage', config.viewport.width - 320, 0, config.zOffset.gitk, 320, 100, gameState);
 		})();
 
 		Crafty.viewport.clampToEntities = false;
@@ -161,7 +153,6 @@ define([
 					action: 'arbitraryCode',
 					code: function(curState, callback) {
 						gameState.addInteraction(['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'], 'villagerGitClone');
-						updateTaskList();
 						vm.destroy();
 					}
 				}]
