@@ -1,6 +1,7 @@
 define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 	/**
-	 * Defines a character, either a playable one, or an AI one.
+	 * Defines a character, either a playable one, or an AI one. In the case of an
+	 * AI one, consider using the NPC component instead.
 	 */
 	Crafty.c('Character', {
 		_targetX: 0, //in world coordinates

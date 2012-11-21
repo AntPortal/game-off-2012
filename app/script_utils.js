@@ -6,7 +6,12 @@ define([
 	'underscore',
 	'Crafty'
 ], function(utils) {
+	/**
+	 * Creates and returns the interpolation variables for an NPC's name, pronoun,
+	 * etc.
+	 */
 	function makeNpcVariables(npcEnt, suffix) {
+		utils.assert(npcEnt);
 		var result = {};
 		suffix = suffix || '';
 		result['npcName' + suffix] = npcEnt.properties.name,
@@ -18,6 +23,8 @@ define([
 	}
 
 	/**
+	 * Constructor.
+	 *
 	 * @param interactionDictionary  the dictionary defining all NPC interactions in the game.
 	 * @param npcDictionary  an object whose keys are NPC names and whose values are corresponding
 	 *                       Crafty NPC entities.
@@ -40,6 +47,12 @@ define([
 		gameState,
 		localState
 	) {
+		utils.assert(localState, 'Must pass in a localState');
+		utils.assert(localState.npc, 'Must pass in an NPC in localState');
+		utils.assert(localState.interaction, 'Must pass in an interaction in localState');
+		utils.assert(localState.x, 'Must pass in an x coordinate in localState');
+		utils.assert(localState.y, 'Must pass in a y coordinate in localState');
+		utils.assert(localState.heroName, 'Must pass in a heroName in localState');
 		this._interactionDictionary = interactionDictionary;
 		this._npcDictionary = npcDictionary;
 		this._gameState = gameState;

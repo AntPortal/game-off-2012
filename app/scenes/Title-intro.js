@@ -10,7 +10,7 @@ define([
 		var clickToSkipText = Crafty.e('2D, DOM, BetterText');
 		clickToSkipText.attr({
 			text: "Click to Skip",
-			textColor: 'white',
+			fillStyle: 'white',
 			w : config.viewport.width,
 			x : 0,
 			y : config.viewport.height * 0.9,

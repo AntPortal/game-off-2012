@@ -418,7 +418,7 @@ function(config, PathFinder, Set) {
 		var title = Crafty.e('2D, DOM, BetterText');
 		title.attr({
 			text: "Karayom",
-			textColor: "#fff",
+			fillStyle: 'white',
 			w : config.viewport.width,
 			x : 0,
 			y : 0,

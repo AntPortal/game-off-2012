@@ -22,7 +22,8 @@ define([
 						y: j * 64,
 						fontSize: '12px',
 						fontFamily: 'Helvetica',
-						textColor: 'white',
+						fillStyle: 'white',
+						strokeStyle: 'black',
 						w: 128,
 						h: 64,
 					});

@@ -31,7 +31,7 @@ define([
 		Crafty.background('#000');
 		Crafty.e('2D, DOM, BetterText').attr({
 			text: "Loading...",
-			textColor: 'white',
+			fillStyle: 'white',
 			w : config.viewport.width,
 			x : 0,
 			y : config.viewport.height / 2

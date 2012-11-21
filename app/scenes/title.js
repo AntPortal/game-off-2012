@@ -93,7 +93,8 @@ define([
 		Crafty.e('2D, Canvas, BetterText').
 			attr({
 				text: "Enter your GitHub name:",
-				textColor: '#FFFFFF',
+				fillStyle: 'white',
+				strokeStyle: 'black',
 				fontFamily: 'Patrick Hand',
 				fontSize: fontSize+'px',
 				x: 20,
@@ -106,7 +107,8 @@ define([
 		var nameEntity = Crafty.e('2D, Canvas, BetterText');
 		nameEntity.attr({
 			text: ' ',
-			textColor: '#FFFFFF',
+			fillStyle: 'white',
+			strokeStyle: 'black',
 			fontFamily: 'Patrick Hand',
 			fontSize: fontSize+'px',
 			x: 20,
@@ -235,7 +237,8 @@ define([
 		var tooltip = Crafty.e('2D, Canvas, BetterText, Mouse');
 		tooltip.attr({
 			text: '?',
-			textColor: '#00FF00',
+			fillStyle: '#00FF00',
+			strokeStyle: 'black',
 			fontFamily: 'Patrick Hand',
 			fontSize: fontSize+'px',
 			x: config.viewport.width - 24,

@@ -11,6 +11,7 @@ define([
 		'components/ViewportRelative',
 		'components/ClickNoDrag',
 		'components/Character',
+		'components/NPC',
 		'components/Dialog',
 		'components/ActionMenu',
 		'scenes/level2-intro',
@@ -88,8 +89,8 @@ define([
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
-					var npcEnt = Crafty.e('2D, Canvas, Character').
-						Character(parsedMapData.heightMap, worldToPixel, pathFinder, object.tileX, object.tileY, object.properties);
+					var npcEnt = Crafty.e('2D, Canvas, NPC').
+						NPC(parsedMapData.heightMap, worldToPixel, pathFinder, object.tileX, object.tileY, object.properties);
 					npcDictionary[object.properties.name] = npcEnt;
 				} else {
 					console.warn('Unknown object type: ', object.type);
