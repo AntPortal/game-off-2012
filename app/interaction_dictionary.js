@@ -367,7 +367,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hi @heroName@, I’m so glad to see you. After we started reading Linus’ book, we realized how much we’d love to start writing ourselves too.",
-						"@npcName@: I heard the that writing magical books is the new literacy! Could you please show me how to add my new chapter?"
+						"@npcName@: I heard that writing magical books is the new literacy! Could you please show me how to add my new chapter?"
 					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
