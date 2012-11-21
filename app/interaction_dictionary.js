@@ -735,6 +735,178 @@ define([
 			},
 			taskString: "Explain 'git pull' to villagers (@num@ left)",
 			referrable: true
+		},
+
+		linusGitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hey, I heard my book is a big success. Everyone’s been adding their own little chapter to it.",
+						"@npcName@: I think it’s great that we can all work together to make it better, but now everyone’s work is only in their own copy!",
+						"@npcName@: Scott’s version has the chapter on alchemy, while Junio’s version has the chapter on summoning, and the Svenites all have their own books.",
+						"@npcName@: You should teach them the “push” spell from each of their versions of the book, to push those changes to me.",
+						"@npcName@: Then I can combine everything into one complete “master edition” with all of their chapters.",
+						"@npcName@: The incantation is short and to-the-point: “git push.”",
+						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
+					]),
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Scott'], 'scottGitPush')
+				]));
+				vm.run();
+			},
+			taskString: "Check in with Linus",
+			referrable: true
+		},
+
+		scottGitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hey @heroName@, what’s up?",
+						"@npcName@: Oh, Linus wants my chapter added to his “master edition”? Wow, that sounds great.",
+						"@npcName@: Did he tell you if there’s a spell involved to do that automatically?"
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git commit", "git add", "git update", "git send"],
+							result: scriptUtils.dialogAndPause([
+								"@npcName@: Well, it doesn’t seem like anything happened.",
+								"@npcName@: I mean, you could go ask Linus if he now has my chapter I guess, but something didn’t feel quite right about casting that last spell..."
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'endPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: Hey, did you see that? The extra pages from my chapter flew into the clouds. I bet Linus probably has my chapter now."]),
+					scriptUtils.addInteraction(['Junio'], 'junioGitPush'),
+					scriptUtils.removeCurrentInteraction(),
+					[
+						{ action: 'label', label: 'end' },
+						{ action: 'destroyVM' }
+					]
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git push' to Scott",
+			referrable: true
+		},
+
+		junioGitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@. What’s happening?",
+						"@npcName@: Linus wants my chapter added to the book? I’ve got the pages ready right here, on the table.",
+						"@npcName@: I’m guessing I have a few steps to do to get the pages bound in and sent off. What comes first?"
+					]),
+
+					[{ action: 'label', label: 'beginAdd' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git add chapter76",
+							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ["git merge", "git mv chapter76 book"],
+							result: [{ action: 'jumpToLabel', label: 'wrongAnswer' }],
+							take: 1
+						},
+						{ /* not really a joke answer, but has a specialized response */
+							choices: [{
+								text: "git push",
+								result: [] /* fall through */
+							}],
+							take: 1
+						}
+					),
+
+					scriptUtils.dialogAndPause([
+						"@npcName@: Huh, nothing happened. I wonder why…",
+						"@npcName@: … Oh, I forgot to actually put them in the book. How can I do that?"
+					]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git add chapter76",
+							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ["git mv table/pages book/chapter76", "git-add chapter76", "git commit chapter76"],
+							result: [{ action: 'jumpToLabel', label: 'wrongAnswer' }],
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginCommit' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, the pages are in the book now. What next?"]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git commit",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+							},
+						{ /* wrong answers */
+							texts: ["git add", "git log"],
+							result: [{ action: 'jumpToLabel', label: 'wrongAnswer' }],
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: Looks like the pages are all bound. What's the next step?"]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git send", "git transmit"],
+							result: [{ action: 'jumpToLabel', label: 'wrongAnswer' }],
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'endPush' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: And there the pages go into the clouds. I’m sure Linus must have them now. Thanks!",
+						"@npcName@: Maybe you should have a look around the village to see if anyone else has some writing they want to share with Linus."
+					]),
+					[{ action: 'jumpToLabel', label: 'end' }],
+
+					[{ action: 'label', label: 'wrongAnswer' }],
+					scriptUtils.dialogAndPause(["@npcName@: Nothing happened. You sure that’s the right spell?"]),
+
+					[
+						{ action: 'label', label: 'end' },
+						{ action: 'destroyVM' }
+					]
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git push' to Junio",
+			referrable: true
 		}
 	};
 });

@@ -185,6 +185,7 @@ define([
 			var targetState = -1;
 			for (var i = 0, n = vm.script.length; i < n; i++) {
 				var maybeLabel = vm.script[i];
+				utils.assert(maybeLabel, 'maybeLabel should not be undefined');
 				if (maybeLabel.action === 'label' && maybeLabel.label === inst.label) {
 					targetState = i;
 					break;
@@ -254,6 +255,7 @@ define([
 			this.script = script;
 			for (var i = 0; i < script.length; i++) {
 				var instObj = script[i];
+				utils.assert(instObj, 'undefined instruction found');
 				var instName = instObj.action;
 				var instEntry = instructions[instName];
 				utils.assert(instEntry, 'Invalid instruction found');
