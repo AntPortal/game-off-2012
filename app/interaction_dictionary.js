@@ -666,7 +666,7 @@ define([
 							result: [{ action: 'jumpToLabel', label: 'endPull' }]
 						},
 						{ /* wrong answers */
-							texts: ["git fetch", "git receive"],
+							texts: ["git fetch", "git receive", "git update"],
 							result: [], /* fall through */
 							take: 2
 						},
@@ -684,11 +684,53 @@ define([
 						"@npcName@: Hey, great. The bug is gone. Thanks!",
 						"@npcName@: I’m sure all the villagers in Sveni will want their books “de-bugged” as well. Why don’t you go and teach them how?"
 					]),
-
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(sveniteNames, 'villagerGitPull')
 				]));
 				vm.run();
 			},
 			taskString: "Explain 'git pull' to Junio",
+			referrable: true
+		},
+
+		villagerGitPull: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@, you came just at the right time. I’ve really been enjoying Linus’ book, but now I’m at chapter 10 and there’s a squashed bug over the most important paragraph!",
+						"@npcName@: I won’t be able to understand any of the rest this way.",
+						"@npcName@: I heard Linus fixed that, but I’d hate to have to throw the whole book out and “git clone” it all over again, just to get that fix.",
+						"@npcName@: You know, there’s a limit on how many pages I can pull through the ether every month... What should I do?"
+					]),
+
+					[{ action: 'label', label: 'askPull' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git pull",
+							result: [{ action: 'jumpToLabel', label: 'endPull' }]
+						},
+						{ /* wrong answers */
+							texts: ["git fetch", "git receive", "git update"],
+							result: [], /* fall through */
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [],  take: 0
+						}
+					),
+					scriptUtils.dialogAndPause(["@npcName@: Doesn’t look like that worked. The bug is still here between the pages. Should we try again?"]),
+					[{ action: 'jumpToLabel', label: 'askPull' }],
+
+					[{ action: 'label', label: 'endPull' }],
+					scriptUtils.dialogAndPause(["@npcName@: Hey, great. The bug is gone. Thanks! Here’s something for your help."]),
+					scriptUtils.giveCopper(COPPER_VALUE),
+					scriptUtils.removeCurrentInteraction()
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git pull' to villagers (@num@ left)",
 			referrable: true
 		}
 	};
