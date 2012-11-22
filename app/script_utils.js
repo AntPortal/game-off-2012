@@ -88,7 +88,13 @@ define([
 		}));
 	}
 
-	ScriptUtils.prototype.actionBranch = function(actions) {
+	/**
+	 * TODO: Document me. What is the structure of "actions"?
+	 * @param preface optional; if present, this text will appear before the each
+	 *                action posed to the user. Typically, this is a terse
+	 *                repetition of the question being asked.
+	 */
+	ScriptUtils.prototype.actionBranch = function(actions, preface) {
 		var self = this;
 		var chosenAction = null;
 		var actionCallback = null;
@@ -100,7 +106,7 @@ define([
 					x: this._localState.x,
 					y: this._localState.y,
 					w: 400,
-					h: 90,
+					h: 110,
 					actions: actions.map(function(action, index) {
 						var jump = 1;
 						for (var i = 0; i < index; i++) {
@@ -110,7 +116,8 @@ define([
 							label: action.label,
 							onClick: function() { actionCallback(jump); }
 						};
-					})
+					}),
+					preface: preface
 				}
 			},
 			{
