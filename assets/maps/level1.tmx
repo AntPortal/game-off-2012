@@ -1,63 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" width="15" height="37" tilewidth="64" tileheight="32">
+<map version="1.0" orientation="isometric" width="70" height="70" tilewidth="64" tileheight="32">
  <tileset firstgid="1" source="iso-64x64-outside.tsx"/>
  <tileset firstgid="161" source="iso-64x64-building_2.tsx"/>
- <layer name="0 floor" width="15" height="37">
+ <layer name="0 floor" width="70" height="70">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   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
+   eJztnEty3DYQhntemoU0D6lKGu1sOa9KnMs4Y2ssyZNYTvlgqSkdI+vkBskBssnCPoOJUv+FVqtBggTImXFp0TUCQYLAh7/RIAjqkoguS+yXwPE3X7mVMXlVWL+wt09cHjAZFjZ54vKISf+JywMmB4rLr3Q/zqTattvalAt0csA8pvz3urBj5jTnc8b896iwGduAz+nzde6cHqdd3tuIenTR3jpcoJMR/74v7B3bTWGHhR0xqylzmHPbZ8xtwuch71hcB3+s0msd01q0NKrPi9UvmAy4vY6L08NaMNL9PlR5k5I8ed3rkjrWtVfqfutAPdclbSjTzpLPPeZrR5yWmtD9nitvxnknfE/447RBma79CyNvXXFdyLeXfH6Pf0eqH1DXPwyL0VJXeU30MqrgMmKGQ75G91GIS5taaqKXJteFuDgfW5EfOwcUp5e/Wur3rvMwNwvFgxVznBus90EvTfNCc1b8veRrtF7A2nH4m3Z3fEnVSxmXQ+Y43tG+zZ13XdiVwUWa5NIXPP/cob7NnefmU79XcLnh6zGnyNFHPxT2fYJ9W/N+oTyni1Ugz/IjqRVwxDy+n6GPvivsmwS7qHm/sjHkA937jLZbejymaC54LsRcJlUvqVz+Leyuxv2q5iiXEb+aC8qaZ+qjXdNLLBcdi3r0UCvg7Y6fctrda2HcO5R+kYFLWfkynUsvVowes52psnEv+NqE+eh8K/1zIpeq8pFuSy94vkV5Z9z2c7rXS0q6KZuLGvdrSy9jLs9ibqXrxOAfE7jE+lEberkRfGN1mzqmxthP5OcxVfXJrZcllzFh5rG67YKL1E1VfXLrZcllDsi/B6jSrfOhpr7RlEvX8QhcTphtjB91qRVw6ToeIUbXiS/b4LKNeLSiuHka0tvgso149Ib8et2++lEbesGapmOzr36UWy96vXdllL0PfpRbL5oL2OybH7WtF8lmW370srDnwp5RWjx6nZEL2HTtRy+ZQ534WBWPDphNLi5L8jqVazIvVH+mrCVYPhPzfFYnHiGvrm4sw54Bd49T8vsdLB1LTv8ksrowyo9Jx67l1dGNpRNZ9iH5PT8hHeN97Ybr3FRTF4HyU+KRzovVjcXliLzvYI0O708sHbv7nzCXCfk1vxmnwamKT1M/qrv2K99L1+GCcnHfPpcLv9I6xr6pDflnUDyfD8ivqWsdaXsWKD8lHoX2bjWN0xhv5R7EntEnWBtfMJdjrsucHr/XxbupGV8T4yfrivyYeJRDL9KX8E6gJ7hYOna/8KNUs/Y85YhHOfSCdTzoFPcBG61jrJWjXefk10VPyce0Bfl9Nairy/skTPsJ3q/niEcpevkouGCP2UJx0TpGmxCPzkX+OZ8zFtfN+Lypuv6TUT7m8aF5Zt14lEMv0OmC/FgzpMc6du35j+7fm1bVbVCSJ/0EOrnlOn0g+/17V/FI1gF9jb5FnbSO0dd35N+/ybpBczgu452sN8q7rqjXtuIRNAOd9siOB7p/7sRxzJFnghvOHZPfVzKnx36BuVfIruihX3WllyrdIm1xseoGLkfk98L2yfuAVX4VG1m/rvTyUfxt6RZpzWBjHINe/qe4OI3yq7hI7cC60Iu0FcX50Ybs8QX7AkL1xjHNNZYN2qPX1NoYXyw2ZfMqcMG3J3rcldcOyX9rMRfl6XldXS66D9vWC8bh0LxKzl9GFB5fJCeccyDK26jym3CBbrrSC8Y57QtT8vOXDfm9MpLLZ4ofX1L8SOumC71INtKPwAV6OVVczpjLZ/JzaMwToRd8r2M9H8Wysdrn6lqmF+ubpDpcZHzC3kbM+05Ee2W7MH/tMRPpR5gzD0S9LT+Cn5Z961bGBbqxvoXCt2gyL/S9QFO/Qls35OcmmNdaMQjPE1IvVjxC/EvhAt1UzW2u1XUphvf+qL/lBxYXxCfoJRSPEMNSuUA3obnNtXF+qmauxD035HXgDM9XFhecJ/2mDT/SutF60TrJwUXqZkR+XqcZlB2Tf7flR/JX7/nOEY/KuKBdudfr5BpMDi6xv7m49Lk9WBtHDB+SX9PDXFeay0O8kut178l/qxxT113lgrEC71TkvA/rDhaXoeICP1pTO37UJReMv7CyfUaaSWgdw/3/g98oXzzaBpcyTmXrFDFpFy9uI+65D1w0o9A6RUw6Riv7yEWyiX2vKtNfMxfJ5pTs90NXIl8ei/GhfeYCNnpeZeU3KXufubRpObl8Af3ZwAc=
   </data>
  </layer>
- <layer name="0 decoration" width="15" height="37">
+ <layer name="0 decoration" width="70" height="70">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztkl8KwjAMh3PHWUV9E9RbiDuF7MmHbVcY6DyQ4J8zmGLCQui6dM/94Ee3rl/TsAJkMpkYrXFdh/mI9wZTJ7g+Z+UdjO4rsV4lnksarX1KNpiVcLmPpzqfT6+8PaaA4cxfzJtG5oG5k88sMEdyGzEf6t1/L9Wc97fKDfXeBOZkrZq8ltbK55B7iuwX4zLTS6GaXgJXGq13LITV9fenV3Mp7g2Gf8RhOhFmDf97PFXXO/o+OsyOfI0+g+5hSRnzYzhyY/XH4Lpuhs+O3KNIdOUeVvcHeQ1Czw==
+   eJztmktOwzAQhnMnHhcocAN2cAYQqsSaU1AiJDbdwhG4BGugR6EWsRhGnsROM37+nzRqmqTO5M94PHHddQAA0CbnqR0As+kH2wyfY+e1yoZt8++G2vX5IGbYefymJ1Y60j1wXV7JsWfH72k7NI5KRXq+Y7pwbJ/qyXfe/iFxZNuOHYc+1xvTxbe9DfmU8hPfTonLj8+9vRF7T+BDDsAvNzb258SFq1+4zplDbF2WqLVpvaeVF+01SqI0f7Xo2XZOulwxu1S4xtgYaslNlxjQe66lrvfldLCjva2GfTROpsaXWjnpfjU57mRdWooTi9XkjO1vUQuK6UMr4VirsWKQNDHw92Pwf96yVXhuAUBiPVjtmDxq+8WFx/lGk7u93ah5tDxPEa5h9Fh3ZenCeVRq91ap3dQs9T5dcsyAP1qurQAonfvUDmRKqC5bFS/Kg9edMXSJUetKzO0/iBc3Oeii9U4g4RO/20CjfC3maT7Ye5oTL99dnPUjKbBrhaZ00cqZ10rtHoJ53vZZp8ovOeny4tgn6eLKHQ8L+pKTLi4kXULW5JkaIXReVdIl9tgk4dKF9jNfQuun3OMlFRprXIAeu4njNO+mfL+JzVReDcm7tWDWPU/l1RZ1mWLOeARAKK56ugZaGncAyIUa5+sOoeb5Oi3wvx4AfmBOyQ10AaBOfgDd+X3h
   </data>
  </layer>
- <objectgroup name="0 NPCs" width="15" height="37">
+ <objectgroup name="0 NPCs" width="70" height="70">
   <properties>
    <property name="baseheight" value="0"/>
   </properties>
-  <object type="npc" x="96" y="512" width="32" height="32">
-   <properties>
-    <property name="gender" value="M"/>
-    <property name="name" value="Colin"/>
-    <property name="sprite" value="oldman"/>
-   </properties>
-  </object>
-  <object type="npc" x="384" y="640" width="32" height="32">
-   <properties>
-    <property name="gender" value="F"/>
-    <property name="name" value="Apache"/>
-    <property name="sprite" value="bunny"/>
-   </properties>
-  </object>
-  <object type="npc" x="224" y="640" width="32" height="32">
-   <properties>
-    <property name="gender" value="F"/>
-    <property name="name" value="Disco"/>
-    <property name="sprite" value="dancerF"/>
-   </properties>
-  </object>
-  <object type="npc" x="256" y="800" width="32" height="32">
+  <object type="npc" x="900" y="1696" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Linus"/>
     <property name="sprite" value="childM"/>
    </properties>
   </object>
-  <object type="npc" x="128" y="928" width="32" height="32">
+  <object type="npc" x="1154" y="1890" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Junio"/>
     <property name="sprite" value="junio"/>
    </properties>
   </object>
-  <object type="npc" x="352" y="992" width="32" height="32">
+  <object type="npc" x="634" y="1444" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Scott"/>
@@ -65,69 +44,90 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="1 floor" width="15" height="37">
+ <layer name="1 floor" width="70" height="70">
   <properties>
    <property name="baseheight" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYEAFMxkGF5iORw7m1oVYMLEApv4EFr3o5uFyy2I85mIzj1y9x9HUL4XSd6D0TAaEX/ZiMW8JVP9SKI3NP0uwiCEDmF6YWciYkF5sfoXZiUuOnmADEK8dYnqpDTYhYWxiy/HoXYOE8YmNgpEBHlCgl5j8sAmL2H0g3odHz2h6HLoAAJmJNjI=
+   eJzt2k0KwjAQhuHc/wLabvVSegUFewQd6EAISQxFm2bmfSBQbBaZz/wtGgIAAIBdt94DwBDuvQcAAAC6uWSaB6+15er3lENq+bRHKNfvNRdFLnnkkhfXPxd+98jbfJGzZmno5y0XyeTZ0M9bLiKtbYqeZT7Vzmm931hU+891nZX6LKFtHY6oNZfTPsPpTurVO76I18+c9LW8j6S+3fFjrbmctw/ncH6Zy+jSO2tL8+haeaf70FTpY1UpFzmDNBePavMlx9L+CgCAZRa/xbJYE3A0rDMAwB44b7YhNwAAxsU5DgAAgH95A2d0RX8=
   </data>
  </layer>
- <layer name="1 decoration" width="15" height="37">
+ <layer name="1 decoration" width="70" height="70">
   <properties>
    <property name="baseheight" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgF1ACVA+0AKoCKgXbAAIObA+2AQQCwhcFouIyCUTAKBhoAACcxA30=
+   eJzt1sEJgDAMBVDH1l1cwRXcRGfRu9AWoaQ070FPvfxAmnRZAAAAAGBOd3SAAV3vOaNDAEymZd/s3VOMxb75r9ZPWf83R+Eua79lrTvrGyjJ2gv0tUUHGJg59GUOtVmjAwAAAAAAAAAAAEDFA41qERE=
   </data>
  </layer>
- <objectgroup name="1 NPCs" width="15" height="37">
+ <objectgroup name="1 NPCs" width="70" height="70">
   <properties>
    <property name="baseheight" value="1"/>
   </properties>
-  <object type="npc" x="384" y="256" width="32" height="32">
+  <object type="npc" x="867" y="982" width="32" height="32">
    <properties>
     <property name="gender" value="F"/>
     <property name="name" value="Berkeley"/>
     <property name="sprite" value="oldwoman"/>
    </properties>
   </object>
-  <object type="npc" x="96" y="224" width="32" height="32">
+  <object type="npc" x="580" y="989" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Conflictee"/>
     <property name="sprite" value="townfolkM"/>
    </properties>
   </object>
-  <object type="npc" x="192" y="160" width="32" height="32">
+  <object type="npc" x="579" y="838" width="32" height="32">
    <properties>
     <property name="gender" value="F"/>
     <property name="name" value="Mergee"/>
     <property name="sprite" value="healerF"/>
    </properties>
   </object>
-  <object type="npc" x="192" y="0" width="32" height="32">
+  <object type="npc" x="322" y="481" width="32" height="32">
    <properties>
     <property name="gender" value="M"/>
     <property name="name" value="Ceeveeus"/>
     <property name="sprite" value="ceeveeus"/>
    </properties>
   </object>
+  <object type="npc" x="867" y="604" width="32" height="32">
+   <properties>
+    <property name="gender" value="M"/>
+    <property name="name" value="Colin"/>
+    <property name="sprite" value="oldman"/>
+   </properties>
+  </object>
+  <object type="npc" x="871" y="817" width="32" height="32">
+   <properties>
+    <property name="gender" value="F"/>
+    <property name="name" value="Apache"/>
+    <property name="sprite" value="bunny"/>
+   </properties>
+  </object>
+  <object type="npc" x="1061" y="757" width="32" height="32">
+   <properties>
+    <property name="gender" value="F"/>
+    <property name="name" value="Disco"/>
+    <property name="sprite" value="dancerF"/>
+   </properties>
+  </object>
  </objectgroup>
- <layer name="2 floor" width="15" height="37">
+ <layer name="2 floor" width="70" height="70">
   <properties>
    <property name="baseheight" value="2"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBh84AEJau8D8TokvA9J7jIZ5qHrXU+B29D1ovOxgbsMmP64j8YfBaNgFIyCUTAKRhIAAKncDeE=
+   eJzt1YEJADAIAzD//3Df7AcZOGpyQVGpVQAAAACQ6UwHACCeX8NL7qnP7Pawa4D/6GYAAAAAAAAAAADIcAH7zgUX
   </data>
  </layer>
- <layer name="2 decoration" width="15" height="37">
+ <layer name="2 decoration" width="70" height="70">
   <properties>
    <property name="baseheight" value="2"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgc4CYNzLxFZfNo4cZRMApGwSgYBaNgFOAHAPLtAo0=
+   eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAACvBkyQAAE=
   </data>
  </layer>
 </map>
