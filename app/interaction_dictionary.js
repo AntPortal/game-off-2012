@@ -902,8 +902,13 @@ define([
 					[{ action: 'label', label: 'endPush' }],
 					scriptUtils.dialogAndPause([
 						"@npcName@: And there the pages go into the clouds. I’m sure Linus must have them now. Thanks!",
-						"@npcName@: Maybe you should have a look around the village to see if anyone else has some writing they want to share with Linus."
+						"@npcName@: Maybe you should have a look around the village to see if anyone else has some writing they want to share with Linus.",
+						"@npcName@: You'll know them when you see them."
 					]),
+					scriptUtils.removeCurrentInteraction(),
+					_.chain(sveniteNames).shuffle().first(4).zip([1, 2, 3, 4]).map(function(p) {
+						return scriptUtils.addInteraction([p[0]], 'villager' + p[1] + 'GitPush');
+					}).value(),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
 					[{ action: 'label', label: 'wrongAnswer' }],
@@ -917,6 +922,311 @@ define([
 				vm.run();
 			},
 			taskString: "Explain 'git push' to Junio",
+			referrable: true
+		},
+
+		villager1GitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@. I heard Linus is assembling a master edition of his book, and wants everyone to send their chapters to him.",
+						"@npcName@: He said there's a spell we can cast to do that. What is it? I already have my writing added in and bound."
+					]),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git send", "git transmit", "git update"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause([
+									"@npcName@: It doesn’t seem like anything happened. Should we try again?",
+								]),
+								[{ action: 'jumpToLabel', label: 'beginPush' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'endPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: Thanks!"]),
+					scriptUtils.removeCurrentInteraction(),
+					[{ action: 'destroyVM' }],
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git push' to villagers (@num@ left)",
+			referrable: true
+		},
+
+		villager2GitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@, I heard Linus is collecting all the chapters that everyone contributed, to add to a master edition of his book.",
+						"@npcName@: I have all my pages right here. If I want to get these to him, what do I do first?"
+					]),
+
+					[{ action: 'label', label: 'beginAdd' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git add chapter77",
+							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ["git push", "git commit"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause([
+									"@npcName@: That didn't do anything... I have a feeling there's something else I have to do first..."
+								]),
+								[{ action: 'jumpToLabel', label: 'beginAdd' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginCommit' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, the pages are in the book now. What's next?"]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git commit",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git push", "git log", "git bind"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause([
+									"@npcName@: That didn't work. Are you sure that's the right spell? Let's try again."
+								]),
+								[{ action: 'jumpToLabel', label: 'beginCommit' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, looks like the pages are bound... what now?"]),
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git send", "git transmit", "git update"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Are you sure that's the right spell? Let's try again."]),
+								[{ action: 'jumpToLabel', label: 'beginPush' }]
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'endPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: Thanks!"]),
+					scriptUtils.removeCurrentInteraction(),
+					[{ action: 'destroyVM' }]
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git push' to villagers (@num@ left)",
+			referrable: true
+		},
+
+		villager3GitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@, I’ve written another chapter on transmutation, and I’ve already added it to the book by using “git add.”",
+						"@npcName@: I’d like to share this with Linus, and word is that there’s a spell that will let me do just that.",
+						"@npcName@: So after “git add”, what's the next thing to do?"
+					]),
+
+					[{ action: 'label', label: 'beginCommit' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git commit",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git push", "git send"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause([
+									"@npcName@: No, that didn’t seem to do anything. I think the ordering of the spells matter.",
+									"@npcName@: There’s something you specifically have to do after casting the `git add` spell... what is it?"
+								]),
+								[{ action: 'jumpToLabel', label: 'beginCommit' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: Good call, I almost forgot that I had to bind the pages after adding them.",
+						"@npcName@: Now I guess it’s time to use that other spell for sending it off, right? What is it?"
+					]),
+					[{ action: 'label', label: 'askPush' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git send", "git log"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause([
+									"@npcName@: I don’t think that worked. I saw someone else cast the spell, and it made his copy of the book fly into the clouds.",
+									"@npcName@: Do you think we should try again?"
+								])
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'endPush' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: That’s all it takes? I’m impressed by how simple git magic is to use nowadays.",
+						"@npcName@: I can remember when the git wizards would always talk in arcane terms like “porcelain” and “plumbing”, and nobody could ever tell what they were getting at.",
+						"@npcName@: Thanks for your help!"
+					]),
+					scriptUtils.giveCopper(1),
+					scriptUtils.removeCurrentInteraction(),
+					[{ action: 'destroyVM' }]
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git push' to villagers (@num@ left)",
+			referrable: true
+		},
+
+		villager4GitPush: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hi @heroName@, I heard Linus is writing a book on magic, but I’m sure he doesn’t have anything on illusions in it, because those are something of an obscure art.",
+						"@npcName@: I wrote an essay on that not long ago, and I think it’d fit right in as a new chapter, but I’ve no idea how to get started.",
+						"@npcName@: I don’t even have a copy of Linus’ book yet. What should I do first?"
+					]),
+					[{ action: 'label', label: 'askClone' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git clone https://github.com/AntPortal/game-off-2012.git",
+							result: [{ action: 'jumpToLabel', label: 'beginAdd' }]
+						},
+						{ /* wrong answers */
+							texts: ["git-clone https://github.com/AntPortal/game-off-2012.git", "git checkout https://github.com/AntPortal/game-off-2012.git"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause([
+									"@npcName@: I guess it didn’t work, ‘cause I figure I’d have Linus’ book in front of me after having cast the spell, but I don’t see a book here. Want to try again?"]),
+								[{ action: 'jumpToLabel', label: 'askClone' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginAdd' }],
+					scriptUtils.dialogAndPause(["@npcName@: Okay, I’ve got the book, and I’ve written down my changes. How do I get my changes into the book?"]),
+					[{ action: 'label', label: 'askAdd' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git add chapter77",
+							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+						},
+						{ /* wrong answers */
+							texts: ["git-add chapter77", "git insert chapter77", "git append chapter77"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause(["@npcName@: My page still isn't in the book. Are you sure you’re casting the right spell? Let's try again."]),
+								[{ action: 'jumpToLabel', label: 'askAdd' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginCommit' }],
+					scriptUtils.dialogAndPause(["@npcName@: Well, the pages are in the book now, but they’re not actually attached to the spine. Is there a way to make my additions more permanent?"]),
+					[{ action: 'label', label: 'askCommit' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git commit",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git save", "git bind"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause(["@npcName@: Hmm, my pages still seem to be unattached to the book. Perhaps we need a different spell?"]),
+								[{ action: 'jumpToLabel', label: 'askCommit' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: Great! Now how do I share my changes with the rest of the villagers?"]),
+					[{ action: 'label', label: 'askPush' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git send", "git transmit"],
+							result: _.flatten([
+								scriptUtils.dialogAndPause(["@npcName@: Nothing seems to have happened. Are you sure you cast the right spell? Let's try again."]),
+								[{ action: 'jumpToLabel', label: 'askPush' }],
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						}
+					),
+
+					[{ action: 'label', label: 'endPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: Looks like it worked. Thanks! Here's two copper coins for your trouble."]),
+					scriptUtils.giveCopper(2),
+					scriptUtils.removeCurrentInteraction()
+				]));
+				vm.run();
+			},
+			taskString: "Explain 'git push' to villagers (@num@ left)",
 			referrable: true
 		}
 	};
