@@ -57,6 +57,7 @@ define([
 		giveCopper: function(num) {
 			this._coppers += num;
 			this._save();
+			this.trigger('CopperUpdated', this);
 		},
 		/** Returns true if this GameState represents a blank save slot. */
 		isEmpty: function() {
@@ -75,6 +76,7 @@ define([
 			this._coppers = 0;
 			this._save();
 			this.trigger('InteractionsUpdated', this);
+			this.trigger('CopperUpdated', this);
 		},
 		addInteraction: function(npcNames, interaction) {
 			var self = this;
@@ -153,6 +155,7 @@ define([
 				this.clear();
 			}
 			this.trigger('InteractionsUpdated', this);
+			this.trigger('CopperUpdated', this);
 		},
 		_save: function() {
 			var toSave = {

@@ -16,6 +16,7 @@ define([
 		'components/ActionMenu',
 		'scenes/level2-intro',
 		'components/TaskList',
+		'components/Coins',
 	], function(config, mapData, mouselook, utils, ScriptUtils, interactionDictionary, gameStates) {
 	var taskListEntity = null;
 	function init() {
@@ -87,6 +88,7 @@ define([
 			// utils.addMusicControlEntity(Crafty);
 			taskListEntity = Crafty.e('TaskList');
 			taskListEntity.TaskList('cr-stage', config.viewport.width - 320, 0, config.zOffset.gitk, 320, 100, gameState);
+			Crafty.e('Coins').Coins('cr-stage', config.viewport.width - 150, config.viewport.height - 32, config.zOffset.gitk, 150, 32, gameState);
 		})();
 
 		Crafty.viewport.clampToEntities = false;
