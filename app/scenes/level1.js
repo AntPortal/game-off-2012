@@ -68,8 +68,8 @@ define([
 										npc: npcDictionary[nearbyNPC.properties.name],
 										interaction: actionName,
 										face: undefined,
-										x: nearbyNPC.x - 150,
-										y: nearbyNPC.y - 80,
+										x: (config.viewport.width - 600) / 2,
+										y: config.viewport.height - 200,
 										heroName: gameState.getShortName()
 									}
 								);

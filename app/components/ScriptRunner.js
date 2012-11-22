@@ -64,7 +64,7 @@ define([
 			//TODO: We can do more validation here if we want.
 		},
 		behaviour: function(vm, inst) {
-			Crafty.e('2D, Canvas, Dialog').attr(inst.params);
+			Crafty.e('2D, Canvas, Dialog, ViewportRelative').attr(inst.params);
 			vm._curState++;
 			vm.run();
 		},
@@ -79,7 +79,7 @@ define([
 			//TODO: We can do more validation here if we want.
 		},
 		behaviour: function(vm, inst) {
-			Crafty.e('2D, Canvas, ActionMenu').attr(inst.params);
+			Crafty.e('2D, Canvas, ActionMenu, ViewportRelative').attr(inst.params);
 			vm._curState++;
 			vm.run();
 		},

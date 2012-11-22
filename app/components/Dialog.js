@@ -79,8 +79,8 @@ define([
 			this._msgEntity.attr({
 				text: this.msg.join(" "),
 				fillStyle: this.msgColor,
-				fontFamily: 'Patrick Hand',
-				fontSize: '16px',
+				fontFamily: config.dialogFont.family,
+				fontSize: config.dialogFont.size,
 				x : this.x + this.TILE_SIZE + paddedFaceWidth,
 				y : this.y + (this.TILE_SIZE / 2),
 				z : this.z,
