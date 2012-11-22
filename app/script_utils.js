@@ -71,8 +71,8 @@ define([
 				params: {
 					x: this._localState.x,
 					y: this._localState.y,
-					w: 400,
-					h: 70,
+					w: 600,
+					h: 140,
 					face: undefined, /* TODO */
 					msg: interpolated
 				},
