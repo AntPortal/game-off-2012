@@ -25,7 +25,7 @@ define([
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
-		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {});
+		var parsedMapData = utils.loadMap(mapData, tileProperties);
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
