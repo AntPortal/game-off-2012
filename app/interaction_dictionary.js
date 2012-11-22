@@ -7,14 +7,11 @@
  * - icon: TODO
  */
 define([
+	'config',
 	'underscore',
 	'Crafty',
 	'components/ScriptRunner',
-], function() {
-	var COPPER_VALUE = 1;
-	var SILVER_VALUE = 4;
-	var GOLD_VALUE = 16;
-	var PLATINUM_VALUE = 64;
+], function(config) {
 	var sveniteNames = ['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'];
 
 	function checkGitPushDone(scriptUtils) {
@@ -159,7 +156,7 @@ define([
 							+ "the Svenites obtain the latest copy of my book. Thank you! Here’s your silver coin."]
 					),
 					scriptUtils.removeCurrentInteraction(),
-					scriptUtils.giveCopper(SILVER_VALUE),
+					scriptUtils.giveCopper(config.coinValues.silver),
 					scriptUtils.addInteraction(['Linus'], 'linusGitAdd1'),
 					[{ action: 'destroyVM' }]
 				]));
@@ -627,7 +624,7 @@ define([
 							label: "I’ve heard of the spells “csv2svn” and “git svn”. Maybe you can do something with those...",
 							result: _.flatten([
 								scriptUtils.dialogAndPause(["@npcName@: Hmm, really? That sounds like it just might work... here’s something for your trouble."]),
-								scriptUtils.giveCopper(GOLD_VALUE)
+								scriptUtils.giveCopper(config.coinValues.gold)
 							])
 						},
 						{
@@ -671,7 +668,7 @@ define([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Well done. I could never get Ceeveeus to even take one look at git magic... Here’s two silver coins for doing such a good job."
 					]),
-					scriptUtils.giveCopper(2*SILVER_VALUE),
+					scriptUtils.giveCopper(2*config.coinValues.silver),
 					scriptUtils.dialogAndPause([
 						"@npcName@: By the way, Junio came by earlier. He was telling me about that squashed bug I found in chapter 10 of the book.",
 						"@npcName@: I told him that I’d fixed it, and that he could use the “git pull” spell to get my changes into his copy of the book.",
@@ -765,7 +762,7 @@ define([
 
 					[{ action: 'label', label: 'endPull' }],
 					scriptUtils.dialogAndPause(["@npcName@: Hey, great. The bug is gone. Thanks! Here’s something for your help."]),
-					scriptUtils.giveCopper(COPPER_VALUE),
+					scriptUtils.giveCopper(config.coinValues.copper),
 					scriptUtils.removeCurrentInteraction(),
 					[{
 						action: 'arbitraryCode',

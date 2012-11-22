@@ -40,6 +40,11 @@ define([], function() {
 		dialogFont: {
 			family: 'Patrick Hand',
 			size: 24
+		},
+		coinValues: {
+			copper: 1,
+			silver: 4,
+			gold: 16
 		}
 	};
 	return configObj;
