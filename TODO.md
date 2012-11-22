@@ -2,6 +2,9 @@ See the "karayom" branch for the story details that used to be written here.
 
 BUGS
 ====
+* Increase size of icons indicating that an NPC has an interaction.
+* Some question menus are missing questions.
+* When spoken to, Linus should (sometimes) repeat the mission he just sent you on, e.g., "What are you waiting for? Go talk to them!"
 * Add (very brief) gameplay instructions to the intro screen.
 * The various "git push" interactions produce multiple entries on the task list, when they should produce only one.
 * When the player earns coins; there should be a dialog saying "You earned X coins" or similar.
