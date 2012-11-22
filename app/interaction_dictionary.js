@@ -590,10 +590,10 @@ define([
 					scriptUtils.actionBranch(_.shuffle([
 						{
 							label: "I’ve heard of the spells “csv2svn” and “git svn”. Maybe you can do something with those...",
-							result: _.flatten(
+							result: _.flatten([
 								scriptUtils.dialogAndPause(["@npcName@: Hmm, really? That sounds like it just might work... here’s something for your trouble."]),
 								scriptUtils.giveCopper(GOLD_VALUE)
-							)
+							])
 						},
 						{
 							label: "I don't know",
