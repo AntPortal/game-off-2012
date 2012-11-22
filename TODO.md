@@ -10,6 +10,7 @@ BUGS
 * Music should be disabled by default.
 * Some of the later interactions don't refer the player to the next one.
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
+* Have Camera follow hero character, instead of click target.
 
 Bugs from the old design, potentially still relevant
 ====================================================
