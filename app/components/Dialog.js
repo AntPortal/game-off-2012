@@ -80,12 +80,12 @@ define([
 				text: this.msg.join(" "),
 				fillStyle: this.msgColor,
 				fontFamily: config.dialogFont.family,
-				fontSize: config.dialogFont.size,
+				fontSize: config.dialogFont.size + 'px',
 				x : this.x + this.TILE_SIZE + paddedFaceWidth,
 				y : this.y + (this.TILE_SIZE / 2),
 				z : this.z,
 				w : this.w - (this.TILE_SIZE * 2) - paddedFaceWidth,
-				h : 16,
+				h : config.dialogFont.size,
 				visible: this.visible,
 			});
 			this._msgEntity.trigger('Change');
