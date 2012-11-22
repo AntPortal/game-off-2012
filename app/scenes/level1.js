@@ -17,80 +17,23 @@ define([
 		'scenes/level2-intro',
 		'components/TaskList',
 	], function(config, mapData, mouselook, utils, ScriptUtils, interactionDictionary, gameStates) {
-	var HERO_START = {x: 8, y: 26};
 	var taskListEntity = null;
 	function init() {
-		var hero; //entity global to this scene
 		var tileProperties = utils.loadTileset(mapData);
 
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
-		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
-			var walkBlockerExists = Crafty('WalkBlocker').length > 0;
-			if (hero && !walkBlockerExists) {
-				hero.setWalkTarget(clickedTileEntity.tileX, clickedTileEntity.tileY);
-				var i = 0;
-				var nearbyNPC = null;
-				for (i = 0; i < parsedMapData.objects.length; i++) {
-					var object = parsedMapData.objects[i];
-					if (object.type == 'npc') {
-						var xDistance = Math.abs(object.tileX - clickedTileEntity.tileX);
-						var yDistance = Math.abs(object.tileY - clickedTileEntity.tileY);
-						if (xDistance + yDistance == 1) {
-							//Has to be exactly 1 tile away, no diagonals, and not 0 distance.
-							nearbyNPC = object; //If there are multiple choices, choose one arbitrarily.
-							break;
-						}
-					}
-				}
-				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
-
-				if (nearbyNPC != null) {
-					/* The use of setTimeout here defers the enclosed until after the "click"
-					 * event for this tile click tile has already passed. Note that this code
-					 * is actually running in a "mouseup" handler, not a "click" handler, and
-					 * that "mouseup" is always delivered before "click" when both are relevant;
-					 * without the use of setTimeout here, the mouse listener from the PACADOC
-					 * would already exist by the time the "click" event happened, and would
-					 * capture that event, causing all the dialogs to close immediately before
-					 * they were displayed. */
-					setTimeout(function() {
-						var npcName = nearbyNPC.properties.name;
-						var actionName = gameState.getOneInteraction(npcName);
-						actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
-						var action = interactionDictionary[actionName];
-						utils.assert(action, 'action should not be undefined');
-
-						var scriptUtils = new ScriptUtils(
-							interactionDictionary,
-							npcDictionary,
-							gameState,
-							{
-								npc: npcDictionary[nearbyNPC.properties.name],
-								interaction: actionName,
-								face: undefined,
-								x: clickedTileEntity.x - 300,
-								y: clickedTileEntity.y - 125,
-								heroName: gameState.getShortName()
-							}
-						);
-						action.doAction(scriptUtils);
-					}, 1);
-				}
-			}
-		});
+		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {});
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-			var pathFinder = utils.makePathFinder(parsedMapData);
-			hero = Crafty.e('2D, Canvas, Character').
-				Character(parsedMapData.heightMap, worldToPixel, pathFinder, HERO_START.x, HERO_START.y, {sprite: 'hero'});
+			var pathFinder = utils.makePathFinder(parsedMapData); /* "filler" value; not used */
 			var i = 0;
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
-					var npcEnt = Crafty.e('2D, Canvas, NPC').
+					var npcEnt = Crafty.e('2D, Canvas, NPC, Mouse').
 						NPC(
 							parsedMapData.heightMap,
 							worldToPixel,
@@ -99,7 +42,40 @@ define([
 							object.tileY,
 							object.properties,
 							gameState
-						);
+						).
+						bind("Click", function() {
+							var nearbyNPC = this;
+							/* The use of setTimeout here defers the enclosed until after the "click"
+							 * event for this tile click tile has already passed. Note that this code
+							 * is actually running in a "mouseup" handler, not a "click" handler, and
+							 * that "mouseup" is always delivered before "click" when both are relevant;
+							 * without the use of setTimeout here, the mouse listener from the PACADOC
+							 * would already exist by the time the "click" event happened, and would
+							 * capture that event, causing all the dialogs to close immediately before
+							 * they were displayed. */
+							setTimeout(function() {
+								var npcName = nearbyNPC.properties.name;
+								var actionName = gameState.getOneInteraction(npcName);
+								actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
+								var action = interactionDictionary[actionName];
+								utils.assert(action, 'action should not be undefined');
+
+								var scriptUtils = new ScriptUtils(
+									interactionDictionary,
+									npcDictionary,
+									gameState,
+									{
+										npc: npcDictionary[nearbyNPC.properties.name],
+										interaction: actionName,
+										face: undefined,
+										x: nearbyNPC.x - 150,
+										y: nearbyNPC.y - 80,
+										heroName: gameState.getShortName()
+									}
+								);
+								action.doAction(scriptUtils);
+							}, 1);
+						});
 					npcDictionary[object.properties.name] = npcEnt;
 				} else {
 					console.warn('Unknown object type: ', object.type);
@@ -108,16 +84,15 @@ define([
 		})();
 		(function() {
 			//Handle HUD
-			utils.addMusicControlEntity(Crafty);
+			// utils.addMusicControlEntity(Crafty);
 			taskListEntity = Crafty.e('TaskList');
 			taskListEntity.TaskList('cr-stage', config.viewport.width - 320, 0, config.zOffset.gitk, 320, 100, gameState);
 		})();
 
 		Crafty.viewport.clampToEntities = false;
-		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
-		utils.ensureMusicIsPlaying('music/town');
-		(function() { //Initial dialog from boy and girl to hero.
+		// utils.ensureMusicIsPlaying('music/town');
+		(function() { //Initial dialog from Linus to hero.
 			if (!gameState.hasNoInteractions()) {
 				return;
 			}
