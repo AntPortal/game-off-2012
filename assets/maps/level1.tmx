@@ -107,7 +107,7 @@
     <property name="sprite" value="oldman"/>
    </properties>
   </object>
-  <object type="npc" x="871" y="817" width="32" height="32">
+  <object type="npc" x="870" y="833" width="32" height="32">
    <properties>
     <property name="gender" value="F"/>
     <property name="name" value="Apache"/>
