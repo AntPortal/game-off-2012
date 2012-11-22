@@ -95,6 +95,8 @@ define([
 		mouselook.start();
 		// utils.ensureMusicIsPlaying('music/town');
 		(function() { //Initial dialog from Linus to hero.
+			utils.centerViewportOn(Crafty, npcDictionary['Linus'], 0);
+
 			if (!gameState.hasNoInteractions()) {
 				return;
 			}
