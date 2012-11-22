@@ -39,7 +39,7 @@ define([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hello @heroName@! It's nice of you to come by. Listen, I'm working on this new book and I'd love to share my draft with the villagers in Sveni. They will be so happy to hear the good news!",
 						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>git clone https://github.com/AntPortal/game-off-2012.git</span>. But they often git it wrong.",
-						"@npcName@: Your mission: go to the six villagers in Sveni, north of here, and help them say the right magic words. You will be rewarded with one copper coin once you complete your mission."
+						"@npcName@: Your mission: go to the six villagers in Sveni, north of here, and help them say the right magic words. You will be rewarded with one silver coin once you complete your mission."
 					]),
 					scriptUtils.addInteraction(sveniteNames, 'villagerGitClone')
 				]));
@@ -102,7 +102,8 @@ define([
 							"@npcName@: Thanks @heroName@! It worked! Have you spoken to @npcNameRef@ lately? I think @heOrSheRef@ was looking for you.",
 							"Thanks @heroName@! It worked!", /* should never happen */
 							thisInteraction
-						)
+						),
+						scriptUtils.giveCopper(config.coinValues.copper),
 					])
 				};
 				var jokeAnswerAction = {
@@ -344,10 +345,10 @@ define([
 						"Thank you! Oh, please go say thank you to Linus on my behalf."
 					]),
 					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.giveCopper(config.coinValues.gold),
 					[{
 						action: 'arbitraryCode',
 						code: function(curState, callback) {
-							/* TODO: give a reward? */
 							gameState.addInteraction(['Linus'], 'linusGitAdd2');
 							callback(curState+1);
 						}
@@ -446,6 +447,7 @@ define([
 						"@npcName@: Thanks! As a token of gratitude, I’m going to go teach it to @npcNameRef@ on your behalf. My mother always told me that teaching is the best way to learn.",
 						"@npcName@: Thanks!"
 					),
+					scriptUtils.giveCopper(config.coinValues.silver),
 					scriptUtils.removeCurrentInteraction(),
 					[{
 						action: 'arbitraryCode',
@@ -720,6 +722,7 @@ define([
 						"@npcName@: Hey, great. The bug is gone. Thanks!",
 						"@npcName@: I’m sure all the villagers in Sveni will want their books “de-bugged” as well. Why don’t you go and teach them how?"
 					]),
+					scriptUtils.giveCopper(config.coinValues.copper),
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.addInteraction(sveniteNames, 'villagerGitPull')
 				]));
@@ -837,6 +840,7 @@ define([
 					scriptUtils.dialogAndPause(["@npcName@: Hey, did you see that? The extra pages from my chapter flew into the clouds. I bet Linus probably has my chapter now."]),
 					scriptUtils.addInteraction(['Junio'], 'junioGitPush'),
 					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.giveCopper(config.coinValues.copper),
 					[
 						{ action: 'label', label: 'end' },
 						{ action: 'destroyVM' }
@@ -938,6 +942,7 @@ define([
 						"@npcName@: Maybe you should have a look around the village to see if anyone else has some writing they want to share with Linus.",
 						"@npcName@: You'll know them when you see them."
 					]),
+					scriptUtils.giveCopper(config.coinValues.gold),
 					scriptUtils.removeCurrentInteraction(),
 					_.chain(sveniteNames).shuffle().first(4).zip([1, 2, 3, 4]).map(function(p) {
 						return scriptUtils.addInteraction([p[0]], 'villager' + p[1] + 'GitPush');
@@ -993,6 +998,7 @@ define([
 					scriptUtils.dialogAndPause(["@npcName@: Thanks!"]),
 					scriptUtils.removeCurrentInteraction(),
 					checkGitPushDone(scriptUtils),
+					scriptUtils.giveCopper(config.coinValues.copper),
 					[{ action: 'destroyVM' }],
 				]));
 				vm.run();
@@ -1076,6 +1082,7 @@ define([
 
 					[{ action: 'label', label: 'endPush' }],
 					scriptUtils.dialogAndPause(["@npcName@: Thanks!"]),
+					scriptUtils.giveCopper(config.coinValues.gold),
 					scriptUtils.removeCurrentInteraction(),
 					checkGitPushDone(scriptUtils),
 					[{ action: 'destroyVM' }]
@@ -1151,7 +1158,7 @@ define([
 						"@npcName@: I can remember when the git wizards would always talk in arcane terms like “porcelain” and “plumbing”, and nobody could ever tell what they were getting at.",
 						"@npcName@: Thanks for your help!"
 					]),
-					scriptUtils.giveCopper(1),
+					scriptUtils.giveCopper(config.coinValues.silver),
 					scriptUtils.removeCurrentInteraction(),
 					checkGitPushDone(scriptUtils),
 					[{ action: 'destroyVM' }]
@@ -1256,8 +1263,8 @@ define([
 					),
 
 					[{ action: 'label', label: 'endPush' }],
-					scriptUtils.dialogAndPause(["@npcName@: Looks like it worked. Thanks! Here's two copper coins for your trouble."]),
-					scriptUtils.giveCopper(2),
+					scriptUtils.dialogAndPause(["@npcName@: Looks like it worked. Thanks! Here's two gold coins for your trouble."]),
+					scriptUtils.giveCopper(2 * config.coinValues.gold),
 					scriptUtils.removeCurrentInteraction(),
 					checkGitPushDone(scriptUtils)
 				]));
