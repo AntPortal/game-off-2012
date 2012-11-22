@@ -34,6 +34,24 @@ define([
 	}
 
 	return {
+		linusIntro: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Hello @heroName@! It's nice of you to come by. Listen, I'm working on this new book and I'd love to share my draft with the villagers in Sveni. They will be so happy to hear the good news!",
+						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>git clone https://github.com/AntPortal/game-off-2012.git</span>. But they often git it wrong.",
+						"@npcName@: Your mission: go to the six villagers in Sveni, north of here, and help them say the right magic words. You will be rewarded with one copper coin once you complete your mission."
+					]),
+					scriptUtils.addInteraction(sveniteNames, 'villagerGitClone')
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false
+		},
+
 		defaultInteraction: {
 			doAction: function(scriptUtils) {
 				var vm = Crafty.e('ScriptRunner');
