@@ -40,7 +40,9 @@ define([
 				config.curSaveSlot = this.saveIndex;
 				if (!gameStates.saveGames[config.curSaveSlot].isEmpty()) {
 					//TODO Load the level
-					Crafty.scene('level1');
+					utils.profile('title.js loading the level', function() {
+						Crafty.scene('level1');
+					});
 				} else {
 					//Load new save creation system.
 					Crafty.scene('newGame');

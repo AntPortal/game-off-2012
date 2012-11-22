@@ -176,7 +176,9 @@ function(config, PathFinder, Set) {
 	 *            a function which accepts a single parameter representing the
 	 *            tile entity that was clicked on.
 	 */
-	function loadMap(mapData, tileProperties, tileClickCallback) {
+	function loadMap(mapData, tileProperties) {
+		assert(mapData, 'mapData required');
+		assert(tileProperties, 'tileProperties required');
 		/**
 		 * Map from a string of the form "x,y", e.g. "0,0", to an object containing information about the highest tile
 		 * at those coordinates. Used for pathing.
@@ -188,9 +190,11 @@ function(config, PathFinder, Set) {
 		function parseTilelayer(layer, baseheight) {
 			if (layer.visible) {
 				var j;
-				for (j = 0; j < layer.data.length; j++) {
-					if (layer.data[j] != 0) {
-						var tileType = 'tile'+layer.data[j];
+				var layerData = layer.data;
+				var layerDataLength = layerData.length;
+				for (j = 0; j < layerDataLength; j++) {
+					if (layerData[j] != 0) {
+						var tileType = 'tile'+layerData[j];
 						/*
 						 * We add the baseheight to convert from "Looks right in tiled" to "reflects actual world
 						 * coordinates."
@@ -252,9 +256,9 @@ function(config, PathFinder, Set) {
 				console.warn('Layer ' + layer.name + ' missing baseheight');
 			}
 			if (layer.type == 'tilelayer') {
-				parseTilelayer(layer, baseheight);
+				profile('utils.js loadMap :: parseTileLayer', parseTilelayer, [layer, baseheight]);
 			} else if (layer.type == 'objectgroup') {
-				parseObjectlayer(layer, baseheight);
+				profile('utils.js loadMap :: parseObjectLayer',  parseObjectlayer, [layer, baseheight]);
 			}
 		}
 		return parsedMapData;
@@ -620,16 +624,34 @@ function(config, PathFinder, Set) {
 	function interpolate(msg, env) {
 		return msg.replace(/@(\w+)@/g, function(_, name) { return env[name]; });
 	}
+	var profileDepth = 0;
+	function profile(desc, func, funcArgs) {
+		var indent = '';
+		var i;
+		for (i = 0; i < profileDepth; i++) {
+			indent += '>';
+		}
+		profileDepth++;
+		var startTime = Date.now();
+		console.log(indent, 'BEGIN ', desc, startTime);
+		try {
+			return func.apply(this, funcArgs || []);
+		} finally {
+			var endTime = Date.now();
+			profileDepth--;
+			console.log(indent, 'END ', desc, endTime, '('+(endTime - startTime)+')');
+		}
+	}
 	return {
 		assert : assert,
 		newUUID : newUUID,
 		makeWorldToPixelConverter : makeWorldToPixelConverter,
 		pointInRect : pointInRect,
-		loadTileset : loadTileset,
+		loadTileset : function(mapData) { return profile('utils.js loadTileset', loadTileset, [mapData]); },
 		effectiveVolume : effectiveVolume,
 		setMusicVolume : setMusicVolume,
 		addMusicControlEntity: addMusicControlEntity,
-		loadMap: loadMap,
+		loadMap: function(mapData, tileProperties, tileClickCallback) { return profile('utils.js loadMap', loadMap, [mapData, tileProperties, tileClickCallback]);},
 		makePathFinder: makePathFinder,
 		stopAllMusic: stopAllMusic,
 		binarySearch: binarySearch,
@@ -643,5 +665,6 @@ function(config, PathFinder, Set) {
 		ensureMusicIsPlaying: ensureMusicIsPlaying,
 		chainSet: chainSet,
 		interpolate: interpolate,
+		profile: profile,
 	};
 });

@@ -46,36 +46,40 @@ define([
 						).
 						bind("Click", function() {
 							var nearbyNPC = this;
-							/* The use of setTimeout here defers the enclosed until after the "click"
-							 * event for this tile click tile has already passed. Note that this code
-							 * is actually running in a "mouseup" handler, not a "click" handler, and
-							 * that "mouseup" is always delivered before "click" when both are relevant;
-							 * without the use of setTimeout here, the mouse listener from the PACADOC
-							 * would already exist by the time the "click" event happened, and would
-							 * capture that event, causing all the dialogs to close immediately before
-							 * they were displayed. */
-							setTimeout(function() {
-								var npcName = nearbyNPC.properties.name;
-								var actionName = gameState.getOneInteraction(npcName);
-								actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
-								var action = interactionDictionary[actionName];
-								utils.assert(action, 'action should not be undefined');
-
-								var scriptUtils = new ScriptUtils(
-									interactionDictionary,
-									npcDictionary,
-									gameState,
-									{
-										npc: npcDictionary[nearbyNPC.properties.name],
-										interaction: actionName,
-										face: undefined,
-										x: (config.viewport.width - 600) / 2,
-										y: config.viewport.height - 200,
-										heroName: gameState.getShortName()
-									}
-								);
-								action.doAction(scriptUtils);
-							}, 1);
+							utils.profile('level1.js click handler', function() {
+								/* The use of setTimeout here defers the enclosed until after the "click"
+							 	* event for this tile click tile has already passed. Note that this code
+							 	* is actually running in a "mouseup" handler, not a "click" handler, and
+							 	* that "mouseup" is always delivered before "click" when both are relevant;
+							 	* without the use of setTimeout here, the mouse listener from the PACADOC
+							 	* would already exist by the time the "click" event happened, and would
+								 * capture that event, causing all the dialogs to close immediately before
+								 * they were displayed. */
+								setTimeout(function() {
+									utils.profile('level1.js click handler timeout hack', function() {
+										var npcName = nearbyNPC.properties.name;
+										var actionName = gameState.getOneInteraction(npcName);
+										actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
+										var action = interactionDictionary[actionName];
+										utils.assert(action, 'action should not be undefined');
+										console.log('About to run ', action);
+										var scriptUtils = new ScriptUtils(
+											interactionDictionary,
+											npcDictionary,
+											gameState,
+											{
+												npc: npcDictionary[nearbyNPC.properties.name],
+												interaction: actionName,
+												face: undefined,
+												x: (config.viewport.width - 600) / 2,
+												y: config.viewport.height - 200,
+												heroName: gameState.getShortName()
+											}
+										);
+										action.doAction(scriptUtils);
+									});
+								}, 1);
+							});
 						});
 					npcDictionary[object.properties.name] = npcEnt;
 				} else {
@@ -124,6 +128,8 @@ define([
 		}
 		taskListEntity = null;
 	}
-	Crafty.scene('level1', init, uninit);
+	Crafty.scene('level1', function() {
+		utils.profile('level1.js init', init);
+	}, uninit);
 	return undefined;
 });

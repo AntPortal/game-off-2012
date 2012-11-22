@@ -8,10 +8,11 @@
  */
 define([
 	'config',
+	'utils',
 	'underscore',
 	'Crafty',
 	'components/ScriptRunner',
-], function(config) {
+], function(config, utils) {
 	var sveniteNames = ['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'];
 
 	function checkGitPushDone(scriptUtils) {
@@ -66,15 +67,17 @@ define([
 		},
 		defaultLinus: {
 			doAction: function(scriptUtils) {
-				var vm = Crafty.e('ScriptRunner');
-				vm.ScriptRunner(_.flatten([
-					/* TODO: implement getting help with git */
-					scriptUtils.dialogAndPause(
-						["@npcName@: Hi @heroName@! I'd give you some help with git, but that feature hasn't been implemented yet..."]
-					),
-					[{ action: 'destroyVM' }]
-				]));
-				vm.run();
+				utils.profile('interaction_dictionary defaultLinus action', function() {
+					var vm = Crafty.e('ScriptRunner');
+					vm.ScriptRunner(_.flatten([
+						/* TODO: implement getting help with git */
+						scriptUtils.dialogAndPause(
+							["@npcName@: Hi @heroName@! I'd give you some help with git, but that feature hasn't been implemented yet..."]
+						),
+						[{ action: 'destroyVM' }]
+					]));
+					vm.run();
+				});
 			}
 		},
 		villagerGitClone: {

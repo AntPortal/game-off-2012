@@ -12,6 +12,7 @@ define([
 	'scenes/Loading',
 	'trapBackspace',
 ], function(config) {
+	console.log('Game starting...');
 	Crafty.init(config.viewport.width, config.viewport.height);
 	// Start in loading scene
 	Crafty.scene('Loading');
