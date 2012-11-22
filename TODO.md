@@ -5,7 +5,6 @@ BUGS
 * Camera should center on Linus at the start of the game.
 * Add (very brief) gameplay instructions to the intro screen.
 * The various "git push" interactions produce multiple entries on the task list, when they should produce only one.
-* Count of earned coins should be displayed somewhere.
 * When the player earns coins; there should be a dialog saying "You earned X coins" or similar.
 * Some of the later interactions don't refer the player to the next one.
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
@@ -17,6 +16,7 @@ BUGS
 * [DONE] In question menu, prefix each answer with e.g. "A.", "B.", "C.". Allow keyboard input to select answer. Repeat question in terse form at the top of the message bar.
 * [DONE] The various "git push" interactions produce multiple entries on the task list, when they should produce only one.
 * [DONE] Add Intro screen.
+* [DONE] Count of earned coins should be displayed somewhere.
 
 Bugs from the old design, potentially still relevant
 ====================================================
