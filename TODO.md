@@ -10,7 +10,6 @@ BUGS
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
 * Have Camera follow hero character, instead of click target.
 * Implement Linus helping the player when the player is stuck.
-* In question menu, prefix each answer with e.g. "A.", "B.", "C.". Allow keyboard input to select answer. Repeat question in terse form at the top of the message bar.
 * Add Intro screen.
 =======
 * [DONE] Music should be disabled by default.
