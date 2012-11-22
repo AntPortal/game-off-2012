@@ -39,8 +39,8 @@ define([
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.makeReferral(
-						"@npcName@: Hi @heroName@! I've got nothing for you right now. Why don't you go see @npcNameRef@? @HeOrSheRef@ said @HeOrSheRef@ wanted to speak with you.",
-						"@npcName@: Hi @heroName@! I've got nothing for you right now. Why don't you go see @npcNameRef@? @HeOrSheRef@ said @HeOrSheRef@ wanted to speak with you.",
+						"@npcName@: Hi @heroName@! I've got nothing for you right now. Why don't you go see @npcNameRef@? @HeOrSheRef@ said @heOrSheRef@ wanted to speak with you.",
+						"@npcName@: Hi @heroName@! I've got nothing for you right now. Why don't you go see @npcNameRef@? @HeOrSheRef@ said @heOrSheRef@ wanted to speak with you.",
 						"@npcName@: Hi @heroName@! I've got nothing for you right now. Why don't you look around to see if anyone else needs help?",
 						undefined
 					),
