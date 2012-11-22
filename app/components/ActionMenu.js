@@ -1,9 +1,10 @@
 define([
+	'config',
 	'Crafty',
 	'components/BaseDialog',
 	'components/BetterText',
-], function() {
-	var ACTION_VERT_SPACE = 24;
+], function(config) {
+	var ACTION_VERT_SPACE = Math.round(config.dialogFont.size * 24.0 / 16.0);
 	var SUBTEXT_INDENT = 16;
 	var ATOI = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 	/**
@@ -72,7 +73,7 @@ define([
 			if (this.preface) {
 				this._prefaceEntity = Crafty.e('2D, Canvas, BetterText').attr({
 					text: this.preface,
-					fontSize: '16px',
+					fontSize: config.dialogFont.size + 'px',
 					fontFamily: 'Patrick Hand',
 					fillStyle: '#AAAAFF',
 					strokeStyle: undefined,
@@ -80,7 +81,7 @@ define([
 					y: this.y + this.TILE_SIZE * 0.25,
 					z: this.z + 1,
 					w: this.w,
-					h: 16
+					h: config.dialogFont.size
 				});
 			}
 
@@ -89,7 +90,7 @@ define([
 				var entities = {};
 				entities['labelEntity'] = Crafty.e('2D, Canvas, BetterText').attr({
 					text: ATOI[i] + '. ' +action.label,
-					fontSize: '16px',
+					fontSize: config.dialogFont.size + 'px',
 					fontFamily: 'Patrick Hand',
 					fillStyle: 'white',
 					strokeStyle: undefined,
@@ -97,7 +98,7 @@ define([
 					y: this.y + this.TILE_SIZE * 0.25 + ACTION_VERT_SPACE * (i + iOffset),
 					z: this.z + 1,
 					w: this.w,
-					h: 16
+					h: config.dialogFont.size
 				});
 				entities['onClickEntity'] = Crafty.e('2D, Mouse').
 					attr({
@@ -105,7 +106,7 @@ define([
 						y: this.y + this.TILE_SIZE * 0.25 + ACTION_VERT_SPACE * (i + iOffset),
 						z: this.z + 1,
 						w: this.w,
-						h: 16
+						h: config.dialogFont.size
 					}).
 					bind('Click', this._createOnClickHandler(action));
 				this._actionEntities.push(entities);

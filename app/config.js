@@ -39,7 +39,7 @@ define([], function() {
 		},
 		dialogFont: {
 			family: 'Patrick Hand',
-			size: '24px'
+			size: 24
 		}
 	};
 	return configObj;
