@@ -174,6 +174,8 @@ define([
 		 * Returns a dictionary where the keys are the interaction names and the
 		 * values is a count of how many villagers have this interaction open. May
 		 * or may not return interactions with a count of zero.
+		 *
+		 * The caller may modify the returned dictionary.
 		 */
 		getInteractionCounts: function() {
 			var retVal = {};

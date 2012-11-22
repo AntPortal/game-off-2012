@@ -10,6 +10,9 @@ BUGS
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
 * Have Camera follow hero character, instead of click target.
 * Implement Linus helping the player when the player is stuck.
+* In question menu, prefix each answer with e.g. "A.", "B.", "C.". Allow keyboard input to select answer. Repeat question in terse form at the top of the message bar.
+* Add Intro screen.
+=======
 * [DONE] Music should be disabled by default.
 * [DONE] Talking to villagers should be done by clicking on them, rather than beside them.
 * [DONE] Name entry screen displays incorrectly; see https://www.evernote.com/shard/s173/sh/ceadeb95-ac1c-453a-874d-a3f17ac0003a/a96111596172e029a1cc01c9971f2593.
