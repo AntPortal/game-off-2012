@@ -1,3 +1,6 @@
+define(function(){return(
+define(function(){return(
+define(function(){return(
 { "height":70,
  "layers":[
         {
@@ -500,3 +503,6 @@
  "version":1,
  "width":70
 }
+);});
+);});
+);});
