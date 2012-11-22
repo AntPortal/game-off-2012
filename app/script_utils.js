@@ -72,7 +72,7 @@ define([
 					x: this._localState.x,
 					y: this._localState.y,
 					w: 600,
-					h: 140,
+					h: 160,
 					face: undefined, /* TODO */
 					msg: interpolated
 				},
@@ -105,8 +105,8 @@ define([
 				params: {
 					x: this._localState.x,
 					y: this._localState.y,
-					w: 400,
-					h: 110,
+					w: 600,
+					h: 160,
 					actions: actions.map(function(action, index) {
 						var jump = 1;
 						for (var i = 0; i < index; i++) {
