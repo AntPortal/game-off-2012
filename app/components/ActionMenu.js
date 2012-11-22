@@ -89,7 +89,7 @@ define([
 				var action = this.actions[i];
 				var entities = {};
 				entities['labelEntity'] = Crafty.e('2D, Canvas, BetterText').attr({
-					text: ATOI[i] + '. ' +action.label,
+					text: '('+ATOI[i] + ') ' +action.label,
 					fontSize: config.dialogFont.size + 'px',
 					fontFamily: 'Patrick Hand',
 					fillStyle: 'white',
