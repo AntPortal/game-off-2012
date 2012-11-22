@@ -44,7 +44,6 @@ define([
 						}
 					}
 				}
-				utils.centerViewportOn(Crafty, clickedTileEntity, 30);
 
 				if (nearbyNPC != null) {
 					/* The use of setTimeout here defers the enclosed until after the "click"
