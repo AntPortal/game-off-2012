@@ -2,7 +2,6 @@ See the "karayom" branch for the story details that used to be written here.
 
 BUGS
 ====
-* Menus should summarize the question being asked, and prefix the options with e.g. "a)", "b)", and "c)".
 * In question menu, prefix each answer with e.g. "A.", "B.", "C.". Allow keyboard input to select answer. Repeat question in terse form at the top of the message bar.
 * The various "git push" interactions produce multiple entries on the task list, when they should produce only one.
 * Count of earned coins should be displayed somewhere.
