@@ -143,7 +143,7 @@ define([
 							Crafty.sprite(16, url, spriteParams);
 						}
 					})();
-					Crafty.sprite(16, 'assets/ui/comment_new.gif', {
+					Crafty.sprite(24, 'assets/ui/comment_new_large.png', {
 						dialogMore : [ 0, 0 ]
 					});
 					Crafty.sprite(16, 'assets/ui/action_stop.gif', {
