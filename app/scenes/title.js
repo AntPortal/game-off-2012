@@ -234,46 +234,5 @@ define([
 				Crafty.scene('level1');
 			}
 		}
-		var tooltip = Crafty.e('2D, Canvas, BetterText, Mouse');
-		tooltip.attr({
-			text: '?',
-			fillStyle: '#00FF00',
-			strokeStyle: 'black',
-			fontFamily: 'Patrick Hand',
-			fontSize: fontSize+'px',
-			x: config.viewport.width - 24,
-			y: 24,
-			w: 16,
-			h: 16,
-			z: config.zOffset.dialog + 2,
-		});
-		var tip = Crafty.e('2D, Canvas, Dialog');
-		tip.attr({
-			msg: [
-				"If you have a Github account, enter your Github account name, and the game will include some bonus content",
-				"tailored specifically to you. If you don't have a Github account, feel free to use any name you want. You'll miss",
-				"out on the bonus content, though!",
-				"",
-				"Note that github names are NOT case sensitive, and you can use this to influence the nickname the game will",
-				"use to refer to you. For example, if your github name is johnsmith, and you wish to be referred to as John,",
-				"enter your github name as JohnSmith."
-			],
-			x: 20,
-			y: 120,
-			w: config.viewport.width - 40,
-			h: config.viewport.height - 180,
-			z: config.zOffset.dialog + 2,
-			visible: false,
-		});
-		tooltip.bind('MouseOver', function() {
-			tip.visible = true;
-		});
-		tooltip.bind('MouseOut', function() {
-			tip.visible = false;
-			//Crafty bug? The letters need to be told to redraw themselves.
-			Crafty('2D').each(function() {
-				this.trigger('Change');
-			});
-		});
 	});
 });
