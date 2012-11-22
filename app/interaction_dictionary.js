@@ -699,6 +699,7 @@ define([
 		villagerGitPull: {
 			doAction: function(scriptUtils) {
 				var gameState = scriptUtils.getGameState();
+				var thisInteraction = 'villagerGitPull';
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
@@ -729,7 +730,17 @@ define([
 					[{ action: 'label', label: 'endPull' }],
 					scriptUtils.dialogAndPause(["@npcName@: Hey, great. The bug is gone. Thanks! Here’s something for your help."]),
 					scriptUtils.giveCopper(COPPER_VALUE),
-					scriptUtils.removeCurrentInteraction()
+					scriptUtils.removeCurrentInteraction(),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							var npcsWithPull = gameState.findInteraction(thisInteraction);
+							if (npcsWithPull.length === 0) {
+								gameState.addInteraction(['Linus'], 'linusGitPush');
+							}
+							callback(curState+1);
+						}
+					}]
 				]));
 				vm.run();
 			},
