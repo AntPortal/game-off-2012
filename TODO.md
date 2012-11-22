@@ -2,7 +2,6 @@ See the "karayom" branch for the story details that used to be written here.
 
 BUGS
 ====
-* Increase size of icons indicating that an NPC has an interaction.
 * Some question menus are missing questions.
 * When spoken to, Linus should (sometimes) repeat the mission he just sent you on, e.g., "What are you waiting for? Go talk to them!"
 * Add (very brief) gameplay instructions to the intro screen.
@@ -12,6 +11,7 @@ BUGS
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
 * Implement Linus helping the player when the player is stuck.
 
+* [DONE] Increase size of icons indicating that an NPC has an interaction.
 * [DONE] Camera should center on Linus at the start of the game.
 * [DONE] Music should be disabled by default.
 * [DONE] Talking to villagers should be done by clicking on them, rather than beside them.
