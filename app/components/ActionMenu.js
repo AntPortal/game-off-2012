@@ -42,12 +42,27 @@ define([
 			this._actionEntities = [];
 			this.bind('Change', this._attributeChanged);
 			this.bind('Remove', this._removed);
+			this.bind('KeyDown', function(keyEvent) {
+				var aKeycode = 65;
+				var zKeycode = aKeycode + 25;
+				var keycode = keyEvent.which || keyEvent.key || keyEvent.keyCode;
+				var choice = null;
+				if (aKeycode <= keycode && keycode <= zKeycode) {
+					choice = keycode - aKeycode; //a -> 0, b -> 1, etc.
+				}
+				if (choice !== null) {
+					var selectedAction = this.actions[choice];
+					if (selectedAction) {
+						this._createOnClickHandler(selectedAction)();
+					}
+				}
+			});
 		},
 		_createOnClickHandler: function(action) {
 			var me = this;
-			return function(e) {
+			return function() {
 				me.destroy();
-				action.onClick(e);
+				action.onClick();
 			};
 		},
 		_attributeChanged: function() {
