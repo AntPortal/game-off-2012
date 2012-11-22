@@ -24,53 +24,7 @@ define([
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
-		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {
-			var walkBlockerExists = Crafty('WalkBlocker').length > 0;
-			if (!walkBlockerExists) {
-				var i = 0;
-				var nearbyNPC = null;
-				for (i = 0; i < parsedMapData.objects.length; i++) {
-					var object = parsedMapData.objects[i];
-					if (object.type == 'npc' && object.tileX === clickedTileEntity.tileX && object.tileY === clickedTileEntity.tileY) {
-						nearbyNPC = object;
-						break;
-					}
-				}
-
-				if (nearbyNPC != null) {
-					/* The use of setTimeout here defers the enclosed until after the "click"
-					 * event for this tile click tile has already passed. Note that this code
-					 * is actually running in a "mouseup" handler, not a "click" handler, and
-					 * that "mouseup" is always delivered before "click" when both are relevant;
-					 * without the use of setTimeout here, the mouse listener from the PACADOC
-					 * would already exist by the time the "click" event happened, and would
-					 * capture that event, causing all the dialogs to close immediately before
-					 * they were displayed. */
-					setTimeout(function() {
-						var npcName = nearbyNPC.properties.name;
-						var actionName = gameState.getOneInteraction(npcName);
-						actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
-						var action = interactionDictionary[actionName];
-						utils.assert(action, 'action should not be undefined');
-
-						var scriptUtils = new ScriptUtils(
-							interactionDictionary,
-							npcDictionary,
-							gameState,
-							{
-								npc: npcDictionary[nearbyNPC.properties.name],
-								interaction: actionName,
-								face: undefined,
-								x: clickedTileEntity.x - 300,
-								y: clickedTileEntity.y - 125,
-								heroName: gameState.getShortName()
-							}
-						);
-						action.doAction(scriptUtils);
-					}, 1);
-				}
-			}
-		});
+		var parsedMapData = utils.loadMap(mapData, tileProperties, function(clickedTileEntity) {});
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
@@ -79,7 +33,7 @@ define([
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
-					var npcEnt = Crafty.e('2D, Canvas, NPC').
+					var npcEnt = Crafty.e('2D, Canvas, NPC, Mouse').
 						NPC(
 							parsedMapData.heightMap,
 							worldToPixel,
@@ -88,7 +42,40 @@ define([
 							object.tileY,
 							object.properties,
 							gameState
-						);
+						).
+						bind("Click", function() {
+							var nearbyNPC = this;
+							/* The use of setTimeout here defers the enclosed until after the "click"
+							 * event for this tile click tile has already passed. Note that this code
+							 * is actually running in a "mouseup" handler, not a "click" handler, and
+							 * that "mouseup" is always delivered before "click" when both are relevant;
+							 * without the use of setTimeout here, the mouse listener from the PACADOC
+							 * would already exist by the time the "click" event happened, and would
+							 * capture that event, causing all the dialogs to close immediately before
+							 * they were displayed. */
+							setTimeout(function() {
+								var npcName = nearbyNPC.properties.name;
+								var actionName = gameState.getOneInteraction(npcName);
+								actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
+								var action = interactionDictionary[actionName];
+								utils.assert(action, 'action should not be undefined');
+
+								var scriptUtils = new ScriptUtils(
+									interactionDictionary,
+									npcDictionary,
+									gameState,
+									{
+										npc: npcDictionary[nearbyNPC.properties.name],
+										interaction: actionName,
+										face: undefined,
+										x: nearbyNPC.x - 150,
+										y: nearbyNPC.y - 80,
+										heroName: gameState.getShortName()
+									}
+								);
+								action.doAction(scriptUtils);
+							}, 1);
+						});
 					npcDictionary[object.properties.name] = npcEnt;
 				} else {
 					console.warn('Unknown object type: ', object.type);
