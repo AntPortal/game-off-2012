@@ -97,52 +97,20 @@ define([
 				return;
 			}
 
-			var heroName = gameState.getShortName();
-			var vm = Crafty.e('ScriptRunner');
-			var chainSet = utils.chainSet;
-			var template = {
-				Linus: {
-					x: -355,
-					y: 580,
-					w: 475,
-					h: 90,
-					face: 'face_childM', /* TODO: change? */
-					showMore: true,
+			var scriptUtils = new ScriptUtils(
+				interactionDictionary,
+				npcDictionary,
+				gameState,
+				{
+					npc: npcDictionary['Linus'],
+					interaction: 'linusIntro',
+					face: undefined,
+					x: (config.viewport.width - 600) / 2,
+					y: config.viewport.height - 200,
+					heroName: gameState.getShortName()
 				}
-			};
-			function dialogAndPause(templateKey, lines) {
-				return [{
-					action: 'dialog',
-					params: chainSet(Crafty.clone(template[templateKey]), 'msg', lines)
-				}, {
-					action: 'PACADOC'
-				}]
-			}
-			vm.ScriptRunner(_.flatten([
-				dialogAndPause('Linus', [
-					"Hello " + heroName + "! It's nice of you to come by. Listen, I'm",
-					"working on this new book and I'd love to share my draft with the",
-					"villagers in Sveni. They will be so happy to hear the good news!"
-				]),
-				dialogAndPause('Linus', [
-					"To get a copy of my book, they need to recite the magic words,",
-					"\"git clone https://github.com/AntPortal/game-off-2012.git\".",
-					"But they often git it wrong.",
-				]),
-				dialogAndPause('Linus', [
-					"Your mission: go to the six villagers in Sveni, north of",
-					"here, and help them say the right magic words. You will be",
-					"rewarded with one copper coin once you complete your mission."
-				]),
-				[{
-					action: 'arbitraryCode',
-					code: function(curState, callback) {
-						gameState.addInteraction(['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'], 'villagerGitClone');
-						vm.destroy();
-					}
-				}]
-			]));
-			vm.run();
+			);
+			interactionDictionary['linusIntro'].doAction(scriptUtils);
 		})();
 	}
 	function uninit() {
