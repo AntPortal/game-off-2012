@@ -37,6 +37,10 @@ define([], function() {
 			'dialog': 2000,
 			'meta': 3000,
 		},
+		dialogFont: {
+			family: 'Patrick Hand',
+			size: '24px'
+		}
 	};
 	return configObj;
 });
