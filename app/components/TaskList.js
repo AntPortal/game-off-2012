@@ -64,11 +64,23 @@ define([
 		},
 		_interactionsUpdated: function(gameState) {
 			var interactionCounts = gameState.getInteractionCounts();
+			//Group together interactions that have identical strings.
+			var interactionByStrings = {};
+			_.each(interactionCounts, function(count, interactionId) {
+				var preInterpolatedString = interactionDictionary[interactionId].taskString;
+				if (this[preInterpolatedString]) {
+					this[preInterpolatedString].count += count;
+				} else {
+					this[preInterpolatedString] = {id: interactionId, count: count};
+				}
+			}, interactionByStrings);
+			utils.assert((!_.isEmpty(interactionByStrings.length)) || _.isEmpty(interactionCounts.length), 'If interactionCounts is non-empty, then interactionByStrings should also be non-empty.');
+			//Perform the interpolation
 			this.tasks = [];
-			_.each(interactionCounts, function(num, interactionId) {
+			_.each(interactionByStrings, function(obj, preInterpolatedString) {
 				var humanString = utils.interpolate(
-					interactionDictionary[interactionId].taskString,
-					{ num: num }
+					preInterpolatedString,
+					{ num: obj.count }
 				);
 				this.push({
 					label: humanString ,
