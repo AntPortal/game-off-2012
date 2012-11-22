@@ -44,6 +44,7 @@ function(config, PathFinder, Set) {
 	 * properties, e.g. {"noStand": "true"}
 	 */
 	function loadTileset(mapData) {
+		assert(mapData, 'mapData required');
 		var tileProperties = {};
 		var tileX, tileY, i;
 		for (i = 0; i < mapData.tilesets.length; i++) {
