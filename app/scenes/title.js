@@ -2,6 +2,7 @@ define([
 		'config',
 		'utils',
 		'components/GameState',
+		'scenes/intro',
 		'scenes/level1',
 		'components/Dialog',
 		'components/TextButton',
@@ -231,7 +232,7 @@ define([
 			if (name.length > 0) {
 				var gameState = gameStates.saveGames[config.curSaveSlot];
 				gameState.setGithubName(name).setShortName(utils.getShortName(name));
-				Crafty.scene('level1');
+				Crafty.scene('intro');
 			}
 		}
 	});
