@@ -16,6 +16,23 @@ define([
 	var GOLD_VALUE = 16;
 	var PLATINUM_VALUE = 64;
 	var sveniteNames = ['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'];
+
+	function checkGitPushDone(scriptUtils) {
+		var gameState = scriptUtils.getGameState();
+		return [{
+			action: 'arbitraryCode',
+			code: function(curState, callback) {
+				var completed = _.all([1,2,3,4], function(i) {
+					return gameState.findInteraction('villager'+i+'GitPush').length === 0;
+				});
+				if (completed) {
+					gameState.addInteraction(['Linus'], 'linusFinal');
+				}
+				callback(curState+1);
+			}
+		}];
+	}
+
 	return {
 		defaultInteraction: {
 			doAction: function(scriptUtils) {
@@ -959,6 +976,7 @@ define([
 					[{ action: 'label', label: 'endPush' }],
 					scriptUtils.dialogAndPause(["@npcName@: Thanks!"]),
 					scriptUtils.removeCurrentInteraction(),
+					checkGitPushDone(scriptUtils),
 					[{ action: 'destroyVM' }],
 				]));
 				vm.run();
@@ -1043,6 +1061,7 @@ define([
 					[{ action: 'label', label: 'endPush' }],
 					scriptUtils.dialogAndPause(["@npcName@: Thanks!"]),
 					scriptUtils.removeCurrentInteraction(),
+					checkGitPushDone(scriptUtils),
 					[{ action: 'destroyVM' }]
 				]));
 				vm.run();
@@ -1118,6 +1137,7 @@ define([
 					]),
 					scriptUtils.giveCopper(1),
 					scriptUtils.removeCurrentInteraction(),
+					checkGitPushDone(scriptUtils),
 					[{ action: 'destroyVM' }]
 				]));
 				vm.run();
@@ -1222,11 +1242,35 @@ define([
 					[{ action: 'label', label: 'endPush' }],
 					scriptUtils.dialogAndPause(["@npcName@: Looks like it worked. Thanks! Here's two copper coins for your trouble."]),
 					scriptUtils.giveCopper(2),
-					scriptUtils.removeCurrentInteraction()
+					scriptUtils.removeCurrentInteraction(),
+					checkGitPushDone(scriptUtils)
 				]));
 				vm.run();
 			},
 			taskString: "Explain 'git push' to villagers (@num@ left)",
+			referrable: true
+		},
+
+		linusFinal: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: @heroName@! I’ve been following your progress as you’ve been teaching the villagers all about git magic, and I think you’re ready to join my magic shop as an Apprentice.",
+						"@npcName@: Congratulations! Here’s a badge that you can wear to show others what you’ve accomplished.",
+						/* TODO: actually award badge here */
+						"@npcName@: Even though you now have a good understanding of how you can use git magic for everyday tasks, there is still much of its power you haven’t tapped.",
+						"@npcName@: I don’t have any more lessons prepared for you right now, but you’re welcome to explore on your own by reading the texts at <a href=\"http://git-scm.com/documentation\">http://git-scm.com/documentation</a>.",
+						/* TODO: make this link open in a new tab/window, so it doesn't interrupt the game */
+						"@npcName@: You might also want to go back to Sveni sometime to see how you can use your new knowledge to help the villagers with their more involved needs.",
+						"@npcName@: I’m sure they’ll reward you well for it..."
+					]),
+					scriptUtils.removeCurrentInteraction()
+				]));
+				vm.run();
+			},
+			taskString: "Check back with Linus",
 			referrable: true
 		}
 	};
