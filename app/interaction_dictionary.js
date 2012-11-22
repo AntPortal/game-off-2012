@@ -375,7 +375,7 @@ define([
 						"@npcName@: It sounds like you’ve now mastered the art of adding pages to the book.",
 						"@npcName@: Could you please go back to the Svenites and teach them what you just taught Scott?", /* TODO: put actual name here */
 						"@npcName@: This time, I think you can just teach 3 of them, and they’ll spread the word themselves from there.",
-						"@npcName@: While you're at it, could you could pass by Ceeveeus’ house? He lives alone in a shack in the forest far North of Sveni.",
+						"@npcName@: While you're at it, could you could pass by Ceeveeus’ house? He lives alone in a fortress in the forest far North of Sveni.",
 						"@npcName@: He never really wanted to join the village of Sveni. Maybe it was for tax purposes. Who knows."
 					]),
 					[{
