@@ -156,11 +156,14 @@ define([
 	 * @param jokeAnswers  an object with the following keys:
 	 *                     - choices: an array of objects, each with the same form as the `rightAnswer` field.
 	 *                     - take: the number of joke answers to present.
+	 * @param preface      the string to show before all of the possible answers (usually a terser version of the
+	 *                     question being asked.) If undefined, no preface will be shown.
 	 */
 	ScriptUtils.prototype.quizBranch = function(
 		rightAnswer,
 		wrongAnswers,
-		jokeAnswers
+		jokeAnswers,
+		preface
 	) {
 		var wrongLabel = utils.newUUID();
 		var endLabel = utils.newUUID();
@@ -186,7 +189,7 @@ define([
 		actionBranches = _.shuffle(actionBranches);
 
 		return _.flatten([
-			this.actionBranch(actionBranches),
+			this.actionBranch(actionBranches, preface),
 			[{ 'action': 'label', 'label': wrongLabel }],
 			wrongAnswers.result,
 			[{ 'action': 'label', 'label': endLabel }]

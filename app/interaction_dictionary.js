@@ -257,7 +257,8 @@ define([
 								}
 							],
 							take: 1
-						}
+						},
+						"How do you get Linus' book?"
 					),
 
 					[{ action: 'label', label: 'beginGitAdd' }],
@@ -294,7 +295,8 @@ define([
 								}
 							],
 							take: 1
-						}
+						},
+						"How do you insert the pages in the book?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -334,7 +336,8 @@ define([
 								}
 							],
 							take: 1
-						}
+						},
+						"How do you permanently attach the pages?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -414,7 +417,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I add my new chapter?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -437,7 +441,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How to attach the pages to the book?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -566,7 +571,8 @@ define([
 						{ /* joke answers; none for now */
 							choices: [],
 							take: 0
-						}
+						},
+						"How do you get the book?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -588,7 +594,8 @@ define([
 						{ /* joke answers; none for now */
 							choices: [],
 							take: 0
-						}
+						},
+						"How do you add pages to this book?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -610,7 +617,8 @@ define([
 						{ /* joke answers; none for now */
 							choices: [],
 							take: 0
-						}
+						},
+						"How do you permanently bind the page to the book?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -710,7 +718,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do you get Linus' changes?"
 					),
 					scriptUtils.dialogAndPause([
 						"@npcName@: Doesn't look like that worked. The bug is still here between the pages. Should we try again?"
@@ -758,7 +767,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [],  take: 0
-						}
+						},
+						"How do you get only the pages that changed?"
 					),
 					scriptUtils.dialogAndPause(["@npcName@: Doesn’t look like that worked. The bug is still here between the pages. Should we try again?"]),
 					[{ action: 'jumpToLabel', label: 'askPull' }],
@@ -832,7 +842,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I sent Linus my changes?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
@@ -880,9 +891,10 @@ define([
 								result: [] /* fall through */
 							}],
 							take: 1
-						}
+						},
+						"What's the first step to get the pages bound in?"
 					),
-
+					//This is the response you get if you do the joke answer.
 					scriptUtils.dialogAndPause([
 						"@npcName@: Huh, nothing happened. I wonder why…",
 						"@npcName@: … Oh, I forgot to actually put them in the book. How can I do that?"
@@ -899,7 +911,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I put the pages in the book?"
 					),
 
 					[{ action: 'label', label: 'beginCommit' }],
@@ -916,7 +929,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I bind the pages in the book?"
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
@@ -933,7 +947,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What do I do after binding the pages?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
@@ -991,7 +1006,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What do I do after binding my writing?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
@@ -1035,7 +1051,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What do I do first?"
 					),
 
 					[{ action: 'label', label: 'beginCommit' }],
@@ -1057,7 +1074,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What do I do after adding the pages?"
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
@@ -1077,7 +1095,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What do I do after binding the pages?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
@@ -1123,7 +1142,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What do I do after “git add”?"
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
@@ -1149,7 +1169,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"What's the spell to send off the book?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
@@ -1196,7 +1217,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I get a copy of Linus' book?"
 					),
 
 					[{ action: 'label', label: 'beginAdd' }],
@@ -1217,7 +1239,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I get my changes into the book?"
 					),
 
 					[{ action: 'label', label: 'beginCommit' }],
@@ -1238,7 +1261,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I permanently attach the pages?"
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
@@ -1259,7 +1283,8 @@ define([
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
-						}
+						},
+						"How do I share my changes with the others?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
