@@ -107,7 +107,7 @@ define([
 		})();
 		(function() {
 			//Handle HUD
-			utils.addMusicControlEntity(Crafty);
+			// utils.addMusicControlEntity(Crafty);
 			taskListEntity = Crafty.e('TaskList');
 			taskListEntity.TaskList('cr-stage', config.viewport.width - 320, 0, config.zOffset.gitk, 320, 100, gameState);
 		})();
@@ -115,7 +115,7 @@ define([
 		Crafty.viewport.clampToEntities = false;
 		utils.centerViewportOn(Crafty, hero, 1);
 		mouselook.start();
-		utils.ensureMusicIsPlaying('music/town');
+		// utils.ensureMusicIsPlaying('music/town');
 		(function() { //Initial dialog from boy and girl to hero.
 			if (!gameState.hasNoInteractions()) {
 				return;
