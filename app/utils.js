@@ -247,8 +247,8 @@ function(config, PathFinder, Set) {
 				for (i = 0; i < layer.objects.length; i++) {
 					var object = layer.objects[i];
 					parsedMapData.objects.push({
-						tileX: object.x / 32 + baseheight, //TODO: How do we know it's 32?
-						tileY: object.y / 32 + baseheight, //TODO: How do we know it's 32?
+						tileX: Math.round(object.x / 32 + baseheight), //TODO: How do we know it's 32?
+						tileY: Math.round(object.y / 32 + baseheight), //TODO: How do we know it's 32?
 						name: object.name,
 						type: object.type,
 						properties: object.properties,
