@@ -218,8 +218,8 @@ define(function(){return(
                     },
                  "type":"npc",
                  "width":32,
-                 "x":871,
-                 "y":817
+                 "x":870,
+                 "y":833
                 }, 
                 {
                  "height":32,
