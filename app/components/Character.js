@@ -58,45 +58,7 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 				y: bottomPixelCoord.pixelY - (config.TILE_IMAGE_SIZE / 4) - this.h
 			};
 		},
-		_updatePosition: function() {
-			var curTilePixelTopLeft = this._getTopLeftPixelCoords(this.tileX, this.tileY, this.tileZ);
-			if (curTilePixelTopLeft.x != this.x || curTilePixelTopLeft.y != this.y) {
-				//Not aligned in tile, so move towards proper position within tile.
-				var newX, newY;
-				newX = Math.round(Crafty.math.lerp(curTilePixelTopLeft.x, this.x, 0.9));
-				newY = Math.round(Crafty.math.lerp(curTilePixelTopLeft.y, this.y, 0.9));
-				if (newY < this.y) {
-					this._facing = 'N';
-				} else if (newY > this.y) {
-					this._facing = 'S';
-				} else if (newX < this.x) {
-					this._facing = 'W';
-				} else if (newX > this.X) {
-					this._facing = 'E';
-				}
-				if (Math.abs(newX - this.x) < 1) {
-					this.x = curTilePixelTopLeft.x;
-				} else {
-					this.x = newX;
-				}
-				if (Math.abs(newY - this.y) < 1) {
-					this.y = curTilePixelTopLeft.y;
-				} else {
-					this.y = newY;
-				}
-				/* 192 is the squared distance between the center of a tile "diamond" and the midpoint of any of its edges. */
-				if (Crafty.math.squaredDistance(curTilePixelTopLeft.x, curTilePixelTopLeft.y, this.x, this.y) < 192) {
-					this.z = this.tileX + this.tileY + Math.ceil(this.tileZ);
-				}
-			} else if (this._pathToTarget !== null && this._pathToTarget.length > 0) {
-				var nextTile = this._pathToTarget.shift();
-				this.tileX = nextTile.state.tileX;
-				this.tileY = nextTile.state.tileY;
-				this.tileZ = this.heightMap[this.tileX+','+this.tileY].surfaceZ;
-			}
-		},
 		_enterFrame: function(e) {
-			this._updatePosition();
 			var frame = Math.floor((e.frame + this._frameOffset) / 10) % 4;
 			var frameMap = {
 					0: 0,
