@@ -44,13 +44,6 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 			});
 			return this;
 		},
-		setWalkTarget: function(worldX, worldY) {
-			var self = this;
-			var startTile = this.heightMap[this.tileX+','+this.tileY];
-			this._targetX = worldX;
-			this._targetY = worldY;
-			/* TODO: remove this method; characters don't walk anymore */
-		},
 		_getTopLeftPixelCoords: function(worldX, worldY, worldZ) {
 			var bottomPixelCoord = this.worldToPixel(worldX, worldY, worldZ);
 			return {
