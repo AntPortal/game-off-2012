@@ -47,6 +47,10 @@ define([
 						).
 						bind("Click", function() {
 							var nearbyNPC = this;
+							if (Crafty('TalkBlocker').length > 0) {
+								return;
+							}
+
 							utils.profile('level1.js click handler', function() {
 								/* The use of setTimeout here defers the enclosed until after the "click"
 							 	* event for this tile click tile has already passed. Note that this code

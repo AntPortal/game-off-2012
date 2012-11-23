@@ -5,7 +5,6 @@ BUGS
 * Display loading screen after intro, while map is being parsed; absorb clicks during this time. Background-load map?
 * Display "click/tap to continue" on dialogs when relevant
 * Question menus should explain how to use them
-* Block other interactions while a question menu or dialog is open
 * Have some animation on intro text, e.g. characters being displayed as if typed
 * Some question menus are missing questions.
 * When spoken to, Linus should (sometimes) repeat the mission he just sent you on, e.g., "What are you waiting for? Go talk to them!"
@@ -16,6 +15,7 @@ BUGS
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
 * Implement Linus helping the player when the player is stuck.
 
+* [DONE] Block other interactions while a question menu or dialog is open
 * [DONE] Don't abbreviate name anymore.
 * [DONE] Increase size of icons indicating that an NPC has an interaction.
 * [DONE] Camera should center on Linus at the start of the game.
