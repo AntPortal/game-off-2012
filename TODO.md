@@ -2,6 +2,12 @@ See the "karayom" branch for the story details that used to be written here.
 
 BUGS
 ====
+* Display loading screen after intro, while map is being parsed; absorb clicks during this time. Background-load map?
+* Don't abbreviate name anymore.
+* Display "click/tap to continue" on dialogs when relevant
+* Question menus should explain how to use them
+* Block other interactions while a question menu or dialog is open
+* Have some animation on intro text, e.g. characters being displayed as if typed
 * Some question menus are missing questions.
 * When spoken to, Linus should (sometimes) repeat the mission he just sent you on, e.g., "What are you waiting for? Go talk to them!"
 * Add (very brief) gameplay instructions to the intro screen.
