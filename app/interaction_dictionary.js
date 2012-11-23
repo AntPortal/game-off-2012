@@ -52,6 +52,7 @@ define([
 						}
 					}],
 					scriptUtils.addInteraction(sveniteNames, 'villagerGitClone'),
+					scriptUtils.addInteraction(['Scott', 'Junio'], 'scottJunioGitClone'),
 					scriptUtils.addInteraction(['Linus'], 'linusGitCloneRepeat'),
 				]));
 				vm.run();
@@ -108,6 +109,22 @@ define([
 			referrable: false
 		},
 
+		scottJunioGitClone: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Are you looking for the village of Sveni? You can drag (or slide) the map to move around.",
+						"@npcName@: You shouldn't have trouble finding it if you follow the road... it's on the hill northeast of here."
+					])
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false,
+		},
+
 		villagerGitClone: {
 			doAction: function(scriptUtils) {
 				var gameState = scriptUtils.getGameState();
@@ -123,6 +140,8 @@ define([
 								var numClonesLeft = npcsWithClone.length;
 								if (numClonesLeft === 0) {
 									gameState.removeInteraction('Linus', 'linusGitCloneRepeat');
+									gameState.removeInteraction('Scott', 'scottJunioGitClone');
+									gameState.removeInteraction('Junio', 'scottJunioGitClone');
 									gameState.addInteraction(['Linus'], 'linusGitCloneComplete');
 								}
 								callback(curState+1);
