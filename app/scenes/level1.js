@@ -35,10 +35,10 @@ define([
 				if (object.type == 'npc') {
 					var npcEnt = Crafty.e('2D, Canvas, NPC, Mouse').
 						NPC(
-							parsedMapData.heightMap,
 							worldToPixel,
 							object.tileX,
 							object.tileY,
+							object.tileZ,
 							object.properties,
 							gameState
 						).

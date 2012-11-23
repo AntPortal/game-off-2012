@@ -15,8 +15,8 @@ define([
 		init: function() {
 			this.requires('Character');
 		},
-		NPC: function(heightMap, worldToPixel, initialX, initialY, properties, gameState) {
-			this.Character(heightMap, worldToPixel, initialX, initialY, properties);
+		NPC: function(worldToPixel, initialX, initialY, initialZ, properties, gameState) {
+			this.Character(worldToPixel, initialX, initialY, initialZ, properties);
 			utils.assert(properties.name, 'NPCs must have a name.');
 			var PIXEL_PER_CHAR = 20;
 			var estimatedLabelWidth = properties.name.length * PIXEL_PER_CHAR / 2.5; //2.5 was determined empirically

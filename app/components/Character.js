@@ -12,21 +12,18 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 		_currentSprite: null,
 		_frameOffset: 0,
 		properties: null, //Must be set by caller!
-		heightMap: null, //Must be set by caller!
 		worldToPixel: null, //Must be set by caller!
 		init: function() {
 			this.requires('2D');
 			this.bind('EnterFrame', this._enterFrame);
 			this._frameOffset = Crafty.math.randomInt(0, 100); //So that not all characters are exactly in sync.
 		},
-		Character: function(heightMap, worldToPixel, initialX, initialY, properties) {
+		Character: function(worldToPixel, initialX, initialY, initialZ, properties) {
 			this.properties = properties;
 			this._spriteName = properties.sprite;
 			this._currentSprite = 'sprite_' + this._spriteName + '_S0';
 			this.addComponent(this._currentSprite);
-			this.heightMap = heightMap;
 			this.worldToPixel = worldToPixel;
-			var initialZ = heightMap[initialX+','+initialY].surfaceZ;
 			this.setPos(initialX,initialY,initialZ);
 			this._targetX = initialX;
 			this._targetY = initialY;

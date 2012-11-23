@@ -238,6 +238,7 @@ function(config, PathFinder, Set) {
 					parsedMapData.objects.push({
 						tileX: Math.round(object.x / 32 + baseheight), //TODO: How do we know it's 32?
 						tileY: Math.round(object.y / 32 + baseheight), //TODO: How do we know it's 32?
+						tileZ: baseheight,
 						name: object.name,
 						type: object.type,
 						properties: object.properties,
