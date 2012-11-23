@@ -4,11 +4,12 @@
 define([
 	'config',
 	'utils',
+	'interaction_dictionary',
 	'path_finder',
 	'Crafty',
 	'components/Character',
 	'underscore',
-], function(config, utils, PathFinder) {
+], function(config, utils, interactionDictionary, PathFinder) {
 	Crafty.c('NPC', {
 		_dialogIconEntity: null,
 		init: function() {
@@ -45,8 +46,8 @@ define([
 		_interactionsUpdated: function(gameState) {
 			var myInteractions = gameState.getInteractionsByNpc(this.properties.name);
 			myInteractions = myInteractions || [];
-			this._hasInteraction = myInteractions.length > 0;
-			this._dialogIconEntity.visible = this._hasInteraction;
+			this._hasReferrableInteraction = myInteractions.some(function(ixnName) { return interactionDictionary[ixnName].referrable; });
+			this._dialogIconEntity.visible = this._hasReferrableInteraction;
 		}
 	});
 });

@@ -175,8 +175,9 @@ define([
 		},
 		/**
 		 * Returns a dictionary where the keys are the interaction names and the
-		 * values is a count of how many villagers have this interaction open. May
-		 * or may not return interactions with a count of zero.
+		 * values is a count of how many villagers have this interaction open. Only
+		 * counts referrable interactions. May or may not return interactions with a
+		 * count of zero.
 		 *
 		 * The caller may modify the returned dictionary.
 		 */
@@ -184,10 +185,12 @@ define([
 			var retVal = {};
 			_.each(this._gameState, function(interactions, villagerName) {
 				_.each(interactions, function(interaction) {
-					if (this[interaction]) {
-						this[interaction]++;
-					} else {
-						this[interaction] = 1;
+					if (interactionDictionary[interaction].referrable) {
+						if (this[interaction]) {
+							this[interaction]++;
+						} else {
+							this[interaction] = 1;
+						}
 					}
 				}, this);
 			}, retVal);
