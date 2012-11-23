@@ -5,6 +5,10 @@ define([], function() {
 			width : 710,
 			height : 580
 		},
+		background: {
+			width: 4480,
+			height: 2240
+		},
 		TILE_IMAGE_SIZE : 64, // A baked in assumption we're making
 		DEFAULT_GITHUB_AVATAR_URL: 'https://a248.e.akamai.net/assets.github.com/images/gravatars/gravatar-user-420.png',
 		areaMaps : {

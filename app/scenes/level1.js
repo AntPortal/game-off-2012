@@ -25,6 +25,13 @@ define([
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
+		Crafty.e('2D, Canvas, level1').attr({
+			x: (config.viewport.width - config.background.width)/2,
+			y: 0,
+			w: config.background.width,
+			h: config.background.height,
+			z: 0
+		});
 		var parsedMapData = utils.loadMap(mapData, tileProperties);
 		(function() {
 			//Add characters

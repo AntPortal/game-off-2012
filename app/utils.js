@@ -257,7 +257,7 @@ function(config, PathFinder, Set) {
 				console.warn('Layer ' + layer.name + ' missing baseheight');
 			}
 			if (layer.type == 'tilelayer') {
-				profile('utils.js loadMap :: parseTileLayer', parseTilelayer, [layer, baseheight]);
+				// profile('utils.js loadMap :: parseTileLayer', parseTilelayer, [layer, baseheight]);
 			} else if (layer.type == 'objectgroup') {
 				profile('utils.js loadMap :: parseObjectLayer',  parseObjectlayer, [layer, baseheight]);
 			}
