@@ -21,7 +21,7 @@ define([
 			h: 40,
 			fontFamily: config.dialogFont.family,
 			fontSize: config.dialogFont.size / 3,
-			text: "<p style='text-align: center'>Click to continue</p>"
+			text: "<p style='text-align: center'>Click (or Tap) to continue</p>"
 		});
 		Crafty.e('2D, Mouse').attr({
 			x: 0,
