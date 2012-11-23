@@ -25,13 +25,6 @@ define([
 		var gameState = gameStates.saveGames[config.curSaveSlot];
 		var npcDictionary = {};
 
-		Crafty.e('2D, Canvas, level1').attr({
-			x: (config.viewport.width - config.background.width)/2,
-			y: 0,
-			w: config.background.width,
-			h: config.background.height,
-			z: 0
-		});
 		var parsedMapData = utils.loadMap(mapData, tileProperties);
 		(function() {
 			//Add characters
@@ -40,7 +33,7 @@ define([
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
 				if (object.type == 'npc') {
-					var npcEnt = Crafty.e('2D, Canvas, NPC, Mouse').
+					var npcEnt = Crafty.e('2D, NPC, Mouse').
 						NPC(
 							worldToPixel,
 							object.tileX,

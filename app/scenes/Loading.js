@@ -88,6 +88,7 @@ define([
 				'assets/ui/coin_gold.png',
 				'assets/ui/coin_silver.png',
 				'assets/ui/comment_new.gif',
+				'assets/ui/comment_new_large.png',
 				'assets/ui/dialog.blue.png',
 				'assets/ui/dialog.brown.png',
 				'assets/ui/dialog.olive.png',
