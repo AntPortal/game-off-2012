@@ -42,6 +42,15 @@ define([
 						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>git clone https://github.com/AntPortal/game-off-2012.git</span>. But they often git it wrong.",
 						"@npcName@: Your mission: go to the six villagers in Sveni, north of here, and help them say the right magic words. You will be rewarded with one silver coin once you complete your mission."
 					]),
+					[{
+						action: 'arbitraryCode',
+						code: function(curState, callback) {
+							var helpTextEnt = Crafty(Crafty('HelpText')[0]);
+							helpTextEnt.setLines(["Drag or slide to look around.", "Click or tap on someone to talk to them."]);
+							setTimeout(function() { helpTextEnt.setLines([]); }, 10000);
+							callback(curState+1);
+						}
+					}],
 					scriptUtils.addInteraction(sveniteNames, 'villagerGitClone')
 				]));
 				vm.run();

@@ -17,6 +17,7 @@ define([
 		'scenes/level2-intro',
 		'components/TaskList',
 		'components/Coins',
+		'components/HelpText',
 	], function(config, mapData, mouselook, utils, ScriptUtils, interactionDictionary, gameStates) {
 	var taskListEntity = null;
 	function init() {
@@ -93,6 +94,7 @@ define([
 			taskListEntity = Crafty.e('TaskList');
 			taskListEntity.TaskList('cr-stage', config.viewport.width - 320, 0, config.zOffset.gitk, 320, 100, gameState);
 			Crafty.e('Coins').Coins('cr-stage', config.viewport.width - 150, config.viewport.height - 32, config.zOffset.gitk, 150, 32, gameState);
+			Crafty.e('HelpText').HelpText('cr-stage', 10, config.viewport.height - 45, config.zOffset.gitk, 250, 40);
 		})();
 
 		Crafty.viewport.clampToEntities = false;
@@ -102,6 +104,10 @@ define([
 			utils.centerViewportOn(Crafty, npcDictionary['Linus'], 0);
 
 			if (!gameState.hasNoInteractions()) {
+				/* TODO: this is duplicated in the interaction dictionary */
+				var helpTextEnt = Crafty(Crafty('HelpText')[0]);
+				helpTextEnt.setLines(["Drag or slide to look around.", "Click or tap on someone to talk to them."]);
+				setTimeout(function() { helpTextEnt.setLines([]); }, 10000);
 				return;
 			}
 
