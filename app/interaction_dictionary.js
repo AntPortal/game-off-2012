@@ -47,7 +47,7 @@ define([
 						code: function(curState, callback) {
 							var helpTextEnt = Crafty(Crafty('HelpText')[0]);
 							helpTextEnt.setLines(["Drag or slide to look around.", "Click or tap on someone to talk to them."]);
-							setTimeout(function() { helpTextEnt.setLines([]); }, 10000);
+							setTimeout(function() { helpTextEnt.setLines([]); }, 120000);
 							callback(curState+1);
 						}
 					}],
