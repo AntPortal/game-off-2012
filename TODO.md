@@ -3,7 +3,6 @@ See the "karayom" branch for the story details that used to be written here.
 BUGS
 ====
 * Display loading screen after intro, while map is being parsed; absorb clicks during this time. Background-load map?
-* Don't abbreviate name anymore.
 * Display "click/tap to continue" on dialogs when relevant
 * Question menus should explain how to use them
 * Block other interactions while a question menu or dialog is open
@@ -17,6 +16,7 @@ BUGS
 * Interactions involving multiple questions should be resumable from just before the last incorrectly-answered one.
 * Implement Linus helping the player when the player is stuck.
 
+* [DONE] Don't abbreviate name anymore.
 * [DONE] Increase size of icons indicating that an NPC has an interaction.
 * [DONE] Camera should center on Linus at the start of the game.
 * [DONE] Music should be disabled by default.
