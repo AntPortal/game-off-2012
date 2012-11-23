@@ -14,7 +14,6 @@ define([
 		'components/NPC',
 		'components/Dialog',
 		'components/ActionMenu',
-		'scenes/level2-intro',
 		'components/TaskList',
 		'components/Coins',
 		'components/HelpText',
