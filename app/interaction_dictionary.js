@@ -51,7 +51,8 @@ define([
 							callback(curState+1);
 						}
 					}],
-					scriptUtils.addInteraction(sveniteNames, 'villagerGitClone')
+					scriptUtils.addInteraction(sveniteNames, 'villagerGitClone'),
+					scriptUtils.addInteraction(['Linus'], 'linusGitCloneRepeat'),
 				]));
 				vm.run();
 			},
@@ -89,6 +90,24 @@ define([
 				});
 			}
 		},
+
+		linusGitCloneRepeat: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Go and see the six villagers in the town of Sveni, northeast of here, and teach them how to get a copy of my book.",
+						"@npcName@: Don't forgit, um, for<em>get</em> the magic words: <span class='cmd'>git clone https://github.com/AntPortal/game-off-2012.git</span>.",
+						"@npcName@: What are you waiting for? Go!"
+					])
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false
+		},
+
 		villagerGitClone: {
 			doAction: function(scriptUtils) {
 				var gameState = scriptUtils.getGameState();
@@ -103,6 +122,7 @@ define([
 								var npcsWithClone = gameState.findInteraction(thisInteraction);
 								var numClonesLeft = npcsWithClone.length;
 								if (numClonesLeft === 0) {
+									gameState.removeInteraction('Linus', 'linusGitCloneRepeat');
 									gameState.addInteraction(['Linus'], 'linusGitCloneComplete');
 								}
 								callback(curState+1);
