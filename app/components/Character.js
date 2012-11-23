@@ -14,20 +14,18 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 		properties: null, //Must be set by caller!
 		heightMap: null, //Must be set by caller!
 		worldToPixel: null, //Must be set by caller!
-		pathFinder: null, //Must be set by caller
 		init: function() {
 			this.requires('2D');
 			this.bind('EnterFrame', this._enterFrame);
 			this._frameOffset = Crafty.math.randomInt(0, 100); //So that not all characters are exactly in sync.
 		},
-		Character: function(heightMap, worldToPixel, pathFinder, initialX, initialY, properties) {
+		Character: function(heightMap, worldToPixel, initialX, initialY, properties) {
 			this.properties = properties;
 			this._spriteName = properties.sprite;
 			this._currentSprite = 'sprite_' + this._spriteName + '_S0';
 			this.addComponent(this._currentSprite);
 			this.heightMap = heightMap;
 			this.worldToPixel = worldToPixel;
-			this.pathFinder = pathFinder;
 			var initialZ = heightMap[initialX+','+initialY].surfaceZ;
 			this.setPos(initialX,initialY,initialZ);
 			this._targetX = initialX;
@@ -51,11 +49,7 @@ define(['config', 'path_finder', 'Crafty'], function(config, PathFinder) {
 			var startTile = this.heightMap[this.tileX+','+this.tileY];
 			this._targetX = worldX;
 			this._targetY = worldY;
-			this._pathToTarget = this.pathFinder.findPath(
-				startTile, /* initial state */
-				function(state) { return (self._targetX === state.tileX) && (self._targetY === state.tileY); }, /* goal test */
-				function(state) { return Math.abs(self._targetX - state.tileX) + Math.abs(self._targetY - state.tileY); } /* heuristic */
-			);
+			/* TODO: remove this method; characters don't walk anymore */
 		},
 		_getTopLeftPixelCoords: function(worldX, worldY, worldZ) {
 			var bottomPixelCoord = this.worldToPixel(worldX, worldY, worldZ);

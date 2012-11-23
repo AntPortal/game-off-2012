@@ -30,7 +30,6 @@ define([
 		(function() {
 			//Add characters
 			var worldToPixel = utils.makeWorldToPixelConverter(mapData.tilewidth, mapData.tileheight);
-			var pathFinder = utils.makePathFinder(parsedMapData); /* "filler" value; not used */
 			var i = 0;
 			for (i = 0; i < parsedMapData.objects.length; i++) {
 				var object = parsedMapData.objects[i];
@@ -39,7 +38,6 @@ define([
 						NPC(
 							parsedMapData.heightMap,
 							worldToPixel,
-							pathFinder,
 							object.tileX,
 							object.tileY,
 							object.properties,
