@@ -167,12 +167,7 @@ define([
 			if (name.length == 0) {
 				nameEntity.text = ' '; //Put a space, or else Crafty messes things up.
 			} else {
-				var shortName = utils.getShortName(name);
-				if (name == shortName) {
-					nameEntity.text = name;
-				} else {
-					nameEntity.text = name + ' ('+shortName+')';
-				}
+				nameEntity.text = name;
 			}
 			//Hack, because otherwise the refresh doesn't seme to work in Crafty.
 			window.setTimeout(function() {
@@ -233,7 +228,7 @@ define([
 		function fnDone() {
 			if (name.length > 0) {
 				var gameState = gameStates.saveGames[config.curSaveSlot];
-				gameState.setGithubName(name).setShortName(utils.getShortName(name));
+				gameState.setGithubName(name);
 				Crafty.scene('intro');
 			}
 		}

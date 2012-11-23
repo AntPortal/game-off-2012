@@ -74,7 +74,7 @@ define([
 												face: undefined,
 												x: (config.viewport.width - 600) / 2,
 												y: config.viewport.height - 200,
-												heroName: gameState.getShortName()
+												heroName: gameState.getGithubName()
 											}
 										);
 										action.doAction(scriptUtils);
@@ -121,7 +121,7 @@ define([
 					face: undefined,
 					x: (config.viewport.width - 600) / 2,
 					y: config.viewport.height - 200,
-					heroName: gameState.getShortName()
+					heroName: gameState.getGithubName()
 				}
 			);
 			interactionDictionary['linusIntro'].doAction(scriptUtils);

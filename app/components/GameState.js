@@ -8,7 +8,6 @@ define([
 	var DEBUG_NO_SAVE = false;
 	Crafty.c('GameState', {
 		_githubName: undefined,
-		_shortName: "",
 		_slotId: 0,
 		_gameState: null,
 		_coppers: 0,
@@ -17,7 +16,6 @@ define([
 			 * The save game object has the following structure:
 			 * {
 			 * 	githubName: "NebuPookins",
-			 * 	shortName: "Nebu"
 			 * 	progress: {
 			 * 		'Apache': ['villagerGitClone', 'villagerGitAdd', ...], // Interactions that this character can perform.
 			 *			...
@@ -26,7 +24,6 @@ define([
 			 * }
 			 * 
 			 * githubName is the github account name (alphanumeric and dash, less than 40 char, can't start with dash)
-			 * shortname is a shortened version of the github name.
 			 * 
 			 * Easiest way to detect that a save slot is empty is to read the progress field, and if it's "undefined", it means
 			 * the slot is empty.
@@ -40,14 +37,6 @@ define([
 		},
 		setGithubName: function(name) {
 			this._githubName = name;
-			this._save();
-			return this;
-		},
-		getShortName: function() {
-			return this._shortName;
-		},
-		setShortName: function(shortName) {
-			this._shortName = shortName;
 			this._save();
 			return this;
 		},
@@ -71,7 +60,6 @@ define([
 		},
 		clear: function() {
 			this._githubName = undefined;
-			this._shortName = "";
 			this._gameState = {};
 			this._coppers = 0;
 			this._save();
@@ -148,7 +136,6 @@ define([
 			if (loadedData) {
 				var parsedData = JSON.parse(loadedData);
 				this._githubName = parsedData.githubName;
-				this._shortName = parsedData.shortName;
 				this._gameState = parsedData.gameState;
 				this._coppers = parsedData.coppers;
 			} else {
@@ -160,7 +147,6 @@ define([
 		_save: function() {
 			var toSave = {
 				githubName: this._githubName,
-				shortName: this._shortName,
 				gameState: this._gameState,
 				coppers: this._coppers
 			};
