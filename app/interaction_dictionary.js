@@ -292,7 +292,7 @@ define([
 									text: 'git init',
 									result: _.flatten([
 										scriptUtils.dialogAndPause([
-											"This doesn’t look like the right book... all it has is one page that says “This page intentionally left blank.” Are you sure that’s the right spell?"
+											"@npcName@: This doesn’t look like the right book... all it has is one page that says “This page intentionally left blank.” Are you sure that’s the right spell?"
 										]),
 										[{ action: 'jumpToLabel', label: 'wrongAnswerClone' }]
 									])
@@ -301,7 +301,7 @@ define([
 									text: 'git clone https://github.com/ruby/ruby.git',
 									result: _.flatten([
 										scriptUtils.dialogAndPause([
-											"Woah!! That’s a lot of stuff! Though are you sure this is Linus’ book? There’s all these gems, and clever trinkets."
+											"@npcName@: Woah!! That’s a lot of stuff! Though are you sure this is Linus’ book? There’s all these gems, and clever trinkets."
 										]),
 										[{ action: 'jumpToLabel', label: 'wrongAnswerClone' }]
 									])
@@ -325,8 +325,8 @@ define([
 						{ /* wrong answers */
 							texts: ['git fetch', 'git-add chapter74', 'git insert chapter74', 'mv chapter74 git'],
 							result: scriptUtils.dialogAndPause([
-								"Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
-								"I hope I don’t have to rewrite that chapter all over again..."
+								"@npcName@: Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
+								"@npcName@: I hope I don’t have to rewrite that chapter all over again..."
 							]),
 							take: 1
 						},
@@ -335,13 +335,13 @@ define([
 								{
 									text: 'cat /dev/random',
 									result: scriptUtils.dialogAndPause([
-										"I͠ ͞ḑon'͠t̢ ̴k̶ńo͞w w̕h͟a͏t ̨you̡ ̛did, b͜u̕t̕ ̶I t͞hink̛ th̶e̸ ţe̢x͠t ͘is̴ ͞ovȩr̡f̀l̀o̧wi҉ng̛ ͘oút ̶of ͏the b̴óok̕.͜"
+										"@npcName@: I͠ ͞ḑon'͠t̢ ̴k̶ńo͞w w̕h͟a͏t ̨you̡ ̛did, b͜u̕t̕ ̶I t͞hink̛ th̶e̸ ţe̢x͠t ͘is̴ ͞ovȩr̡f̀l̀o̧wi҉ng̛ ͘oút ̶of ͏the b̴óok̕.͜"
 									])
 								},
 								{
 									text: 'sudo systemctl poweroff',
 									result: scriptUtils.dialogAndPause([
-										"I don't think I have the wizardly authority to cast the 'sudo' spell..." /* TODO: say something about the "poweroff" part */
+										"@npcName@: I don't think I have the wizardly authority to cast the 'sudo' spell..." /* TODO: say something about the "poweroff" part */
 									])
 								}
 							],
@@ -353,8 +353,8 @@ define([
 
 					[{ action: 'label', label: 'beginGitCommit' }],
 					scriptUtils.dialogAndPause([
-						"That looks like it worked! But the pages don’t seem to be glued to the book.",
-						"Did Linus mention about anyway to permanently attach the pages? What’s that spell?"
+						"@npcName@: That looks like it worked! But the pages don’t seem to be glued to the book.",
+						"@npcName@: Did Linus mention about anyway to permanently attach the pages? What’s that spell?"
 					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
@@ -366,8 +366,8 @@ define([
 						{ /* wrong answers */
 							texts: ['svn commit', 'git commit chapter74'],
 							result: scriptUtils.dialogAndPause([
-								"Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
-								"I hope I don’t have to rewrite that chapter all over again..."
+								"@npcName@: Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
+								"@npcName@: I hope I don’t have to rewrite that chapter all over again..."
 							]),
 							take: 1
 						},
@@ -376,13 +376,13 @@ define([
 								{
 									text: 'curl http://download.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2',
 									result: scriptUtils.dialogAndPause([
-										"My house isn't big enough to hold a whole library..."
+										"@npcName@: My house isn't big enough to hold a whole library..."
 									])
 								},
 								{
 									text: 'nmap 0.0.0.0/0',
 									result: scriptUtils.dialogAndPause([
-										"I don't know, I've heard people have gotten themselves into a lot of trouble with that 'nmap' spell..."
+										"@npcName@: I don't know, I've heard people have gotten themselves into a lot of trouble with that 'nmap' spell..."
 									])
 								}
 							],
@@ -394,9 +394,9 @@ define([
 
 					[{ action: 'label', label: 'endGitCommit' }],
 					scriptUtils.dialogAndPause([
-						"Ahh! Interesting, the book asked me to explain why I was gluing these pages in. But it’s all said and done now.",
-						"Perfect, looks like the pages are securely fastened to the book. I guess I’ll continue writing my next chapter.",
-						"Thank you! Oh, please go say thank you to Linus on my behalf."
+						"@npcName@: Ahh! Interesting, the book asked me to explain why I was gluing these pages in. But it’s all said and done now.",
+						"@npcName@: Perfect, looks like the pages are securely fastened to the book. I guess I’ll continue writing my next chapter.",
+						"@npcName@: Thank you! Oh, please go say thank you to Linus on my behalf."
 					]),
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.giveCopper(config.coinValues.gold),
@@ -485,8 +485,8 @@ define([
 						{ /* wrong answers */
 							texts: ['svn commit', 'git commit chapter75'],
 							result: scriptUtils.dialogAndPause([
-								"Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
-								"I hope I don’t have to rewrite that chapter all over again..."
+								"@npcName@: Aaah, no, that didn’t work. You didn’t lose my changes, did you?",
+								"@npcName@: I hope I don’t have to rewrite that chapter all over again..."
 							]),
 							take: 2
 						},
