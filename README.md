@@ -1,3 +1,19 @@
+## Karayom!
+
+Check out our live demo at karayom.com. The name comes from the tagalog word and it means needle in english. We figured our tiny little game is like a needle in a haystack among all the game-off-2012 participants. Perhaps a dull, rusty needle :-)
+
+### Open source projects we used
+
+- Crafty
+- Tiled
+- Underscore
+
+### In game screenshots
+
+
+
+# GitHub Challenge Original Description
+
 Here at GitHub, we're no strangers to hosting or sponsoring hackathons. With the growing number of games and game development resources on GitHub, we thought it was about time to throw our very own game jam!
 
 ## The Challenge
