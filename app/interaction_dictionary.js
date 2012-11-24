@@ -696,8 +696,8 @@ define([
 							label: "Just use “git cvs”",
 							result: scriptUtils.dialogAndPause(["@npcName@: Son, I don’t want to be rude, but you have no idea what you’re talking about, do you?"])
 						}
-					],
-					"Is there a spell to bridge from cvs to git?")),
+					]),
+					"Is there a spell to bridge from cvs to git?"),
 					[{
 						action: 'arbitraryCode',
 						code: function(curState, callback) {
