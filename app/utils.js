@@ -408,10 +408,7 @@ function(config, PathFinder, Set) {
 		var TITLE_WIDTH = 434;
 		var TITLE_HEIGHT = 130;
 		var title = Crafty.e('2D, Canvas, karayom_title');
-		title.attr({
-			x: (config.viewport.width - TITLE_WIDTH) / 2,
-			y: 10
-		});
+		title.attr({x: 0, y: 0});
 		return title;
 	}
 	function charAtIsLowerCase(text, index) {

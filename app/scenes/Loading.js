@@ -123,7 +123,7 @@ define([
 					loadAntifareaCharacterSprite('healerF', 'assets/sprites/healerF.png');
 					loadAntifareaCharacterSprite('townfolkM', 'assets/sprites/townfolkM.png');
 					Crafty.sprite('assets/maps/karayom_title_small.png', {
-						karayom_title: [0, 0, 434, 130]
+						karayom_title: [0, 0, config.viewport.width, config.viewport.height]
 					});
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]
