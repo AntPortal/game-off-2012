@@ -51,10 +51,10 @@ define([
 			if (!gameStates.saveGames[i].isEmpty()) {
 				var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
 				slotDelete.attr({
-					x: config.viewport.width - 16 - 8,
+					x: config.viewport.width - 24 - 8,
 					y: 120 * i + 150 + 10,
-					w: 16,
-					h: 16,
+					w: 24,
+					h: 24,
 					z: config.zOffset.dialog,
 					saveIndex: i,
 				});
