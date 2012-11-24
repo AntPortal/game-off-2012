@@ -1,6 +1,6 @@
 ## Karayom!
 
-Check out our live demo at [karayom.com](http://karayom.com). The name comes from the tagalog word and it means needle in english. We figured our tiny little game is like a needle in a haystack among all the game-off-2012 participants. Perhaps a dull, rusty needle :-)
+Check out our live demo at [karayom.com](http://karayom.com). The name comes from the tagalog word karayom which means needle. We figured our tiny little game is like a needle in a haystack among all the game-off-2012 participants. Perhaps a dull, rusty needle. That and the fact that we owned the URL :-)
 
 ### Open source projects we used
 
