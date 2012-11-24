@@ -4,9 +4,10 @@ Check out our live demo at [karayom.com](http://karayom.com). The name comes fro
 
 ### Open source projects we used
 
-- Crafty
-- Tiled
-- Underscore
+- [Crafty](http://craftyjs.com/)
+- [Tiled](http://www.mapeditor.org/)
+- [Underscore](http://documentcloud.github.com/underscore/)
+- [RequireJS](http://requirejs.org/)
 
 ### In game screenshots
 
