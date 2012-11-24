@@ -81,7 +81,7 @@ define([
 				'assets/sprites/townfolkM.png',
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
-				'assets/ui/action_stop24.gif',
+				'assets/ui/action_stop24.png',
 				'assets/ui/arrows.png',
 				'assets/ui/bg-blue.png',
 				'assets/ui/coin_copper.png',
@@ -148,7 +148,7 @@ define([
 					Crafty.sprite(24, 'assets/ui/comment_new_large.png', {
 						dialogMore : [ 0, 0 ]
 					});
-					Crafty.sprite(24, 'assets/ui/action_stop24.gif', {
+					Crafty.sprite(24, 'assets/ui/action_stop24.png', {
 						ui_save_delete : [ 0, 0 ]
 					});
 					Crafty.sprite(64, 'assets/ui/OrbzPrw.png', {
