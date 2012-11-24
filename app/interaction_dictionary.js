@@ -234,7 +234,7 @@ define([
 					[{
 						action: 'arbitraryCode',
 						code: function(curState, callback) {
-							gameState.addInteraction([sveniteNames[0]], 'villagerGitAdd1');
+							gameState.addInteraction(['Scott'], 'villagerGitAdd1');
 							callback(curState+1);
 						}
 					}],
@@ -414,7 +414,7 @@ define([
 				]));
 				vm.run();
 			},
-			taskString: "Talk to Apache", /* TODO: fix name? */
+			taskString: "Teach Scott how to add and commit",
 			referrable: true
 		},
 
