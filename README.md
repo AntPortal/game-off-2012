@@ -11,6 +11,8 @@ Check out our live demo at [karayom.com](http://karayom.com). The name comes fro
 ### In game screenshots
 
 <img src="https://raw.github.com/AntPortal/game-off-2012/master/assets/screenshots/Karayom.png" style="border:0;">
+<img src="https://github.com/AntPortal/game-off-2012/blob/master/assets/screenshots/Karayom-3.png?raw=true" style="border:0;">
+
 
 
 # GitHub Challenge Original Description
