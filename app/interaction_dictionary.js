@@ -566,7 +566,7 @@ define([
 			doAction: function(scriptUtils) {
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
-					scriptUtils.dialogAndPause(["@npcName@: Hey, git out of my face!"]),
+					scriptUtils.dialogAndPause(["@npcName@: Hey, git outta my face!"]),
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.addInteraction(['Ceeveeus'], 'ceeveeus4')
 				]));
@@ -682,7 +682,7 @@ define([
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.actionBranch(_.shuffle([
 						{
-							label: "I’ve heard of the spells “csv2svn” and “git svn”. Maybe you can do something with those...",
+							label: "Maybe you can do something with “csv2svn” and “git svn”...",
 							result: _.flatten([
 								scriptUtils.dialogAndPause(["@npcName@: Hmm, really? That sounds like it just might work... here’s something for your trouble."]),
 								scriptUtils.giveCopper(config.coinValues.gold)
