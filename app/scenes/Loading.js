@@ -64,6 +64,7 @@ define([
 				'assets/faces/48x48_Faces_4th_Sheet_Update_CharlesGabriel_OGA_0.png',
 				'assets/faces/faces1.png',
 				'assets/maps/level1.png',
+				'assets/maps/karayom_title_small.png',
 				'assets/sprites/bunny.png',
 				'assets/sprites/ceeveeus.png',
 				'assets/sprites/charsets_warrior.png',
@@ -121,6 +122,9 @@ define([
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
 					loadAntifareaCharacterSprite('healerF', 'assets/sprites/healerF.png');
 					loadAntifareaCharacterSprite('townfolkM', 'assets/sprites/townfolkM.png');
+					Crafty.sprite('assets/maps/karayom_title_small.png', {
+						karayom_title: [0, 0, 434, 130]
+					});
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]
 					});

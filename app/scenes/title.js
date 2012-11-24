@@ -11,7 +11,6 @@ define([
 	Crafty.scene('title', function() {
 		var i;
 		var title = utils.createTitleEntity(Crafty);
-		title.css('display', 'block');
 		var slots = [0,1,2];
 		function getMsgForSaveGameData(i) {
 			return [
