@@ -99,8 +99,8 @@ define([
 						3: 1,
 					};
 
-					var w = Math.round(c._asset.width / 3);
-					var h = Math.round(c._asset.height / 4);
+					var w = Math.floor(c._asset.width / 3);
+					var h = Math.floor(c._asset.height / 4);
 					var sx = frameMap[frame]*w;
 					var sy = h*2;
 					var dx = Math.round(c.x + Crafty.viewport.x - w + (config.TILE_IMAGE_SIZE/2));
