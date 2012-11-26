@@ -64,6 +64,7 @@ define([
 				'assets/faces/48x48_Faces_4th_Sheet_Update_CharlesGabriel_OGA_0.png',
 				'assets/faces/faces1.png',
 				'assets/maps/level1.png',
+				'assets/maps/karayom_title_small.png',
 				'assets/sprites/bunny.png',
 				'assets/sprites/ceeveeus.png',
 				'assets/sprites/charsets_warrior.png',
@@ -81,7 +82,7 @@ define([
 				'assets/sprites/townfolkM.png',
 				'assets/tiles/iso-64x64-building_2.png',
 				'assets/tiles/iso-64x64-outside.png',
-				'assets/ui/action_stop.gif',
+				'assets/ui/action_stop24.png',
 				'assets/ui/arrows.png',
 				'assets/ui/bg-blue.png',
 				'assets/ui/coin_copper.png',
@@ -121,6 +122,9 @@ define([
 					loadAntifareaCharacterSprite('mom', 'assets/sprites/mom.png');
 					loadAntifareaCharacterSprite('healerF', 'assets/sprites/healerF.png');
 					loadAntifareaCharacterSprite('townfolkM', 'assets/sprites/townfolkM.png');
+					Crafty.sprite('assets/maps/karayom_title_small.png', {
+						karayom_title: [0, 0, config.viewport.width, config.viewport.height]
+					});
 					Crafty.sprite(917, 'assets/ui/bg-blue.png', {
 						ui_bg_blue: [0, 0]
 					});
@@ -148,7 +152,7 @@ define([
 					Crafty.sprite(24, 'assets/ui/comment_new_large.png', {
 						dialogMore : [ 0, 0 ]
 					});
-					Crafty.sprite(16, 'assets/ui/action_stop.gif', {
+					Crafty.sprite(24, 'assets/ui/action_stop24.png', {
 						ui_save_delete : [ 0, 0 ]
 					});
 					Crafty.sprite(64, 'assets/ui/OrbzPrw.png', {

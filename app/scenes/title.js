@@ -11,7 +11,6 @@ define([
 	Crafty.scene('title', function() {
 		var i;
 		var title = utils.createTitleEntity(Crafty);
-		title.css('display', 'block');
 		var slots = [0,1,2];
 		function getMsgForSaveGameData(i) {
 			return [
@@ -23,9 +22,9 @@ define([
 		for (i = 0; i < slots.length; i++) {
 			slots[i] = Crafty.e('Dialog');
 			slots[i].attr({
-				x: 0,
-				y: 120 * i + 150,
-				w: config.viewport.width,
+				x: 20,
+				y: 110 * i + 230,
+				w: config.viewport.width - 40,
 				h: 100,
 				z: config.zOffset.dialog,
 				msg: getMsgForSaveGameData(i),
@@ -51,10 +50,10 @@ define([
 			if (!gameStates.saveGames[i].isEmpty()) {
 				var slotDelete = Crafty.e('2D, Canvas, ui_save_delete, Mouse');
 				slotDelete.attr({
-					x: config.viewport.width - 16 - 8,
-					y: 120 * i + 150 + 10,
-					w: 16,
-					h: 16,
+					x: config.viewport.width - 20 - 24 - 8,
+					y: 110 * i + 230 + 10,
+					w: 24,
+					h: 24,
 					z: config.zOffset.dialog,
 					saveIndex: i,
 				});

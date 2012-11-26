@@ -405,22 +405,10 @@ function(config, PathFinder, Set) {
 		return result;
 	}
 	function createTitleEntity(Crafty) {
-		var title = Crafty.e('2D, DOM, BetterText');
-		title.attr({
-			text: "Karayom",
-			fillStyle: 'white',
-			w : config.viewport.width,
-			x : 0,
-			y : 0,
-			z : 1,
-		}).css({
-			'text-align': 'center',
-			'display' : 'none',
-			'font-family' : 'Corben', //depends on index.html
-			'font-size' : '80px',
-			'font-weight' : 700,
-			'text-shadow': '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff2d95, 0 0 30px #ff2d95, 0 0 40px #ff2d95, 0 0 50px #ff2d95, 0 0 75px #ff2d95',
-		});
+		var TITLE_WIDTH = 434;
+		var TITLE_HEIGHT = 130;
+		var title = Crafty.e('2D, Canvas, karayom_title');
+		title.attr({x: 0, y: 0});
 		return title;
 	}
 	function charAtIsLowerCase(text, index) {
