@@ -911,9 +911,13 @@ define([
 						"@npcName@: Hey, I heard my book is a big success. Everyone’s been adding their own little chapter to it.",
 						"@npcName@: I think it’s great that we can all work together to make it better, but now everyone’s work is only in their own copy!",
 						"@npcName@: Scott’s version has the chapter on alchemy, while Junio’s version has the chapter on summoning, and the Svenites all have their own books.",
-						"@npcName@: You should teach them the “push” spell from each of their versions of the book, to push those changes to me.",
+						"@npcName@: You should teach them how to cast the “push” spell on each of their versions of the book, to send those changes to me.",
 						"@npcName@: Then I can combine everything into one complete “master edition” with all of their chapters.",
-						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span>",
+						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span> But there's an important care you have to take when using that spell.",
+						"@npcName@: I’m always working on this book, you see, and even after you've gotten a copy with <span class='cmd'>“git clone,”</span> or gotten the latest and greatest with <span class='cmd'>“git push”</span>, there's always a chance that I'll have changed something by the time you're ready to send your own changes back.",
+						"@npcName@: And if you were to just send your changes straight off, they could interfere with mine, which would cause lots of trouble...",
+						"@npcName@: So you must remember to always cast <span class='cmd'>“git pull”</span> before you try to send your changes. That will retrieve my latest changes and make sure they can fit together with yours.",
+						"@npcName@: So, to sum it all up: <span class='cmd'>“git pull,”</span> then <span class='cmd'>“git push.”</span>",
 						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
 					]),
 					scriptUtils.removeCurrentInteraction(),
@@ -933,7 +937,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go see Scott and teach him how to send him changes back to me.",
-						"@npcName@: The spell for that is <span class='cmd'>“git push.”</span>"
+						"@npcName@: To do that, you first cast <span class='cmd'>“git pull”</span> to get my latest changes and make sure they fit together with yours. Then you cast <span class='cmd'>“git push”</span> to actually send your changes back to me."
 					])
 				]));
 				vm.run();
@@ -950,7 +954,36 @@ define([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hey @heroName@, what’s up?",
 						"@npcName@: Oh, Linus wants my chapter added to his “master edition”? Wow, that sounds great.",
-						"@npcName@: Did he tell you if there’s a spell involved to do that automatically?"
+						"@npcName@: There must be some magic involved to do that automatically, right? What's the first thing I need to do?"
+					]),
+
+					[{ action: 'label', label: 'beginPull' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git pull",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git get", "git send", "git receive"],
+							result: scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Should we try again?"]),
+							take: 1
+						},
+						{ /* not really a joke answer, but has a specialized response */
+							choices: [{
+								text: "git push",
+								result: scriptUtils.dialogAndPause([
+									"@npcName@: OK... wait. What if Linus changed something in his copy while I was working on mine? Shouldn't we get his latest changes first, so we can be sure they won't interfere with mine?"
+								])
+							}],
+							take: 1
+						},
+						"If I want to send changes to Linus, what do I do first?"
+					),
+					[{ action: 'jumpToLabel', label: 'beginPull' }],
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: OK, looks like everything fits together well. Now, we need to actually send the changes over, right? What's the spell for that?"
 					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
@@ -968,7 +1001,7 @@ define([
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
-						"How do I sent Linus my changes?"
+						"How do I send my changes over to Linus?"
 					),
 					[{ action: 'jumpToLabel', label: 'end' }],
 
