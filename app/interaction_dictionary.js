@@ -1079,7 +1079,7 @@ define([
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git commit",
-							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+							result: [{ action: 'jumpToLabel', label: 'beginPull' }]
 							},
 						{ /* wrong answers */
 							texts: ["git add", "git log"],
@@ -1092,8 +1092,37 @@ define([
 						"How do I bind the pages in the book?"
 					),
 
-					[{ action: 'label', label: 'beginPush' }],
+					[{ action: 'label', label: 'beginPull' }],
 					scriptUtils.dialogAndPause(["@npcName@: Looks like the pages are all bound. What's the next step?"]),
+					[{ action: 'label', label: 'askPull' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git pull",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+						},
+						{ /* wrong answers */
+							texts: ["git send", "git receive", "git transmit", "git fetch"],
+							result: [{ action: 'jumpToLabel', label: 'wrongAnswer' }],
+							take: 1
+						},
+						{ /* not really a joke answer, but has a unique response */
+							choices: [{
+								text: "git push",
+								result: _.flatten([
+									scriptUtils.dialogAndPause([
+										"@npcName@: And there go the pages into the clouds... but now they're falling back down again! It's almost as if Linus' book didn't want my changes. I didn't think my writing was all that bad...",
+										"@npcName@: Or maybe Linus also has changes of his own, and the book is just protecting itself against all the changes interfering? Maybe I should retrieve those changes and make sure they fit with my own. How do I do that?"
+									]),
+									[{ action: 'jumpToLabel', label: 'askPull' }]
+								])
+							}],
+							take: 1
+						},
+						"What do I do after binding the pages?"
+					),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, I see all of Linus' latest changes, and they all fit together with mine. What now?"]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
@@ -1107,7 +1136,7 @@ define([
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
-						"What do I do after binding the pages?"
+						"What do I do after ensuring the latest changes fit with my own?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
