@@ -39,7 +39,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hello @heroName@! It's nice of you to come by. Listen, I'm working on this new book and I'd love to share my draft with the villagers in Sveni. They will be so happy to hear the good news!",
-						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>git clone https://github.com/git/git.git</span>. But they often git it wrong.",
+						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>“git clone https://github.com/git/git.git”</span>. But they often git it wrong.",
 						"@npcName@: Your mission: go to the six villagers in Sveni, north of here, and help them say the right magic words. You will be rewarded with one silver coin once you complete your mission."
 					]),
 					[{
@@ -99,7 +99,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go and see the six villagers in the town of Sveni, northeast of here, and teach them how to get a copy of my book.",
-						"@npcName@: Don't forgit, um, forget the magic words: <span class='cmd'>git clone https://github.com/git/git.git</span>.",
+						"@npcName@: Don't forgit, um, forget the magic words: <span class='cmd'>“git clone https://github.com/git/git.git.”</span>",
 						"@npcName@: What are you waiting for? Go!"
 					])
 				]));
@@ -227,9 +227,9 @@ define([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Ah, this is embarrassing... it seems there was a squashed bug in my book! He must have jumped in there when I wasn’t looking.",
 						"@npcName@: Let me see... Okay. I’ve rewritten the page and the bug is there no more!",
-						"@npcName@: Now I need to add that page into the book. For that I will use the magic words <span class='cmd'>git add page503</span>.",
-						"@npcName@: But the page won’t be bound to my book until I call the magic words <span class='cmd'>git commit</span>, and then add a note explaining that I’ve removed a bug.",
-						"@npcName@: <span class='cmd'>git add</span>, then <span class='cmd'>git commit</span>. You might want to remember that in case you ever need to commit something yourself...",
+						"@npcName@: Now I need to add that page into the book. For that I will use the magic words <span class='cmd'>“git add page503.”</span>",
+						"@npcName@: But the page won’t be bound to my book until I call the magic words <span class='cmd'>“git commit,”</span> and then add a note explaining that I’ve removed a bug.",
+						"@npcName@: <span class='cmd'>“git add,”</span> then <span class='cmd'>“git commit.”</span> You might want to remember that in case you ever need to commit something yourself...",
 					]),
 					[{
 						action: 'arbitraryCode',
@@ -260,7 +260,7 @@ define([
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.makeReferral(
-						"@npcName@: I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you. It might be a good opportunity for you to teach @himOrHerRef@ about the “git add” and “git commit” spells I just taught you.",
+						"@npcName@: I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you. It might be a good opportunity for you to teach @himOrHerRef@ about the <span class='cmd'>“git add”</span> and <span class='cmd'>“git commit”</span> spells I just taught you.",
 						"@npcName@: BTW, I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you.",
 						"@npcName@: Come back and see me later in case I find another bug.",
 						"villagerGitAdd1"
@@ -473,7 +473,7 @@ define([
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
-						"@npcName@: Go and teach the Svenites about the “git add” and “git commit” spells you just taught Scott.",
+						"@npcName@: Go and teach the Svenites about the <span class='cmd'>“git add”</span> and <span class='cmd'>“git commit”</span> spells you just taught Scott.",
 						"@npcName@: Also make sure to pass by Ceeveeus’ house, far north of Sveni. Hopefully he’ll listen to you more than he listened to me…"
 					])
 				]));
@@ -713,7 +713,7 @@ define([
 
 					[{ action: 'label', label: 'endCommit' }],
 					scriptUtils.dialogAndPause([
-						"@npcName@: `git commit`? Sounds like this “Linus” kid just took my ideas, changed a few keywords around, and called it his own.",
+						"@npcName@: “git commit”? Sounds like this “Linus” kid just took my ideas, changed a few keywords around, and called it his own.",
 						"@npcName@: Still, at least the book is bound now. Give it a look... or don’t, I don’t care! I got work to do here.",
 						"@npcName@: But I sure hope Linus will invent a spell to put all my branches in order... You wouldn’t happen to know how to do that, would you?"
 					]),
@@ -771,9 +771,9 @@ define([
 					scriptUtils.giveCopper(2*config.coinValues.silver),
 					scriptUtils.dialogAndPause([
 						"@npcName@: By the way, Junio came by earlier. He was telling me about that squashed bug I found in chapter 10 of the book.",
-						"@npcName@: I told him that I’d fixed it, and that he could use the “git pull” spell to get my changes into his copy of the book.",
+						"@npcName@: I told him that I’d fixed it, and that he could use the <span class='cmd'>“git pull”</span> spell to get my changes into his copy of the book.",
 						"@npcName@: I’m not sure he understood, though... I’m afraid he might’ve taken “pull” to mean “pull the page out of the book.”",
-						"@npcName@: Maybe you should go visit him to explain it in more depth. He lives south of here, by the lake. Don’t forget the spell: “git pull.”"
+						"@npcName@: Maybe you should go visit him to explain it in more depth. He lives south of here, by the lake. Don’t forget the spell: <span class='cmd'>“git pull.”</span>"
 					]),
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.addInteraction(['Linus'], 'linusGitPullRepeat'),
@@ -792,7 +792,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go see Junio and show him how to get my changes into his copy of the book.",
-						"@npcName@: Remember the spell: “git pull.”"
+						"@npcName@: Remember the spell: <span class='cmd'>“git pull.”</span>"
 					])
 				]));
 				vm.run();
@@ -913,7 +913,7 @@ define([
 						"@npcName@: Scott’s version has the chapter on alchemy, while Junio’s version has the chapter on summoning, and the Svenites all have their own books.",
 						"@npcName@: You should teach them the “push” spell from each of their versions of the book, to push those changes to me.",
 						"@npcName@: Then I can combine everything into one complete “master edition” with all of their chapters.",
-						"@npcName@: The incantation is short and to-the-point: “git push.”",
+						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span>",
 						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
 					]),
 					scriptUtils.removeCurrentInteraction(),
@@ -933,7 +933,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go see Scott and teach him how to send him changes back to me.",
-						"@npcName@: The spell for that is “git push.”"
+						"@npcName@: The spell for that is <span class='cmd'>“git push.”</span>"
 					])
 				]));
 				vm.run();
