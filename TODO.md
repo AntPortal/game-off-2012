@@ -4,7 +4,6 @@ BUGS
 ====
 * Add a 'git pull' step to villager 'git push' interactions.
 * Display loading screen after intro, while map is being parsed; absorb clicks during this time. Background-load map?
-* Question menus should explain how to use them
 * Have some animation on intro text, e.g. characters being displayed as if typed
 * Respond to drags even when they go outside the viewport.
 * When spoken to, Linus should (sometimes) repeat the mission he just sent you on, e.g., "What are you waiting for? Go talk to them!"
@@ -16,6 +15,7 @@ BUGS
 * Implement Linus helping the player when the player is stuck.
 * Make sure task list updates only happen when NPCs mention the corresponding task.
 
+* [DONE] Question menus should explain how to use them
 * [DONE] Display "click/tap to continue" on dialogs when relevant
 * [DONE] Some question menus are missing questions.
 * [DONE] Increase size of "Delete game" icons.

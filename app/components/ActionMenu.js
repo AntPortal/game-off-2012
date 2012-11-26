@@ -4,6 +4,8 @@ define([
 	'components/BaseDialog',
 	'components/BetterText',
 ], function(config) {
+	var TIP_WIDTH = 115;
+	var TIP_HEIGHT = 20;
 	var ACTION_VERT_SPACE = Math.round(config.dialogFont.size * 24.0 / 16.0);
 	var SUBTEXT_INDENT = 16;
 	var ATOI = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -35,6 +37,7 @@ define([
 		 * }
 		 */
 		_actionEntities: null,
+		_tipEntity: null,
 		_dimmer: null,
 		init: function() {
 			this.requires('BaseDialog');
@@ -111,6 +114,19 @@ define([
 					bind('Click', this._createOnClickHandler(action));
 				this._actionEntities.push(entities);
 			}
+
+			this._tipEntity = Crafty.e('2D, Canvas, BetterText').attr({
+				text: "Click or tap an option to select it",
+				fontSize: (config.dialogFont.size*0.5) + 'px',
+				fontFamily: 'Patrick Hand',
+				fillStyle: 'white',
+				strokeStyle: undefined,
+				x: this.x + this.w - TIP_WIDTH - 41, // empirical value
+				y: this.y + this.h - TIP_HEIGHT - 9, // empirical value
+				z: this.z + 1,
+				w: TIP_WIDTH,
+				h: TIP_HEIGHT
+			})
 		},
 		/**
 		 * Destroys any Crafty entities that are internally managed by this component.
@@ -126,6 +142,10 @@ define([
 			if (this._prefaceEntity) {
 				this._prefaceEntity.destroy();
 				this._prefaceEntity = null;
+			}
+			if (this._tipEntity) {
+				this._tipEntity.destroy();
+				this._tipEntity = null;
 			}
 		},
 	});
