@@ -2,12 +2,10 @@ See the "karayom" branch for the story details that used to be written here.
 
 BUGS
 ====
-* Increase size of "Delete game" icons.
 * Display loading screen after intro, while map is being parsed; absorb clicks during this time. Background-load map?
 * Display "click/tap to continue" on dialogs when relevant
 * Question menus should explain how to use them
 * Have some animation on intro text, e.g. characters being displayed as if typed
-* Some question menus are missing questions.
 * Respond to drags even when they go outside the viewport.
 * When spoken to, Linus should (sometimes) repeat the mission he just sent you on, e.g., "What are you waiting for? Go talk to them!"
 * Add (very brief) gameplay instructions to the intro screen.
@@ -18,6 +16,8 @@ BUGS
 * Implement Linus helping the player when the player is stuck.
 * Make sure task list updates only happen when NPCs mention the corresponding task.
 
+* [DONE] Some question menus are missing questions.
+* [DONE] Increase size of "Delete game" icons.
 * [DONE] Block other interactions while a question menu or dialog is open
 * [DONE] Don't abbreviate name anymore.
 * [DONE] Increase size of icons indicating that an NPC has an interaction.
