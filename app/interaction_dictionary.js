@@ -39,7 +39,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hello @heroName@! It's nice of you to come by. Listen, I'm working on this new book and I'd love to share my draft with the villagers in Sveni. They will be so happy to hear the good news!",
-						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>git clone https://github.com/AntPortal/game-off-2012.git</span>. But they often git it wrong.",
+						"@npcName@: To get a copy of my book, they need to recite the magic words, <span class='cmd'>git clone https://github.com/git/git.git</span>. But they often git it wrong.",
 						"@npcName@: Your mission: go to the six villagers in Sveni, north of here, and help them say the right magic words. You will be rewarded with one silver coin once you complete your mission."
 					]),
 					[{
@@ -99,7 +99,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go and see the six villagers in the town of Sveni, northeast of here, and teach them how to get a copy of my book.",
-						"@npcName@: Don't forgit, um, forget the magic words: <span class='cmd'>git clone https://github.com/AntPortal/game-off-2012.git</span>.",
+						"@npcName@: Don't forgit, um, forget the magic words: <span class='cmd'>git clone https://github.com/git/git.git</span>.",
 						"@npcName@: What are you waiting for? Go!"
 					])
 				]));
@@ -130,7 +130,7 @@ define([
 				var gameState = scriptUtils.getGameState();
 				var thisInteraction = 'villagerGitClone';
 				var rightAnswerAction = {
-					label: "git clone https://github.com/AntPortal/game-off-2012.git",
+					label: "git clone https://github.com/git/git.git",
 					result: _.flatten([
 						scriptUtils.removeCurrentInteraction(),
 						[{
@@ -165,11 +165,11 @@ define([
 					)
 				};
 				var wrongAnswers = [
-					"git init https://github.com/AntPortal/game-off-2012.git",
-					"git checkout https://github.com/AntPortal/game-off-2012.git",
-					"clone https://github.com/AntPortal/game-off-2012.git",
-					"clone git https://github.com/AntPortal/game-off-2012.git",
-					"git-clone https://github.com/AntPortal/game-off-2012.git",
+					"git init https://github.com/git/git.git",
+					"git checkout https://github.com/git/git.git",
+					"clone https://github.com/git/git.git",
+					"clone git https://github.com/git/git.git",
+					"git-clone https://github.com/git/git.git",
 					"git clone AntPortal/game-off-2012.git"
 				];
 				var wrongAnswerAction = {
@@ -294,12 +294,12 @@ define([
 					[{ action: 'label', label: 'askClone' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
-							text: 'git clone https://github.com/AntPortal/game-off-2012.git',
+							text: 'git clone https://github.com/git/git.git',
 							result: [{ action: 'jumpToLabel', label: 'beginGitAdd' }],
 						},
 						{ /* wrong answers */
 							texts: [
-								'git-clone https://github.com/AntPortal/game-off-2012.git',
+								'git-clone https://github.com/git/git.git',
 								'git clone AntPortal/game-off-2012.git'
 							],
 							result: [{ action: 'jumpToLabel', label: 'wrongAnswerClone'}],
@@ -643,14 +643,14 @@ define([
 					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
-							text: "git clone https://github.com/AntPortal/game-off-2012.git",
+							text: "git clone https://github.com/git/git.git",
 							result: [{ action: 'jumpToLabel', label: 'beginAdd' }],
 						},
 						{ /* wrong answers */
 							texts: [
-								"git checkout https://github.com/AntPortal/game-off-2012.git",
-								"cvs checkout https://github.com/AntPortal/game-off-2012.git",
-								"cvs clone https://github.com/AntPortal/game-off-2012.git"
+								"git checkout https://github.com/git/git.git",
+								"cvs checkout https://github.com/git/git.git",
+								"cvs clone https://github.com/git/git.git"
 							],
 							result: scriptUtils.dialogAndPause([
 								"@npcName@:  Hrm, didn’t work. You know, back in my day, we made spells that actually did things..."
@@ -1329,11 +1329,11 @@ define([
 					[{ action: 'label', label: 'askClone' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
-							text: "git clone https://github.com/AntPortal/game-off-2012.git",
+							text: "git clone https://github.com/git/git.git",
 							result: [{ action: 'jumpToLabel', label: 'beginAdd' }]
 						},
 						{ /* wrong answers */
-							texts: ["git-clone https://github.com/AntPortal/game-off-2012.git", "git checkout https://github.com/AntPortal/game-off-2012.git"],
+							texts: ["git-clone https://github.com/git/git.git", "git checkout https://github.com/git/git.git"],
 							result: _.flatten([
 								scriptUtils.dialogAndPause([
 									"@npcName@: I guess it didn’t work, ‘cause I figure I’d have Linus’ book in front of me after having cast the spell, but I don’t see a book here. Want to try again?"]),
