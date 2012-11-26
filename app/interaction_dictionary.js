@@ -14,6 +14,8 @@ define([
 	'components/ScriptRunner',
 ], function(config, utils) {
 	var sveniteNames = ['Apache', 'Berkeley', 'Colin', 'Disco', 'Mergee', 'Conflictee'];
+	var pullWrongAnswers = ["git transmit", "git send", "git update", "git receive", "git fetch"];
+	var pushWrongAnswers = ["git send", "git update", "git transmit"];
 
 	function checkGitPushDone(scriptUtils) {
 		var gameState = scriptUtils.getGameState();
@@ -1173,17 +1175,41 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hi @heroName@. I heard Linus is assembling a master edition of his book, and wants everyone to send their chapters to him.",
-						"@npcName@: He said there's a spell we can cast to do that. What is it? I already have my writing added in and bound."
+						"@npcName@: He said there's some magic we can use to do that. What is it? I already have my writing added in and bound."
 					]),
 
+
+					[{ action: 'label', label: 'beginPull' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git pull",
+							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+						},
+						{ /* wrong answers */
+							texts: pullWrongAnswers,
+							result: _.flatten(
+								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Should we try again?"]),
+								[{ action: 'jumpToLabel', label: 'beginPull' }]
+							),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						},
+						"What do I do after binding my writing?"
+					),
+
 					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause([
+						"@npcName@: So far so good; I now see all Linus' changes and they fit together perfectly with mine."
+					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
 							result: [{ action: 'jumpToLabel', label: 'endPush' }]
 						},
 						{ /* wrong answers */
-							texts: ["git send", "git transmit", "git update"],
+							texts: pushWrongAnswers,
 							result: _.flatten([
 								scriptUtils.dialogAndPause([
 									"@npcName@: It doesn’t seem like anything happened. Should we try again?",
@@ -1195,7 +1221,7 @@ define([
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
-						"What do I do after binding my writing?"
+						"What do I do after ensuring Linus' changes mesh with mine?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
