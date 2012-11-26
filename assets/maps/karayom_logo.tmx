@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="isometric" width="25" height="25" tilewidth="64" tileheight="32">
+ <tileset firstgid="1" source="iso-64x64-outside.tsx"/>
+ <tileset firstgid="161" source="iso-64x64-building_2.tsx"/>
+ <layer name="Tile Layer 1" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztkzEOwCAIRfFUnQri/Q/VDpAwkHboxy4ML+ofeJofBxGNpkk4NzkUOG8aMdMk+4LavVehw2fyjdhZChzR429A9pH1ILZfhZ7DVofNzUCvhk4cDbkAPeh/8uSZGzwC7OHNU+lomr+5AHa1EDA=
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQw0U08kOatqDzTxa2VGMRYyaAN0eWtiBbg+t7Bhoe2hh70DYQ0swXO0ZBaNgFFAOACybGSk=
+  </data>
+ </layer>
+</map>
