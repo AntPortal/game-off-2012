@@ -1435,17 +1435,36 @@ define([
 						"@npcName@: Congratulations! Here’s a badge that you can wear to show others what you’ve accomplished.",
 						/* TODO: actually award badge here */
 						"@npcName@: Even though you now have a good understanding of how you can use git magic for everyday tasks, there is still much of its power you haven’t tapped.",
-						"@npcName@: I don’t have any more lessons prepared for you right now, but you’re welcome to explore on your own by reading the texts at <a href=\"http://git-scm.com/documentation\">http://git-scm.com/documentation</a>.",
-						/* TODO: make this link open in a new tab/window, so it doesn't interrupt the game */
+						"@npcName@: I don’t have any more lessons prepared for you right now, but you’re welcome to explore on your own by reading the texts at <a href='http://git-scm.com/doc' target='_blank'>http://git-scm.com/doc</a>.",
 						"@npcName@: You might also want to go back to Sveni sometime to see how you can use your new knowledge to help the villagers with their more involved needs.",
 						"@npcName@: I’m sure they’ll reward you well for it..."
 					]),
-					scriptUtils.removeCurrentInteraction()
+					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(["Linus"], "linusFinalRepeat")
 				]));
 				vm.run();
 			},
 			taskString: "Check back with Linus",
 			referrable: true
+		},
+
+		linusFinalRepeat: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: If you want to learn more about git magic, there are many resources available to you, which you can find at <a href='http://git-scm.com/doc' target='_blank'>http://git-scm.com/doc</a>",
+						"@npcName@: I'd especially like to highlight the <a href='http://git-scm.com/book' target='_blank'>Pro Git</a> book, which builds on the basics I've taught you and then progresses into much more advanced spells. You'll be amazed at what git magic can do!",
+						"@npcName@: Or, if you're starting to find this village a bit too small, you can move to the big city of <a href='http://github.com' target='_blank'>GitHub</a>, where thousands of people use git magic every day to work together on their creations.",
+						"@npcName@: As long as you're willing to share your creations with the world, it won't cost even one copper to <a href='https://github.com/signup' target='_blank'>become a citizen</a>.",
+						"@npcName@: But even if you do that, please do come back to visit Sveni sometimes. The villagers might still need your help, after all..."
+					])
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false,
 		}
 	};
 });
