@@ -63,6 +63,7 @@ define([
 			var assets = [ //Try to keep alphabetical
 				'assets/faces/48x48_Faces_4th_Sheet_Update_CharlesGabriel_OGA_0.png',
 				'assets/faces/faces1.png',
+				'assets/maps/level1.jpg',
 				'assets/maps/level1.png',
 				'assets/maps/karayom_title_small.png',
 				'assets/sprites/bunny.png',
@@ -159,9 +160,6 @@ define([
 						'gitk_commit_current' : [3,0],
 						'gitk_commit_old' : [2, 0],
 						'gitk_commit_dead' : [0, 1],
-					});
-					Crafty.sprite('assets/maps/level1.png', {
-						'level1': [0, 0, config.background.width, config.background.height]
 					});
 					(function() {
 						//Loads the faces as face_warriorM, face_warriorF, face_mageM, etc.

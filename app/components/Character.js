@@ -67,24 +67,29 @@ define([
 	Crafty.bind("SceneChange", function(e) {
 		if (e.newScene === "level1") {
 			var backgroundAsset = Crafty.asset('assets/maps/level1.png');
+			var MAP_SCALE = 1;
+			if (backgroundAsset.width === 0) { //ipad cannot load the hi-res map, load the low res map.
+				backgroundAsset = Crafty.asset('assets/maps/level1.jpg');
+				var MAP_SCALE = 0.5;
+			}
 			var dialogIconAsset = Crafty.asset('assets/ui/comment_new_large.png');
 			console.log(backgroundAsset);
 			characterDrawer.bind("EnterFrame", function(e) {
 				var chars = Crafty('NPC');
 				var MAGIC_BACKGROUND_X_OFFSET = 1871; /* Determined empirically; not related to the year Babbage invented his computer. */
-				var bgsx = Crafty.math.clamp(MAGIC_BACKGROUND_X_OFFSET - Crafty.viewport.x, 0, config.background.width);
-				var bgsy = Crafty.math.clamp(-Crafty.viewport.y, 0, config.background.height);
-				var bgsw = Crafty.math.clamp(config.background.width - bgsx, 0, config.viewport.width);
-				var bgsh = Crafty.math.clamp(config.background.height - bgsy, 0, config.viewport.height);
+				var bgsx = Crafty.math.clamp((MAGIC_BACKGROUND_X_OFFSET - Crafty.viewport.x) * MAP_SCALE, 0, config.background.width * MAP_SCALE);
+				var bgsy = Crafty.math.clamp((-Crafty.viewport.y) * MAP_SCALE, 0, config.background.height * MAP_SCALE);
+				var bgsw = Crafty.math.clamp((config.background.width * MAP_SCALE) - bgsx, 0, config.viewport.width * MAP_SCALE);
+				var bgsh = Crafty.math.clamp((config.background.height * MAP_SCALE) - bgsy, 0, config.viewport.height * MAP_SCALE);
 				var bgdx = Crafty.math.clamp(Crafty.viewport.x - MAGIC_BACKGROUND_X_OFFSET, 0, config.viewport.width);
 				var bgdy = Crafty.math.clamp(Crafty.viewport.y, 0, config.viewport.height);
 
 				canvasContext.clearRect(0, 0, config.viewport.width, config.viewport.height);
-				canvasContext.drawImage(
-					backgroundAsset,
+				var bgParams = [backgroundAsset,
 					bgsx, bgsy, bgsw, bgsh,
-					bgdx, bgdy, bgsw, bgsh
-				);
+					bgdx, bgdy, bgsw / MAP_SCALE, bgsh / MAP_SCALE];
+				canvasContext.drawImage.apply(canvasContext, bgParams);
+				//canvasContext.fillText(bgParams.toString(), 100, 100);
 				canvasContext.font = PIXEL_PER_CHAR+'px Patrick Hand';
 				canvasContext.strokeStyle = 'black';
 				canvasContext.fillStyle = 'white';
