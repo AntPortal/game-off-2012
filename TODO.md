@@ -2,8 +2,8 @@ See the "karayom" branch for the story details that used to be written here.
 
 BUGS
 ====
+* Add a 'git pull' step to villager 'git push' interactions.
 * Display loading screen after intro, while map is being parsed; absorb clicks during this time. Background-load map?
-* Display "click/tap to continue" on dialogs when relevant
 * Question menus should explain how to use them
 * Have some animation on intro text, e.g. characters being displayed as if typed
 * Respond to drags even when they go outside the viewport.
@@ -16,6 +16,7 @@ BUGS
 * Implement Linus helping the player when the player is stuck.
 * Make sure task list updates only happen when NPCs mention the corresponding task.
 
+* [DONE] Display "click/tap to continue" on dialogs when relevant
 * [DONE] Some question menus are missing questions.
 * [DONE] Increase size of "Delete game" icons.
 * [DONE] Block other interactions while a question menu or dialog is open
