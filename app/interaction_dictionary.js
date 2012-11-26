@@ -1384,9 +1384,11 @@ define([
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
-						"@npcName@: Hi @heroName@, I heard Linus is writing a book on magic, but I’m sure he doesn’t have anything on illusions in it, because those are something of an obscure art.",
-						"@npcName@: I wrote an essay on that not long ago, and I think it’d fit right in as a new chapter, but I’ve no idea how to get started.",
-						"@npcName@: I don’t even have a copy of Linus’ book yet. What should I do first?"
+						"@npcName@: Hi @heroName@, I was thinking about that book on magic Linus is writing, and I realized that it doesn't have a chapter on illusions in it. That doesn't surprise me, because those are something of an obscure art.",
+						"@npcName@: I wrote an essay on that not long ago, and I think it’d fit right in as a new chapter.",
+						"@npcName@: Now, I used to have a copy of Linus' book, but unfortunately my bookshelf only has a capacity of 100 MB (Magic Books), and it eventually became so packed that I had to throw Linus' book out to make room for all the other stuff I wanted to read.",
+						"@npcName@: I figured I could always just clone it again if I wanted to.",
+						"@npcName@: Anyhow, I'm done with those other books, and I think I have shelf space to spare. How can I get a new copy of Linus' book?"
 					]),
 					[{ action: 'label', label: 'askClone' }],
 					scriptUtils.quizBranch(
