@@ -4,7 +4,9 @@ define([
 	'components/BetterText',
 	'components/BaseDialog',
 ], function(config) {
-	var SHOW_MORE_SIZE = 16; // hardcoded size of the "show more" icon.
+	var SHOW_MORE_WIDTH = 115;
+	var SHOW_MORE_HEIGHT = 20;
+
 	/**
 	 * Extends BaseDialog by providing support for text, a portrait, and a "show more..." icon.
 	 */
@@ -15,16 +17,8 @@ define([
 			this.requires('2D');
 			this.requires('BaseDialog');
 			this._msgEntity = null;
-			this.bind('EnterFrame', this._animateShowMore);
 			this.bind('Change', this._attributeChanged);
 			this.bind('Remove', this._removed);
-		},
-		_animateShowMore: function(params) {
-			if (this.visible && this._showMoreEntity) {
-				var size = (Math.sin(params.frame / 20) + 1)/ 3;
-				this._showMoreEntity.w = SHOW_MORE_SIZE * (1 + size);
-				this._showMoreEntity.h = SHOW_MORE_SIZE * (1 + size);
-			}
 		},
 		_attributeChanged: function() {
 			if (!this.msg) {
@@ -36,12 +30,18 @@ define([
 			var i;
 			if (this.showMore) {
 				if (!this._showMoreEntity) {
-					this._showMoreEntity = Crafty.e('2D, Canvas, dialogMore');
+					this._showMoreEntity = Crafty.e('2D, DOM, BetterText');
 				}
 				this._showMoreEntity.attr({
-					x: this.x + this.w - (this.TILE_SIZE * 1.5),
-					y: this.y + this.h - (this.TILE_SIZE * 1.5),
+					x: this.x + this.w - SHOW_MORE_WIDTH,
+					y: this.y + this.h - SHOW_MORE_HEIGHT,
+					w: SHOW_MORE_WIDTH,
+					h: SHOW_MORE_HEIGHT,
 					z: this.z,
+					text: "Click or tap to continue",
+					fillStyle: this.msgColor,
+					fontFamily: config.dialogFont.family,
+					fontSize: Math.floor(config.dialogFont.size * 0.5) + 'px',
 					visible: this.visible
 				});
 			} else if (this._showMoreEntity) {

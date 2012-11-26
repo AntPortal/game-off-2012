@@ -51,7 +51,7 @@ define([
 							utils.profile('level1.js click handler', function() {
 								var npcName = nearbyNPC.properties.name;
 								var actionName = gameState.getOneInteraction(npcName);
-								actionName = actionName || (npcName === 'Linus' ? 'defaultLinus' : 'defaultInteraction');
+								actionName = actionName || 'defaultInteraction';
 								var action = interactionDictionary[actionName];
 								utils.assert(action, 'action should not be undefined');
 								console.log('About to run ', action);

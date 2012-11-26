@@ -74,7 +74,8 @@ define([
 					w: 600,
 					h: 160,
 					face: undefined, /* TODO */
-					msg: interpolated
+					msg: interpolated,
+					showMore: true
 				},
 			},
 			{action: 'PACADOC'}
