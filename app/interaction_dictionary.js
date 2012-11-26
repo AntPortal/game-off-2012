@@ -235,6 +235,7 @@ define([
 						action: 'arbitraryCode',
 						code: function(curState, callback) {
 							gameState.addInteraction(['Scott'], 'villagerGitAdd1');
+							gameState.addInteraction(['Linus'], 'linusGitAdd1Repeat');
 							callback(curState+1);
 						}
 					}],
@@ -251,6 +252,24 @@ define([
 			},
 			taskString: "Talk to Linus",
 			referrable: true
+		},
+
+		linusGitAdd1Repeat: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.makeReferral(
+						"@npcName@: I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you. It might be a good opportunity for you to teach @himOrHerRef@ about the “git add” and “git commit” spells I just taught you.",
+						"@npcName@: BTW, I think @npcNameRef@ said @heOrSheRef@ wanted to talk to you.",
+						"@npcName@: Come back and see me later in case I find another bug.",
+						"villagerGitAdd1"
+					)
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false
 		},
 
 		villagerGitAdd1: {
@@ -403,6 +422,7 @@ define([
 					[{
 						action: 'arbitraryCode',
 						code: function(curState, callback) {
+							gameState.removeInteraction('Linus', 'linusGitAdd1Repeat');
 							gameState.addInteraction(['Linus'], 'linusGitAdd2');
 							callback(curState+1);
 						}
@@ -433,6 +453,7 @@ define([
 					[{
 						action: 'arbitraryCode',
 						code: function(curState, callback) {
+							gameState.addInteraction(['Linus'], 'linusGitAdd2Repeat');
 							gameState.addInteraction(sveniteNames, 'villagerGitAdd2');
 							gameState.addInteraction(['Ceeveeus'], 'ceeveeus1');
 							callback(curState+1);
@@ -444,6 +465,22 @@ define([
 			},
 			taskString: "Talk to Linus",
 			referrable: true
+		},
+
+		linusGitAdd2Repeat: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Go and teach the Svenites about the “git add” and “git commit” spells you just taught Scott.",
+						"@npcName@: Also make sure to pass by Ceeveeus’ house, far north of Sveni. Hopefully he’ll listen to you more than he listened to me…"
+					])
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false,
 		},
 
 		villagerGitAdd2: {
@@ -511,6 +548,7 @@ define([
 							var villagersWithGitAdd = gameState.findInteraction(thisInteraction);
 							var ceeveeusInteraction = gameState.getOneInteraction('Ceeveeus');
 							if (villagersWithGitAdd.length === 0 && !ceeveeusInteraction) {
+								gameState.removeInteraction('Linus', 'linusGitAdd2Repeat');
 								gameState.addInteraction(['Linus'], 'linusGitPull');
 							}
 							callback(curState+1);
@@ -704,6 +742,7 @@ define([
 							var villagersWithGitAdd = gameState.findInteraction('villagerGitAdd2');
 							var ceeveeusInteraction = gameState.getOneInteraction('Ceeveeus');
 							if (villagersWithGitAdd.length === 0 && !ceeveeusInteraction) {
+								gameState.removeInteraction('Linus', 'linusGitAdd2Repeat');
 								gameState.addInteraction(['Linus'], 'linusGitPull');
 							}
 							callback(curState+1);
@@ -737,12 +776,29 @@ define([
 						"@npcName@: Maybe you should go visit him to explain it in more depth. He lives south of here, by the lake. Don’t forget the spell: “git pull.”"
 					]),
 					scriptUtils.removeCurrentInteraction(),
+					scriptUtils.addInteraction(['Linus'], 'linusGitPullRepeat'),
 					scriptUtils.addInteraction(['Junio'], 'junioGitPull')
 				]));
 				vm.run();
 			},
 			taskString: "Talk to Linus",
 			referrable: true
+		},
+
+		linusGitPullRepeat: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Go see Junio and show him how to get my changes into his copy of the book.",
+						"@npcName@: Remember the spell: “git pull.”"
+					])
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false
 		},
 
 		junioGitPull: {
@@ -782,6 +838,7 @@ define([
 						"@npcName@: Hey, great. The bug is gone. Thanks!",
 						"@npcName@: I’m sure all the villagers in Sveni will want their books “de-bugged” as well. Why don’t you go and teach them how?"
 					]),
+					scriptUtils.removeInteraction('Linus', 'linusGitPullRepeat'),
 					scriptUtils.giveCopper(config.coinValues.copper),
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.addInteraction(sveniteNames, 'villagerGitPull')
@@ -860,12 +917,29 @@ define([
 						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
 					]),
 					scriptUtils.removeCurrentInteraction(),
-					scriptUtils.addInteraction(['Scott'], 'scottGitPush')
+					scriptUtils.addInteraction(['Scott'], 'scottGitPush'),
+					scriptUtils.addInteraction(['Linus'], 'linusGitPushRepeat')
 				]));
 				vm.run();
 			},
 			taskString: "Check in with Linus",
 			referrable: true
+		},
+
+		linusGitPushRepeat: {
+			doAction: function(scriptUtils) {
+				var gameState = scriptUtils.getGameState();
+				var vm = Crafty.e('ScriptRunner');
+				vm.ScriptRunner(_.flatten([
+					scriptUtils.dialogAndPause([
+						"@npcName@: Go see Scott and teach him how to send him changes back to me.",
+						"@npcName@: The spell for that is “git push.”"
+					])
+				]));
+				vm.run();
+			},
+			taskString: "",
+			referrable: false
 		},
 
 		scottGitPush: {
@@ -901,6 +975,7 @@ define([
 					[{ action: 'label', label: 'endPush' }],
 					scriptUtils.dialogAndPause(["@npcName@: Hey, did you see that? The extra pages from my chapter flew into the clouds. I bet Linus probably has my chapter now."]),
 					scriptUtils.addInteraction(['Junio'], 'junioGitPush'),
+					scriptUtils.removeInteraction('Linus', 'linusGitPushRepeat'),
 					scriptUtils.removeCurrentInteraction(),
 					scriptUtils.giveCopper(config.coinValues.copper),
 					[

@@ -306,7 +306,18 @@ define([
 				callback(curState + 1);
 			}
 		}];
-	}
+	};
+
+	ScriptUtils.prototype.removeInteraction = function(npcName, interaction) {
+		var self = this;
+		return [{
+			action: 'arbitraryCode',
+			code: function(curState, callback) {
+				self._gameState.removeInteraction(npcName, interaction);
+				callback(curState + 1);
+			}
+		}];
+	};
 
 	/**
 	 * Returns a script fragment that removes the current interaction from the current NPC's
