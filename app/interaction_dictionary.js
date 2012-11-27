@@ -914,12 +914,12 @@ define([
 						"@npcName@: I think it’s great that we can all work together to make it better, but now everyone’s work is only in their own copy!",
 						"@npcName@: Scott’s version has the chapter on alchemy, while Junio’s version has the chapter on summoning, and the Svenites all have their own books.",
 						"@npcName@: You should teach them how to cast the “push” spell on each of their versions of the book, to send those changes to me. Then I can combine everything into one complete “master edition” with all of their chapters.",
-						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span> But there's an important care you have to take when using that spell.",
-						"@npcName@: I’m always working on this book, you see, and even after you've gotten a copy with <span class='cmd'>“git clone,”</span> or gotten the latest and greatest with <span class='cmd'>“git push”</span>, there's always a chance that I'll have changed something by the time you're ready to send your own changes back.",
+						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span> But there's a small wrinkle you might run into when you're using that spell.",
+						"@npcName@: I’m always working on my book, you see, and even after you've gotten a copy with “git clone,” or gotten the latest and greatest with “git pull”, there's always a chance that I'll have changed something else by the time you're ready to send your own changes back.",
 						"@npcName@: And if you were to just send your changes straight off, they could interfere with mine, which would cause lots of trouble...",
-						"@npcName@: So you'll usually want to cast <span class='cmd'>“git pull”</span> before you try to send your changes. That will retrieve my latest changes and make sure they can fit together with yours.",
-						"@npcName@: It's not a big deal if you forget, though — I've put some safeguards into the “git push” spell, so that it'll bounce your pages back to you if they would interfere with any of my changes. You can take that as a reminder that you forgot to cast <span class='cmd'>“git pull”</span>.",
-						"@npcName@: So, to sum it all up: <span class='cmd'>“git pull,”</span> then <span class='cmd'>“git push.”</span>",
+						"@npcName@: So I've built some safeguards into the “git push” spell: it'll bounce your changes back to you if they would interfere with any of mine. When that happens, what you need to do is cast <span class='cmd'>“git pull.”</span>. That will retrieve my latest changes and make sure they can fit together with yours.",
+						"@npcName@: Once you've done that, you can try the <span class='cmd'>“git push”</span> again, and it should work.",
+						"@npcName@: So, to sum it all up: first try <span class='cmd'>“git push”</span>; if your changes bounce back, do <span class='cmd'>“git pull”</span>, then try the <span class='cmd'>“git push”</span> again.",
 						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
 					]),
 					scriptUtils.removeCurrentInteraction(),
@@ -939,7 +939,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go see Scott and teach him how to send him changes back to me.",
-						"@npcName@: To do that, you first cast <span class='cmd'>“git pull”</span> to get my latest changes and make sure they fit together with yours. Then you cast <span class='cmd'>“git push”</span> to actually send your changes back to me."
+						"@npcName@: To do that, you first cast <span class='cmd'>“git push”</span>. If your changes bounce back, then cast <span class='cmd'>“git pull”</span> to get my latest changes and make sure they fit together with yours, then try the <span class='cmd'>“git push”</span> one more time."
 					])
 				]));
 				vm.run();
@@ -959,34 +959,6 @@ define([
 						"@npcName@: There must be some magic involved to do that automatically, right? What's the first thing I need to do?"
 					]),
 
-					[{ action: 'label', label: 'beginPull' }],
-					scriptUtils.quizBranch(
-						{ /* right answer */
-							text: "git pull",
-							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
-						},
-						{ /* wrong answers */
-							texts: ["git get", "git send", "git receive"],
-							result: scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Should we try again?"]),
-							take: 1
-						},
-						{ /* not really a joke answer, but has a specialized response */
-							choices: [{
-								text: "git push",
-								result: scriptUtils.dialogAndPause([
-									"@npcName@: OK... wait. What if Linus changed something in his copy while I was working on mine? Shouldn't we get his latest changes first, so we can be sure they won't interfere with mine?"
-								])
-							}],
-							take: 1
-						},
-						"If I want to send changes to Linus, what do I do first?"
-					),
-					[{ action: 'jumpToLabel', label: 'beginPull' }],
-
-					[{ action: 'label', label: 'beginPush' }],
-					scriptUtils.dialogAndPause([
-						"@npcName@: OK, looks like everything fits together well. Now, we need to actually send the changes over, right? What's the spell for that?"
-					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
@@ -1124,7 +1096,7 @@ define([
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
-					scriptUtils.dialogAndPause(["@npcName@: OK, I see all of Linus' latest changes, and they all fit together with mine. What now?"]),
+					scriptUtils.dialogAndPause(["@npcName@: OK, I see all of Linus' latest changes here, and they all fit together with mine. What now?"]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
@@ -1191,18 +1163,28 @@ define([
 								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Should we try again?"]),
 								[{ action: 'jumpToLabel', label: 'beginPull' }]
 							),
-							take: 2
+							take: 1
 						},
-						{ /* joke answers; none for now */
-							choices: [], take: 0
+						{ /* not really a joke answer, but has a unique response */
+							choices: [{
+								text: "git push",
+								result: _.flatten([
+									scriptUtils.dialogAndPause([
+										"@npcName@: And there go the pages into the clouds... and here they come back. Maybe there's something on Linus' side that's keeping the pages from being accepted? How can we find out?",
+									]),
+									[{ action: 'jumpToLabel', label: 'beginPull' }]
+								])
+							}],
+							take: 1
 						},
 						"What do I do after binding my writing?"
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
 					scriptUtils.dialogAndPause([
-						"@npcName@: So far so good; I now see all Linus' changes and they fit together perfectly with mine."
+						"@npcName@: Hmm... so I first have to get all Linus' changes and make sure they fit together perfectly with mine. Interesting. OK, what's next?"
 					]),
+					[{ action: 'label', label: 'askPush' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
@@ -1214,7 +1196,7 @@ define([
 								scriptUtils.dialogAndPause([
 									"@npcName@: It doesn’t seem like anything happened. Should we try again?",
 								]),
-								[{ action: 'jumpToLabel', label: 'beginPush' }],
+								[{ action: 'jumpToLabel', label: 'askPush' }],
 							]),
 							take: 2
 						},
@@ -1244,14 +1226,14 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hi @heroName@, I heard Linus is collecting all the chapters that everyone contributed, to add to a master edition of his book.",
-						"@npcName@: I have all my pages right here. If I want to get these to him, what do I do first?"
+						"@npcName@: I have all my pages right here. I'm guessing there are a few steps to go through to get these to him. What's the first step?"
 					]),
 
 					[{ action: 'label', label: 'beginAdd' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git add chapter77",
-							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+							result: [] /* fall through */
 						},
 						{ /* wrong answers */
 							texts: ["git push", "git commit"],
@@ -1266,15 +1248,16 @@ define([
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
-						"What do I do first?"
+						"I have my pages right here. What do I do first?"
 					),
 
 					[{ action: 'label', label: 'beginCommit' }],
 					scriptUtils.dialogAndPause(["@npcName@: OK, the pages are in the book now. What's next?"]),
+					[{ action: 'label', label: 'askCommit' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git commit",
-							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+							result: [] /* fall through */
 						},
 						{ /* wrong answers */
 							texts: ["git push", "git log", "git bind"],
@@ -1282,7 +1265,7 @@ define([
 								scriptUtils.dialogAndPause([
 									"@npcName@: That didn't work. Are you sure that's the right spell? Let's try again."
 								]),
-								[{ action: 'jumpToLabel', label: 'beginCommit' }],
+								[{ action: 'jumpToLabel', label: 'askCommit' }],
 							]),
 							take: 2
 						},
@@ -1292,25 +1275,57 @@ define([
 						"What do I do after adding the pages?"
 					),
 
+					[{ action: 'label', label: 'beginPull' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, looks like the pages are all bound... what now?"]),
+					[{ action: 'label', label: 'askPull' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git pull",
+							result: [] /* fall through */
+						},
+						{ /* wrong answers */
+							texts: pullWrongAnswers,
+							result: _.flatten([
+								scriptUtils.dialogAndPause(["@npcName@: Nothing happened. Are you sure you have all the words right? Let's try again."]),
+								[{ action: 'jumpToLabel', label: 'askPull' }],
+							]),
+							take: 1
+						},
+						{ /* joke answers; none for now */
+							choices: [{
+								text: "git push",
+								result: _.flatten([
+									scriptUtils.dialogAndPause([
+										"@npcName@: And there go the pages into the clouds... and here they come back. Maybe there's something on Linus' side that's keeping the pages from being accepted? How can we find out?",
+									]),
+									[{ action: 'jumpToLabel', label: 'askPull' }]
+								])
+							}],
+							take: 1
+						},
+						"What do I do after binding the pages?"
+					),
+
 					[{ action: 'label', label: 'beginPush' }],
-					scriptUtils.dialogAndPause(["@npcName@: OK, looks like the pages are bound... what now?"]),
+					scriptUtils.dialogAndPause(["@npcName@: OK, I see some new changes from Linus and they fit just fine with my own... what now?"]),
+					[{ action: 'label', label: 'askPush' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
-							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+							result: [] /* fall through */
 						},
 						{ /* wrong answers */
-							texts: ["git send", "git transmit", "git update"],
+							texts: pushWrongAnswers,
 							result: _.flatten([
 								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Are you sure that's the right spell? Let's try again."]),
-								[{ action: 'jumpToLabel', label: 'beginPush' }]
+								[{ action: 'jumpToLabel', label: 'askPush' }]
 							]),
 							take: 2
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
-						"What do I do after binding the pages?"
+						"What do I do after ensuring Linus' changes fit with mine?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
