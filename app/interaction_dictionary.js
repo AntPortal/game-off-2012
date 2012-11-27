@@ -701,9 +701,9 @@ define([
 							result: [{ action: 'jumpToLabel', label: 'endCommit' }]
 						},
 						{ /* wrong answers */
-							texts: ["cvs commit"], /* TODO: add more */
+							texts: ["cvs commit", "svn commit", "g95 git.for"], /* TODO: add more */
 							result: scriptUtils.dialogAndPause(["@npcName@: Nope, the pages aren’t bound to the book. If you whippersnappers are gonna reinvent the wheel, and least invent a wheel that works!"]),
-							take: 1
+							take: 2
 						},
 						{ /* joke answers; none for now */
 							choices: [],
