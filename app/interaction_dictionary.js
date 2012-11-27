@@ -1289,11 +1289,19 @@ define([
 								scriptUtils.dialogAndPause(["@npcName@: Nothing happened. Are you sure you have all the words right? Let's try again."]),
 								[{ action: 'jumpToLabel', label: 'askPull' }],
 							]),
-
-							take: 2
+							take: 1
 						},
 						{ /* joke answers; none for now */
-							choices: [], take: 0
+							choices: [{
+								text: "git push",
+								result: _.flatten([
+									scriptUtils.dialogAndPause([
+										"@npcName@: And there go the pages into the clouds... and here they come back. Maybe there's something on Linus' side that's keeping the pages from being accepted? How can we find out?",
+									]),
+									[{ action: 'jumpToLabel', label: 'askPull' }]
+								])
+							}],
+							take: 1
 						},
 						"What do I do after binding the pages?"
 					),
