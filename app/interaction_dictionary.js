@@ -918,7 +918,7 @@ define([
 						"@npcName@: I’m always working on this book, you see, and even after you've gotten a copy with <span class='cmd'>“git clone,”</span> or gotten the latest and greatest with <span class='cmd'>“git push”</span>, there's always a chance that I'll have changed something by the time you're ready to send your own changes back.",
 						"@npcName@: And if you were to just send your changes straight off, they could interfere with mine, which would cause lots of trouble...",
 						"@npcName@: So you'll usually want to cast <span class='cmd'>“git pull”</span> before you try to send your changes. That will retrieve my latest changes and make sure they can fit together with yours.",
-						"@npcName@: It's not a big deal if you forget, though — I've put some safeguards into the “git push” spell, so that it'll bounce your pages back to you if they would interfere with any of my changes. You can take that as a reminder that you forgot to cast <span class='cmd'>“git pull”</span>.",
+						"@npcName@: It's not a big deal if you forget, though — I've put some safeguards into the “git push” spell, so that it'll bounce your pages back to you if they would interfere with any of my changes. You can take that as a reminder that you should have casted <span class='cmd'>“git pull”</span>.",
 						"@npcName@: So, to sum it all up: <span class='cmd'>“git pull,”</span> then <span class='cmd'>“git push.”</span>",
 						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
 					]),
@@ -1244,14 +1244,14 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Hi @heroName@, I heard Linus is collecting all the chapters that everyone contributed, to add to a master edition of his book.",
-						"@npcName@: I have all my pages right here. If I want to get these to him, what do I do first?"
+						"@npcName@: I have all my pages right here. I'm guessing there are a few steps to go through to get these to him. What's the first step?"
 					]),
 
 					[{ action: 'label', label: 'beginAdd' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git add chapter77",
-							result: [{ action: 'jumpToLabel', label: 'beginCommit' }]
+							result: [] /* fall through */
 						},
 						{ /* wrong answers */
 							texts: ["git push", "git commit"],
@@ -1266,15 +1266,16 @@ define([
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
-						"What do I do first?"
+						"I have my pages right here. What do I do first?"
 					),
 
 					[{ action: 'label', label: 'beginCommit' }],
 					scriptUtils.dialogAndPause(["@npcName@: OK, the pages are in the book now. What's next?"]),
+					[{ action: 'label', label: 'askCommit' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git commit",
-							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
+							result: [] /* fall through */
 						},
 						{ /* wrong answers */
 							texts: ["git push", "git log", "git bind"],
@@ -1282,7 +1283,7 @@ define([
 								scriptUtils.dialogAndPause([
 									"@npcName@: That didn't work. Are you sure that's the right spell? Let's try again."
 								]),
-								[{ action: 'jumpToLabel', label: 'beginCommit' }],
+								[{ action: 'jumpToLabel', label: 'askCommit' }],
 							]),
 							take: 2
 						},
@@ -1292,25 +1293,49 @@ define([
 						"What do I do after adding the pages?"
 					),
 
-					[{ action: 'label', label: 'beginPush' }],
-					scriptUtils.dialogAndPause(["@npcName@: OK, looks like the pages are bound... what now?"]),
+					[{ action: 'label', label: 'beginPull' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, looks like the pages are all bound... what now?"]),
+					[{ action: 'label', label: 'askPull' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
-							text: "git push",
-							result: [{ action: 'jumpToLabel', label: 'endPush' }]
+							text: "git pull",
+							result: [] /* fall through */
 						},
 						{ /* wrong answers */
-							texts: ["git send", "git transmit", "git update"],
+							texts: pullWrongAnswers,
 							result: _.flatten([
-								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Are you sure that's the right spell? Let's try again."]),
-								[{ action: 'jumpToLabel', label: 'beginPush' }]
+								scriptUtils.dialogAndPause(["@npcName@: Nothing happened. Are you sure you have all the words right? Let's try again."]),
+								[{ action: 'jumpToLabel', label: 'askPull' }],
 							]),
+
 							take: 2
 						},
 						{ /* joke answers; none for now */
 							choices: [], take: 0
 						},
 						"What do I do after binding the pages?"
+					),
+
+					[{ action: 'label', label: 'beginPush' }],
+					scriptUtils.dialogAndPause(["@npcName@: OK, I see some new changes from Linus and they fit just fine with my own... what now?"]),
+					[{ action: 'label', label: 'askPush' }],
+					scriptUtils.quizBranch(
+						{ /* right answer */
+							text: "git push",
+							result: [] /* fall through */
+						},
+						{ /* wrong answers */
+							texts: pushWrongAnswers,
+							result: _.flatten([
+								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Are you sure that's the right spell? Let's try again."]),
+								[{ action: 'jumpToLabel', label: 'askPush' }]
+							]),
+							take: 2
+						},
+						{ /* joke answers; none for now */
+							choices: [], take: 0
+						},
+						"What do I do after ensuring Linus' changes fit with mine?"
 					),
 
 					[{ action: 'label', label: 'endPush' }],
