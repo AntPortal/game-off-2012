@@ -13,7 +13,7 @@ define([
 				"As a result, very few people, to this day, remember the wonders of using git magic..."
 			],
 			50,
-			[50, 200, 270, 340],
+			[50, 220, 310, 400],
 			config.viewport.width - 100,
 			function() {
 				Crafty.e('2D, Mouse').attr({
