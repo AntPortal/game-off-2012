@@ -914,12 +914,12 @@ define([
 						"@npcName@: I think it’s great that we can all work together to make it better, but now everyone’s work is only in their own copy!",
 						"@npcName@: Scott’s version has the chapter on alchemy, while Junio’s version has the chapter on summoning, and the Svenites all have their own books.",
 						"@npcName@: You should teach them how to cast the “push” spell on each of their versions of the book, to send those changes to me. Then I can combine everything into one complete “master edition” with all of their chapters.",
-						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span> But there's an important care you have to take when using that spell.",
-						"@npcName@: I’m always working on this book, you see, and even after you've gotten a copy with <span class='cmd'>“git clone,”</span> or gotten the latest and greatest with <span class='cmd'>“git push”</span>, there's always a chance that I'll have changed something by the time you're ready to send your own changes back.",
+						"@npcName@: The incantation is short and to-the-point: <span class='cmd'>“git push.”</span> But there's a small wrinkle you might run into when you're using that spell.",
+						"@npcName@: I’m always working on my book, you see, and even after you've gotten a copy with “git clone,” or gotten the latest and greatest with “git pull”, there's always a chance that I'll have changed something else by the time you're ready to send your own changes back.",
 						"@npcName@: And if you were to just send your changes straight off, they could interfere with mine, which would cause lots of trouble...",
-						"@npcName@: So you'll usually want to cast <span class='cmd'>“git pull”</span> before you try to send your changes. That will retrieve my latest changes and make sure they can fit together with yours.",
-						"@npcName@: It's not a big deal if you forget, though — I've put some safeguards into the “git push” spell, so that it'll bounce your pages back to you if they would interfere with any of my changes. You can take that as a reminder that you should have casted <span class='cmd'>“git pull”</span>.",
-						"@npcName@: So, to sum it all up: <span class='cmd'>“git pull,”</span> then <span class='cmd'>“git push.”</span>",
+						"@npcName@: So I've built some safeguards into the “git push” spell: it'll bounce your changes back to you if they would interfere with any of mine. When that happens, what you need to do is cast <span class='cmd'>“git pull.”</span>. That will retrieve my latest changes and make sure they can fit together with yours.",
+						"@npcName@: Once you've done that, you can try the <span class='cmd'>“git push”</span> again, and it should work.",
+						"@npcName@: So, to sum it all up: first try <span class='cmd'>“git push”</span>; if your changes bounce back, do <span class='cmd'>“git pull”</span>, then try the <span class='cmd'>“git push”</span> again.",
 						"@npcName@: Scott seems to be quick at picking up new spells. Why don’t you go see him first?"
 					]),
 					scriptUtils.removeCurrentInteraction(),
@@ -939,7 +939,7 @@ define([
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
 						"@npcName@: Go see Scott and teach him how to send him changes back to me.",
-						"@npcName@: To do that, you first cast <span class='cmd'>“git pull”</span> to get my latest changes and make sure they fit together with yours. Then you cast <span class='cmd'>“git push”</span> to actually send your changes back to me."
+						"@npcName@: To do that, you first cast <span class='cmd'>“git push”</span>. If your changes bounce back, then cast <span class='cmd'>“git pull”</span> to get my latest changes and make sure they fit together with yours, then try the <span class='cmd'>“git push”</span> one more time."
 					])
 				]));
 				vm.run();
