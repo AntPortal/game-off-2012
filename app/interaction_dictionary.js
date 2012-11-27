@@ -1096,7 +1096,7 @@ define([
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
-					scriptUtils.dialogAndPause(["@npcName@: OK, I see all of Linus' latest changes, and they all fit together with mine. What now?"]),
+					scriptUtils.dialogAndPause(["@npcName@: OK, I see all of Linus' latest changes here, and they all fit together with mine. What now?"]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
@@ -1163,18 +1163,28 @@ define([
 								scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Should we try again?"]),
 								[{ action: 'jumpToLabel', label: 'beginPull' }]
 							),
-							take: 2
+							take: 1
 						},
-						{ /* joke answers; none for now */
-							choices: [], take: 0
+						{ /* not really a joke answer, but has a unique response */
+							choices: [{
+								text: "git push",
+								result: _.flatten([
+									scriptUtils.dialogAndPause([
+										"@npcName@: And there go the pages into the clouds... and here they come back. Maybe there's something on Linus' side that's keeping the pages from being accepted? How can we find out?",
+									]),
+									[{ action: 'jumpToLabel', label: 'beginPull' }]
+								])
+							}],
+							take: 1
 						},
 						"What do I do after binding my writing?"
 					),
 
 					[{ action: 'label', label: 'beginPush' }],
 					scriptUtils.dialogAndPause([
-						"@npcName@: So far so good; I now see all Linus' changes and they fit together perfectly with mine."
+						"@npcName@: Hmm... so I first have to get all Linus' changes and make sure they fit together perfectly with mine. Interesting. OK, what's next?"
 					]),
+					[{ action: 'label', label: 'askPush' }],
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
@@ -1186,7 +1196,7 @@ define([
 								scriptUtils.dialogAndPause([
 									"@npcName@: It doesn’t seem like anything happened. Should we try again?",
 								]),
-								[{ action: 'jumpToLabel', label: 'beginPush' }],
+								[{ action: 'jumpToLabel', label: 'askPush' }],
 							]),
 							take: 2
 						},
