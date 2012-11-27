@@ -4,20 +4,20 @@
  * on entities.
  */
 define([ 'Crafty' ], function() {
+	var SCROLL_ELEMENT = document; //or Crafty.stage.elem;
 	var mouselook = {
 		/**
 		 * Enable mouselook. Must be called from within a scene definition.
 		 * (TODO: is that always the case?)
 		 */
 		start: function() {
-			Crafty.addEvent(this, Crafty.stage.elem, "mousedown", this._mousedown);
+			Crafty.addEvent(this, SCROLL_ELEMENT, "mousedown", this._mousedown);
 		},
 		stop: function() {
-			Crafty.removeEvent(this, Crafty.stage.elem, "mousedown", this._mousedown);
+			Crafty.removeEvent(this, SCROLL_ELEMENT, "mousedown", this._mousedown);
 		},
 		_mousedown: function(e) {
 			if(e.button > 1) return;
-			var scrollStart = {x: e.clientX, y: e.clientY};
 			var base = {x: e.clientX, y: e.clientY};
 
 			function scroll(e) {
@@ -28,9 +28,9 @@ define([ 'Crafty' ], function() {
 				Crafty.viewport.y -= dy;
 			};
 
-			Crafty.addEvent(this, Crafty.stage.elem, "mousemove", scroll);
-			Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function(e) {
-				Crafty.removeEvent(this, Crafty.stage.elem, "mousemove", scroll);
+			Crafty.addEvent(this, SCROLL_ELEMENT, "mousemove", scroll);
+			Crafty.addEvent(this, SCROLL_ELEMENT, "mouseup", function(e) {
+				Crafty.removeEvent(this, SCROLL_ELEMENT, "mousemove", scroll);
 			});
 		}
 	};
