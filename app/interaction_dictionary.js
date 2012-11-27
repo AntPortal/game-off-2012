@@ -959,34 +959,6 @@ define([
 						"@npcName@: There must be some magic involved to do that automatically, right? What's the first thing I need to do?"
 					]),
 
-					[{ action: 'label', label: 'beginPull' }],
-					scriptUtils.quizBranch(
-						{ /* right answer */
-							text: "git pull",
-							result: [{ action: 'jumpToLabel', label: 'beginPush' }]
-						},
-						{ /* wrong answers */
-							texts: ["git get", "git send", "git receive"],
-							result: scriptUtils.dialogAndPause(["@npcName@: That didn't do anything. Should we try again?"]),
-							take: 1
-						},
-						{ /* not really a joke answer, but has a specialized response */
-							choices: [{
-								text: "git push",
-								result: scriptUtils.dialogAndPause([
-									"@npcName@: OK... wait. What if Linus changed something in his copy while I was working on mine? Shouldn't we get his latest changes first, so we can be sure they won't interfere with mine?"
-								])
-							}],
-							take: 1
-						},
-						"If I want to send changes to Linus, what do I do first?"
-					),
-					[{ action: 'jumpToLabel', label: 'beginPull' }],
-
-					[{ action: 'label', label: 'beginPush' }],
-					scriptUtils.dialogAndPause([
-						"@npcName@: OK, looks like everything fits together well. Now, we need to actually send the changes over, right? What's the spell for that?"
-					]),
 					scriptUtils.quizBranch(
 						{ /* right answer */
 							text: "git push",
