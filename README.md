@@ -16,4 +16,6 @@ Check out our live demo at [karayom.com](http://karayom.com). The name comes fro
 <img src="https://raw.github.com/AntPortal/game-off-2012/master/assets/screenshots/Karayom.png" style="border:0;">
 <img src="https://raw.github.com/AntPortal/game-off-2012/master/assets/screenshots/Karayom-2.png" style="border:0;">
 <img src="https://raw.github.com/AntPortal/game-off-2012/master/assets/screenshots/Karayom-4.png" style="border:0;">
+<img src="https://raw.github.com/AntPortal/game-off-2012/master/assets/screenshots/Karayom_commit.png" style="border:0;">
 <img src="https://github.com/AntPortal/game-off-2012/blob/master/assets/screenshots/Karayom_map.png?raw=true" style="border:0;">
+<img src="https://raw.github.com/AntPortal/game-off-2012/master/assets/screenshots/Karayom-github_link.png" style="border:0;">
