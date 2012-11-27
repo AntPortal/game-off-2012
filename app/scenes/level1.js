@@ -64,7 +64,7 @@ define([
 										interaction: actionName,
 										face: undefined,
 										x: (config.viewport.width - 600) / 2,
-										y: config.viewport.height - 200,
+										y: config.viewport.height - 210,
 										heroName: gameState.getGithubName()
 									}
 								);
@@ -83,7 +83,7 @@ define([
 			taskListEntity = Crafty.e('TaskList');
 			taskListEntity.TaskList('cr-stage', config.viewport.width - 320, 0, config.zOffset.gitk, 320, 100, gameState);
 			Crafty.e('Coins').Coins('cr-stage', config.viewport.width - 150, config.viewport.height - 32, config.zOffset.gitk, 150, 32, gameState);
-			Crafty.e('HelpText').HelpText('cr-stage', 10, config.viewport.height - 45, config.zOffset.gitk, 250, 40);
+			Crafty.e('HelpText').HelpText('cr-stage', 10, config.viewport.height - 40, config.zOffset.gitk, 250, 40);
 		})();
 
 		Crafty.viewport.clampToEntities = false;

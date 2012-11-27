@@ -395,7 +395,7 @@ define([
 						{ /* joke answers */
 							choices: [
 								{
-									text: 'curl http://download.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2',
+									text: 'wget -r -l0 -e robots=off http://en.wikipedia.org',
 									result: scriptUtils.dialogAndPause([
 										"@npcName@: My house isn't big enough to hold a whole library..."
 									])
