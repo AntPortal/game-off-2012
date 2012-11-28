@@ -715,7 +715,7 @@ define([
 
 					[{ action: 'label', label: 'endCommit' }],
 					scriptUtils.dialogAndPause([
-						"@npcName@: “git commit”? Sounds like this “Linus” kid just took my ideas, changed a few keywords around, and called it his own.",
+						"@npcName@: “git commit?” Sounds like this “Linus” kid just took my ideas, changed a few keywords around, and called it his own.",
 						"@npcName@: Still, at least the book is bound now. Give it a look... or don’t, I don’t care! I got work to do here.",
 						"@npcName@: But I sure hope Linus will invent a spell to put all my branches in order... You wouldn’t happen to know how to do that, would you?"
 					]),
@@ -1559,7 +1559,7 @@ define([
 				var vm = Crafty.e('ScriptRunner');
 				vm.ScriptRunner(_.flatten([
 					scriptUtils.dialogAndPause([
-						"@npcName@: If you want to learn more about git magic, there are many resources available to you, which you can find at <a href='http://git-scm.com/doc' target='_blank'>http://git-scm.com/doc</a>",
+						"@npcName@: If you want to learn more about git magic, there are many resources available to you, which you can find at <a href='http://git-scm.com/doc' target='_blank'>http://git-scm.com/doc</a>.",
 						"@npcName@: I'd especially like to highlight the <a href='http://git-scm.com/book' target='_blank'>Pro Git</a> book, which builds on the basics I've taught you and then progresses into much more advanced spells. You'll be amazed at what git magic can do!",
 						"@npcName@: Or, if you're starting to find this village a bit too small, you can move to the big city of <a href='http://github.com' target='_blank'>GitHub</a>, where thousands of people use git magic every day to work together on their creations.",
 						"@npcName@: As long as you're willing to share your creations with the world, it won't cost even one copper to <a href='https://github.com/signup' target='_blank'>become a citizen</a>.",
