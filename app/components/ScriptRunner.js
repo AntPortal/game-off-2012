@@ -241,7 +241,7 @@ define([
 	Crafty.c('ScriptRunner', {
 		_curState: 0,
 		init: function() {
-			//Does nothing
+			this.bind("Remove", this._removed);
 			return this;
 		},
 		/**
@@ -265,6 +265,7 @@ define([
 		},
 		run: function() {
 			if (this._curState >= this.script.length) {
+				this.destroy();
 				return; //Done
 			}
 			var instObj = this.script[this._curState];
@@ -281,6 +282,9 @@ define([
 				retVal += i + '\t' + instEntry.toString(this, instObj) + '\n';
 			}
 			return retVal;
+		},
+		_removed: function() {
+			this.script = null;
 		}
 	});
 });
